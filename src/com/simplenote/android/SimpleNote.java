@@ -37,11 +37,17 @@ public class SimpleNote extends ListActivity {
       Cursor notesCursor = mDbHelper.fetchAllNotes();
       startManagingCursor(notesCursor);
 
-      // Create an array to specify the fields we want to display in the list (only TITLE)
-      String[] from = new String[]{NotesDbAdapter.KEY_TITLE};
+      // Create an array to specify the fields we want to display in the list
+      String[] from = new String[]{
+    		  	NotesDbAdapter.KEY_TITLE,
+    		  	NotesDbAdapter.KEY_DATESTAMP
+    		  };
 
-      // and an array of the fields we want to bind those fields to (in this case just text1)
-      int[] to = new int[]{R.id.text1};
+      // and an array of the fields we want to bind those fields to
+      int[] to = new int[]{
+    		  	R.id.text_title,
+    		  	R.id.text_date
+    		  };
 
       // Now create a simple cursor adapter and set it to display
       SimpleCursorAdapter notes = 

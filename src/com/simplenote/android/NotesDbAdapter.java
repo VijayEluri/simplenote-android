@@ -1,5 +1,9 @@
 package com.simplenote.android;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,8 +17,9 @@ public class NotesDbAdapter {
     public static final String KEY_TITLE = "title";
     public static final String KEY_BODY = "body";
     public static final String KEY_ROWID = "_id";
+    public static final String KEY_DATESTAMP = "datestamp";
 
-    private static final String TAG = "NotesDbAdapter";
+    private static final String TAG = "SimpleNote NotesDbAdapter";
     private DatabaseHelper mDbHelper;
     private SQLiteDatabase mDb;
 
@@ -23,9 +28,10 @@ public class NotesDbAdapter {
      */
     private static final String DATABASE_CREATE =
         "create table notes (_id integer primary key autoincrement, "
-        + "title text not null, body text not null);";
+        + "title text not null, body text not null, "
+        + "datestamp text not null, needs_sync boolean default 0);";
 
-    private static final String DATABASE_NAME = "simplenotes_data";
+    private static final String DATABASE_NAME = "simplenotes_data.db";
     private static final String DATABASE_TABLE = "notes";
     private static final int DATABASE_VERSION = 1;
 
@@ -45,10 +51,19 @@ public class NotesDbAdapter {
 
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-                    + newVersion + ", which will destroy all old data");
-            db.execSQL("DROP TABLE IF EXISTS notes");
-            onCreate(db);
+        	Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+                    + newVersion);
+        	        	
+        	final String V2_UPGRADE_SQL = "";
+        	
+        	switch (oldVersion) {
+        	case 1:
+        		Log.i(TAG, "** now upgrading from v1 to v2;");
+        		db.execSQL(V2_UPGRADE_SQL);
+        	default:
+        		Log.i(TAG, "** upgrade steps complete.");
+        		break;
+        	}
         }
     }
 
@@ -74,6 +89,7 @@ public class NotesDbAdapter {
     public NotesDbAdapter open() throws SQLException {
         mDbHelper = new DatabaseHelper(mCtx);
         mDb = mDbHelper.getWritableDatabase();
+        if (Constants.LOGGING) { Log.i(TAG, "SQLite Database Now Open"); }
         return this;
     }
 
@@ -91,11 +107,13 @@ public class NotesDbAdapter {
      * @param body the body of the note
      * @return rowId or -1 if failed
      */
-    public long createNote(String title, String body) {
+    public long createNote(String title, String body, String datestamp) {
         ContentValues initialValues = new ContentValues();
         initialValues.put(KEY_TITLE, title);
         initialValues.put(KEY_BODY, body);
+        initialValues.put(KEY_DATESTAMP, datestamp);
 
+        if ( Constants.LOGGING ) { Log.i(TAG, "Inserting new note into DB"); }
         return mDb.insert(DATABASE_TABLE, null, initialValues);
     }
 
@@ -118,7 +136,7 @@ public class NotesDbAdapter {
     public Cursor fetchAllNotes() {
 
         return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_TITLE,
-                KEY_BODY}, null, null, null, null, null);
+                KEY_BODY, KEY_DATESTAMP}, null, null, null, null, null);
     }
 
     /**
@@ -133,7 +151,7 @@ public class NotesDbAdapter {
         Cursor mCursor =
 
             mDb.query(true, DATABASE_TABLE, new String[] {KEY_ROWID,
-                    KEY_TITLE, KEY_BODY}, KEY_ROWID + "=" + rowId, null,
+                    KEY_TITLE, KEY_BODY, KEY_DATESTAMP}, KEY_ROWID + "=" + rowId, null,
                     null, null, null, null);
         if (mCursor != null) {
             mCursor.moveToFirst();
@@ -152,11 +170,23 @@ public class NotesDbAdapter {
      * @param body value to set note body to
      * @return true if the note was successfully updated, false otherwise
      */
-    public boolean updateNote(long rowId, String title, String body) {
+    public boolean updateNote(long rowId, String title, String body, String datestamp) {
         ContentValues args = new ContentValues();
         args.put(KEY_TITLE, title);
         args.put(KEY_BODY, body);
+        args.put(KEY_DATESTAMP, datestamp);
 
         return mDb.update(DATABASE_TABLE, args, KEY_ROWID + "=" + rowId, null) > 0;
+    }
+    
+    /**
+     * Get the current system datetime value
+     * 
+     * @return String containing datetime value
+     */
+    public String getDateTime() {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 }

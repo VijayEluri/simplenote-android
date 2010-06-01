@@ -6,11 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class NoteEdit extends Activity {
 
     private EditText mTitleText;
     private EditText mBodyText;
+    private TextView mDateStamp;
     private Long mRowId;
     private NotesDbAdapter mDbHelper;
 
@@ -24,6 +26,7 @@ public class NoteEdit extends Activity {
 
         mTitleText = (EditText) findViewById(R.id.title);
         mBodyText = (EditText) findViewById(R.id.body);
+        mDateStamp = (TextView) findViewById(R.id.datestamp);
 
         Button confirmButton = (Button) findViewById(R.id.confirm);
 
@@ -55,6 +58,8 @@ public class NoteEdit extends Activity {
                     note.getColumnIndexOrThrow(NotesDbAdapter.KEY_TITLE)));
             mBodyText.setText(note.getString(
                     note.getColumnIndexOrThrow(NotesDbAdapter.KEY_BODY)));
+            mDateStamp.setText( note.getString(
+            		note.getColumnIndexOrThrow(NotesDbAdapter.KEY_DATESTAMP) ) );
         }
     }
 
@@ -80,14 +85,15 @@ public class NoteEdit extends Activity {
     private void saveState() {
         String title = mTitleText.getText().toString();
         String body = mBodyText.getText().toString();
+        String datestamp = mDbHelper.getDateTime();
 
         if (mRowId == null) {
-            long id = mDbHelper.createNote(title, body);
+            long id = mDbHelper.createNote(title, body, datestamp);
             if (id > 0) {
                 mRowId = id;
             }
         } else {
-            mDbHelper.updateNote(mRowId, title, body);
+            mDbHelper.updateNote(mRowId, title, body, datestamp);
         }
     }
 

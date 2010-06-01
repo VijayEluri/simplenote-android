@@ -20,9 +20,11 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 public class SimpleNote extends ListActivity {
   private static final int ACTIVITY_CREATE=0;
   private static final int ACTIVITY_EDIT=1;
+  private static final int ACTIVITY_LOGIN=2;
 
   private static final int INSERT_ID = Menu.FIRST;
   private static final int DELETE_ID = Menu.FIRST + 1;
+  private static final int LOGIN_ID  = Menu.FIRST + 2;
 
   private NotesDbAdapter mDbHelper;
   private SharedPreferences mPrefs;
@@ -83,6 +85,7 @@ public class SimpleNote extends ListActivity {
   public boolean onCreateOptionsMenu(Menu menu) {
       super.onCreateOptionsMenu(menu);
       menu.add(0, INSERT_ID, 0, R.string.menu_insert);
+      menu.add(0, LOGIN_ID, 0, R.string.menu_login);
       return true;
   }
 
@@ -92,6 +95,9 @@ public class SimpleNote extends ListActivity {
           case INSERT_ID:
               createNote();
               return true;
+          case LOGIN_ID:
+        	  loginUser();
+        	  return true;
       }
 
       return super.onMenuItemSelected(featureId, item);
@@ -119,6 +125,12 @@ public class SimpleNote extends ListActivity {
   private void createNote() {
       Intent i = new Intent(this, NoteEdit.class);
       startActivityForResult(i, ACTIVITY_CREATE);
+  }
+  
+  private void loginUser() {
+	  Intent i = new Intent(this, LoginDialog.class);
+	  startActivity(i);
+	  SimpleNote.this.finish();
   }
 
   @Override

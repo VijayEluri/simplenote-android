@@ -1,7 +1,11 @@
 package com.simplenote.android;
 
+import org.json.JSONObject;
+
 import android.app.ListActivity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -21,16 +25,36 @@ public class SimpleNote extends ListActivity {
   private static final int DELETE_ID = Menu.FIRST + 1;
 
   private NotesDbAdapter mDbHelper;
+  private SharedPreferences mPrefs;
+  private SharedPreferences.Editor mPrefsEditor;
+  private String mUserEmail;
+  private String mUserPassword;
+  private String mUserToken;
+  public JSONObject mUserData;
+  public ProgressDialog mProgressDialog;
+  private Thread mThread;
 
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.notes_list);
-      mDbHelper = new NotesDbAdapter(this);
-      mDbHelper.open();
-      fillData();
-      registerForContextMenu(getListView());
+      
+      mPrefs = getSharedPreferences( Constants.PREFS_NAME, 0);
+      mPrefsEditor = mPrefs.edit();
+      mUserEmail = mPrefs.getString("email", "");
+      mUserToken = mPrefs.getString("token", null);
+      
+      if ( mUserToken == null ) {	// Get login credentials
+    	  Intent intent = new Intent( SimpleNote.this, LoginDialog.class );
+    	  startActivity( intent );
+    	  SimpleNote.this.finish();
+      } else {						// User is "logged in"
+	      setContentView(R.layout.notes_list);
+	      mDbHelper = new NotesDbAdapter(this);
+	      mDbHelper.open();
+	      fillData();
+	      registerForContextMenu(getListView());
+      }
   }
 
   private void fillData() {

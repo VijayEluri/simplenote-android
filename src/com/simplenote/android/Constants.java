@@ -2,6 +2,8 @@ package com.simplenote.android;
 
 
 public class Constants {
+	static final String PREFS_NAME = "SimpleNotePrefs";
+	static final String TAG = "SimpleNote";
 	static final boolean LOGGING = true;
 	
 	static final boolean USE_CACHE = true;

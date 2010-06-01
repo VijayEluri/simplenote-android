@@ -28,8 +28,15 @@ public class LoginDialog extends Activity {
 		
 		mPrefs = getSharedPreferences( Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
-		
+
 		setContentView(R.layout.login);
+
+		EditText loginBox = (EditText) findViewById(R.id.email);
+		EditText passwordBox = (EditText) findViewById(R.id.password);
+		
+		loginBox.setText( mPrefs.getString("email", "") );
+		passwordBox.setText( mPrefs.getString("password", "") );
+
 		Button loginBtn = (Button) findViewById(R.id.loginBtn);
 		loginBtn.setOnClickListener(mLoginButtonClick);
 	}

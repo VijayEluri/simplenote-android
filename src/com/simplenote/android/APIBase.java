@@ -108,10 +108,14 @@ public class APIBase {
 	}
 	
 	public static String encode( String str ) {
+		return encode( str, true ); // Base64 encode by default
+	}
+	
+	public static String encode( String str, Boolean base64Encode ) {
 		try {
-			return URLEncoder.encode( str, "UTF-8" );
+			return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str, "UTF-8" ).getBytes() ) : URLEncoder.encode( str, "UTF-8" );
 		} catch (UnsupportedEncodingException e) {
-			return URLEncoder.encode( str );
+			return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str ).getBytes() ) : URLEncoder.encode( str );
 		}
 	}
 

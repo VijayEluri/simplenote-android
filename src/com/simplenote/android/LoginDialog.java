@@ -70,10 +70,8 @@ public class LoginDialog extends Activity {
 				Log.d(Constants.TAG, "Attempting login authentication with API server."); 
 				Log.d(Constants.TAG, "email: " + email + ", password: " + password); 
 			}
-			// Do API login here!!
-			// FIXME: get real HTTP response => Response authToken = User.info(email, password);
-			
-			String authBody = APIBase.encode( "email=" + email + "&password=" + password );
+
+			String authBody = APIBase.encode( "email=" + email + "&password=" + password, true );
 			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
 			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
 						

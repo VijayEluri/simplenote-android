@@ -108,7 +108,7 @@ public class APIBase {
 	}
 	
 	public static String encode( String str ) {
-		return encode( str, true ); // Base64 encode by default
+		return encode( str, false ); // Don't Base64 encode by default
 	}
 	
 	public static String encode( String str, Boolean base64Encode ) {

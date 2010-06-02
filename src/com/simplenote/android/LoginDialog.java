@@ -14,6 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.simplenote.android.APIBase.Response;
+
 public class LoginDialog extends Activity {
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mPrefsEditor;
@@ -64,10 +66,18 @@ public class LoginDialog extends Activity {
 				}
 			});
 			
-			if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Attempting login authentication with API server."); }
+			if ( Constants.LOGGING ) { 
+				Log.d(Constants.TAG, "Attempting login authentication with API server."); 
+				Log.d(Constants.TAG, "email: " + email + ", password: " + password); 
+			}
 			// Do API login here!!
 			// FIXME: get real HTTP response => Response authToken = User.info(email, password);
-			if ( false ) {		// failed auth login
+			
+			String authBody = APIBase.encode( "email=" + email + "&password=" + password );
+			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
+			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
+						
+			if ( authResponse.statusCode == 401 ) { // failed auth login
 				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth failed with API server."); }
 				runOnUiThread( new Runnable() {
 					public void run() {
@@ -75,7 +85,7 @@ public class LoginDialog extends Activity {
 						Toast.makeText( LoginDialog.this, "Error authenticating with server", Toast.LENGTH_LONG).show();
 					}
 				});
-			} else { 			// successful auth login
+			} else if (authResponse.statusCode == 200) { // successful auth login
 				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
 				mPrefsEditor.putString("email", email);
 				mPrefsEditor.putString("password", password);

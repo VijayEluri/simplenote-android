@@ -24,6 +24,7 @@ public class Constants {
     // Preference keys and values
 
 	// API Base URL
-	static final String API_BASE_URL = "http://simple-note.appspot.com/api";
+	static final String API_BASE_URL  = "http://simple-note.appspot.com/api";
+	static final String API_LOGIN_URL = "https://simple-note.appspot.com/api/login";
 }
 

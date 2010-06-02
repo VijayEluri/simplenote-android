@@ -90,6 +90,9 @@ public class LoginDialog extends Activity {
 				mPrefsEditor.putString("token", authResponse.resp);
 				mPrefsEditor.commit();
 				
+				// TODO: should probably also grab the fresh list of note headers from the server here
+				// NoteSync.resetAllHeaders();
+				
 				runOnUiThread( new Runnable() {
 					public void run() {
 						mProgressDialog.dismiss();

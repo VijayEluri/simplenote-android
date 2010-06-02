@@ -116,6 +116,15 @@ public class NotesDbAdapter {
         if ( Constants.LOGGING ) { Log.i(TAG, "Inserting new note into DB"); }
         return mDb.insert(DATABASE_TABLE, null, initialValues);
     }
+    
+    /**
+     * Delete all notes from the table
+     * 
+     * @return true if any notes deleted, false otherwise
+     */
+    public boolean deleteAllNotes() {
+    	return mDb.delete(DATABASE_TABLE, "1", null) > 0;
+    }
 
     /**
      * Delete the note with the given rowId

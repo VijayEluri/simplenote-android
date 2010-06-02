@@ -89,7 +89,7 @@ public class LoginDialog extends Activity {
 				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
 				mPrefsEditor.putString("email", email);
 				mPrefsEditor.putString("password", password);
-				mPrefsEditor.putString("token", "__VALID_API_TOKEN__");
+				mPrefsEditor.putString("token", authResponse.resp);
 				mPrefsEditor.commit();
 				
 				runOnUiThread( new Runnable() {

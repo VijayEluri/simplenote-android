@@ -58,6 +58,12 @@ public class SimpleNote extends ListActivity {
 	      registerForContextMenu(getListView());
       }
   }
+  
+  @Override
+  public void onStop() {
+	  if ( mDbHelper != null ) { mDbHelper.close(); }
+	  super.onStop();
+  }
 
   private void fillData() {
       Cursor notesCursor = mDbHelper.fetchAllNotes();

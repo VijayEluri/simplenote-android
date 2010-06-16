@@ -94,7 +94,7 @@ public class APIBase {
 			} catch (IOException e) {
 				response.statusCode = 401;
 			}
-			response.resp = sb.toString().replaceAll("(\\r|\\n)", ""); // Remove extraneous CR/LF
+			response.resp = sb.toString(); // Remove extraneous CR/LF
 
 			// Clean up
 			conn.disconnect();

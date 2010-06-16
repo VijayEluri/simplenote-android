@@ -111,8 +111,12 @@ public class LoginDialog extends Activity {
 					    JSONObject jsonNote = jsonNotes.getJSONObject(i);
 					    String key = jsonNote.getString("key");
 					    authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + logInToken + "&email=" + email);
+					    String title = authResponse.resp;
+					    if (title.indexOf('\n') > -1) {
+					    	title = title.substring(0, title.indexOf('\n'));
+					    }
 						
-				        mDbHelper.createNote(authResponse.resp.substring(0, (authResponse.resp.length() < 40 ? authResponse.resp.length() : 40)), authResponse.resp, jsonNote.getString("modify"));
+				        mDbHelper.createNote(title, authResponse.resp, jsonNote.getString("modify"));
 					}	
 					
 				} catch (JSONException e) {

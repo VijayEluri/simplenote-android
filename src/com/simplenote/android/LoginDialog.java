@@ -1,5 +1,7 @@
 package com.simplenote.android;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -21,13 +23,16 @@ public class LoginDialog extends Activity {
 	private SharedPreferences.Editor mPrefsEditor;
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
+    private NotesDbAdapter mDbHelper;
 	
 	private Thread mThread;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+        mDbHelper = new NotesDbAdapter(this);
+        mDbHelper.open();
+
 		mPrefs = getSharedPreferences( Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
 
@@ -41,6 +46,7 @@ public class LoginDialog extends Activity {
 
 		Button loginBtn = (Button) findViewById(R.id.loginBtn);
 		loginBtn.setOnClickListener(mLoginButtonClick);
+        mDbHelper.close();
 	}
 	
 	@Override
@@ -91,7 +97,29 @@ public class LoginDialog extends Activity {
 				mPrefsEditor.commit();
 				
 				// TODO: should probably also grab the fresh list of note headers from the server here
-				// NoteSync.resetAllHeaders();
+				String logInToken = authResponse.resp.replaceAll("(\\r|\\n)", "");
+				
+				authResponse = APIBase.HTTPGet(Constants.API_NOTES_URL + "?auth=" + logInToken + "&email=" + email);
+				
+				JSONArray jsonNotes;
+				try {
+					jsonNotes = new JSONArray(authResponse.resp);
+			        mDbHelper.open();
+			        mDbHelper.deleteAllNotes();
+
+					for (int i = 0; i < jsonNotes.length(); ++i) {
+					    JSONObject jsonNote = jsonNotes.getJSONObject(i);
+					    String key = jsonNote.getString("key");
+					    authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + logInToken + "&email=" + email);
+						
+				        mDbHelper.createNote(authResponse.resp.substring(0, (authResponse.resp.length() < 40 ? authResponse.resp.length() : 40)), authResponse.resp, jsonNote.getString("modify"));
+					}	
+					
+				} catch (JSONException e) {
+					
+				} finally {
+			        mDbHelper.close();
+				}
 				
 				runOnUiThread( new Runnable() {
 					public void run() {

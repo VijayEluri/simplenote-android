@@ -66,6 +66,7 @@ public class SimpleNote extends ListActivity {
   }
 
   private void fillData() {
+	  mDbHelper.open();
       Cursor notesCursor = mDbHelper.fetchAllNotes();
       startManagingCursor(notesCursor);
 

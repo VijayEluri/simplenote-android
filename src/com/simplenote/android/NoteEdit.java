@@ -87,13 +87,14 @@ public class NoteEdit extends Activity {
         String body = mBodyText.getText().toString();
         String datestamp = mDbHelper.getDateTime();
 
+        // TODO: Rationalise this...
         if (mRowId == null) {
-            long id = mDbHelper.createNote(title, body, datestamp);
+            long id = mDbHelper.createNote("key_" + title, title, body, datestamp);
             if (id > 0) {
                 mRowId = id;
             }
         } else {
-            mDbHelper.updateNote(mRowId, title, body, datestamp);
+            mDbHelper.updateNote("key_" + title, title, body, datestamp);
         }
     }
 

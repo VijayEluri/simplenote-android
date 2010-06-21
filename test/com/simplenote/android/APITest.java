@@ -40,7 +40,7 @@ public class APITest extends AndroidTestCase {
 			NotesDbAdapter mDbHelper = new NotesDbAdapter(getContext());
 	        mDbHelper.open();
 	        mDbHelper.deleteAllNotes();
-	        mDbHelper.createNote(authResponse.resp, authResponse.resp, jsonNote.getString("modify"));
+	        mDbHelper.createNote(jsonNote.getString("key"), authResponse.resp, authResponse.resp, jsonNote.getString("modify"));
 		}	
     }
 }

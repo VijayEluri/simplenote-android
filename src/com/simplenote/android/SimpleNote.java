@@ -1,13 +1,18 @@
 package com.simplenote.android;
 
+import java.util.Calendar;
+
 import org.json.JSONObject;
 
+import android.app.AlarmManager;
 import android.app.ListActivity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +20,7 @@ import android.view.View;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SimpleNote extends ListActivity {
@@ -46,9 +52,18 @@ public class SimpleNote extends ListActivity {
       mUserEmail = mPrefs.getString("email", "");
       mUserToken = mPrefs.getString("token", null);
       
+      Intent intent = new Intent(this, AlarmReceiver.class);
+      intent.putExtra("email", mPrefs.getString("email", ""));
+      intent.putExtra("password", mPrefs.getString("password", ""));
+      PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      
+      // Set up the AlarmManager service
+      AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+      //am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 60 * 1000, pendingIntent);
+		
       if ( mUserToken == null ) {	// Get login credentials
-    	  Intent intent = new Intent( SimpleNote.this, LoginDialog.class );
-    	  startActivity( intent );
+    	  Intent intent1 = new Intent( SimpleNote.this, LoginDialog.class );
+    	  startActivity( intent1 );
     	  SimpleNote.this.finish();
       } else {						// User is "logged in"
 	      setContentView(R.layout.notes_list);

@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +32,8 @@ public class SimpleNote extends ListActivity {
   private static final int INSERT_ID = Menu.FIRST;
   private static final int DELETE_ID = Menu.FIRST + 1;
   private static final int LOGIN_ID  = Menu.FIRST + 2;
-
+  private static final int PREFERENCES_ID  = Menu.FIRST + 3;
+  
   private NotesDbAdapter mDbHelper;
   private SharedPreferences mPrefs;
   private SharedPreferences.Editor mPrefsEditor;
@@ -71,6 +73,13 @@ public class SimpleNote extends ListActivity {
 	      mDbHelper.open();
 	      fillData();
 	      registerForContextMenu(getListView());
+
+	      SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+          Toast.makeText(getBaseContext(),
+                  "Back:" + preferences.getAll(),
+                  Toast.LENGTH_LONG).show();
+
       }
   }
   
@@ -108,6 +117,7 @@ public class SimpleNote extends ListActivity {
       super.onCreateOptionsMenu(menu);
       menu.add(0, INSERT_ID, 0, R.string.menu_insert);
       menu.add(0, LOGIN_ID, 0, R.string.menu_login);
+      menu.add(0, PREFERENCES_ID, 0, R.string.menu_preferences);
       return true;
   }
 
@@ -115,10 +125,18 @@ public class SimpleNote extends ListActivity {
   public boolean onMenuItemSelected(int featureId, MenuItem item) {
       switch(item.getItemId()) {
           case INSERT_ID:
+              Toast.makeText(getBaseContext(),
+                      "Back:" + mPrefs.getAll(),
+                      Toast.LENGTH_LONG).show();
+
               createNote();
               return true;
           case LOGIN_ID:
         	  loginUser();
+        	  return true;
+          case PREFERENCES_ID:
+              Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
+		      startActivity(settingsActivity);
         	  return true;
       }
 

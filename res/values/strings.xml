@@ -9,4 +9,6 @@
     <string name="confirm">Confirm</string>
     <string name="edit_note">Edit Note</string>
 	<string name="menu_login">Login</string>
+	<string name="menu_preferences">Settings</string>
+	
 </resources>

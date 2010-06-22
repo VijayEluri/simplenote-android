@@ -10,7 +10,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.simplenote.android.APIBase.Response;
 
@@ -69,6 +72,31 @@ public class APIHelper {
 		return (mDbHelper.fetchNote(key).getCount() > 0);
 	}
 	
+	public boolean storeNote(Context context, long rowId, String key, String title, String body, String dateModified) {
+		// Get a new token
+		SharedPreferences mPrefs = context.getSharedPreferences(Constants.PREFS_NAME, 0);
+		mPrefs.getString("token", null);
+
+		String authBody = APIBase.encode( "email=" + mPrefs.getString("email", "")
+				+ "&password=" + mPrefs.getString("password", ""), true );
+		Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
+		
+		if (authResponse.statusCode == 200) { // successful auth login
+			if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
+			String token = authResponse.resp;
+			authBody = APIBase.encode(body , true);
+			authResponse = APIBase.HTTPPost( Constants.API_UPDATE_URL + "?email=" + mPrefs.getString("email", "") 
+					+ "&auth=" + token, authBody);
+			
+			// Update the note key
+	        mDbHelper = new NotesDbAdapter(context);
+	        mDbHelper.open();
+	        mDbHelper.addKeyToNote(rowId, authResponse.resp.replaceAll("(\\r|\\n)", ""));
+	        mDbHelper.close();
+		}
+		
+		return false;
+	}
 	
 	public static Date parseDate(String date) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

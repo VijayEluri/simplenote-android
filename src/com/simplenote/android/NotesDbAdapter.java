@@ -223,6 +223,13 @@ public class NotesDbAdapter {
         return mDb.update(DATABASE_TABLE, args, KEY_KEY + " LIKE '" + key + "'", null) > 0;
     }
     
+    public boolean addKeyToNote(long rowId, String key) {
+        ContentValues args = new ContentValues();
+        args.put(KEY_KEY, key);
+        
+        return mDb.update(DATABASE_TABLE, args, KEY_ROWID + " = " + rowId, null) > 0;
+    }
+    
 	boolean checkNewerNote(String key, Date dateOfLastUpdate) {
 		Cursor note = fetchNote(key);
 		if (note != null && note.getCount() > 0) {

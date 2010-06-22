@@ -14,6 +14,8 @@ public class AlarmReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		try {
+			if (Constants.LOGGING) { Log.i(Constants.TAG, "Running Alarm!"); }
+
 			APIHelper apiHelper = new APIHelper();
 		    Bundle bundle = intent.getExtras();
 		    String email = bundle.getString("email");
@@ -24,7 +26,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 						
 			if (authResponse.statusCode == 200) { // successful auth login
 				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
-				// Refresh the notes when logging in. TODO: Make this happen in the background
 				String logInToken = authResponse.resp.replaceAll("(\\r|\\n)", "");
 				apiHelper.refreshNotes(context, logInToken, email);
 			}
@@ -33,5 +34,4 @@ public class AlarmReceiver extends BroadcastReceiver {
 			e.printStackTrace();
 		}
 	}
-
 }

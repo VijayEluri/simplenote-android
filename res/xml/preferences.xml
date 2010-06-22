@@ -13,7 +13,7 @@
                         android:key="background"
                         android:defaultValue="1"
                         android:entries="@array/background"
-                        android:entryValues="@array/background" />
+                        android:entryValues="@array/background_values" />
         </PreferenceCategory>
                <PreferenceCategory
                 android:title="SimpleNote Account">
@@ -22,5 +22,4 @@
                 android:summary="Enter your SimpleNote login details"
                 android:key="customPref" />
         </PreferenceCategory>
-                
 </PreferenceScreen>

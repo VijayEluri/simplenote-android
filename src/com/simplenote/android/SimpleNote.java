@@ -55,7 +55,6 @@ public class SimpleNote extends ListActivity {
 		} else {						// User is "logged in"
 			setContentView(R.layout.notes_list);
 			mDbHelper = new NotesDbAdapter(this);
-			mDbHelper.open();
 			fillData();
 			registerForContextMenu(getListView());
 		}
@@ -87,6 +86,8 @@ public class SimpleNote extends ListActivity {
 		// Now create a simple cursor adapter and set it to display
 		SimpleCursorAdapter notes = new SimpleCursorAdapter(this, R.layout.notes_row, notesCursor, from, to);
 		setListAdapter(notes);
+		
+		mDbHelper.close();
 	}
 
 	@Override

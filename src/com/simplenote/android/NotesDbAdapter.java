@@ -127,7 +127,7 @@ public class NotesDbAdapter {
      * @return true if any notes deleted, false otherwise
      */
     public boolean deleteAllNotes() {
-    	return mDb.delete(DATABASE_TABLE, "1", null) > 0;
+    	return mDb.delete(DATABASE_TABLE, null, null) > 0;
     }
 
     /**
@@ -137,7 +137,6 @@ public class NotesDbAdapter {
      * @return true if deleted, false otherwise
      */
     public boolean deleteNote(long rowId) {
-
         return mDb.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
     }
     

@@ -107,15 +107,23 @@ public class APIBase {
 		return response;
 	}
 	
-	public static String encode( String str ) {
-		return encode( str, false ); // Don't Base64 encode by default
+	public static String encode(String str) {
+		return encode( str, false, true ); // Don't Base64 encode by default
 	}
 	
-	public static String encode( String str, Boolean base64Encode ) {
-		try {
-			return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str, "UTF-8" ).getBytes() ) : URLEncoder.encode( str, "UTF-8" );
-		} catch (UnsupportedEncodingException e) {
-			return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str ).getBytes() ) : URLEncoder.encode( str );
+	public static String encode(String str, Boolean base64Encode) {
+		return encode( str, false, true ); // Don't Base64 encode by default
+	}
+	
+	public static String encode(String str, Boolean base64Encode, boolean urlEncode) {
+		if (urlEncode) {
+			try {
+				return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str, "UTF-8" ).getBytes() ) : URLEncoder.encode( str, "UTF-8" );
+			} catch (UnsupportedEncodingException e) {
+				return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str ).getBytes() ) : URLEncoder.encode( str );
+			}
+		} else {
+			return base64Encode ? Base64.encodeBytes(str.getBytes()) : str;
 		}
 	}
 

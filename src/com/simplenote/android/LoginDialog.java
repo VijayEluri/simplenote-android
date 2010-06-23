@@ -71,7 +71,7 @@ public class LoginDialog extends Activity {
 				Log.d(Constants.TAG, "email: " + email + ", password: " + password); 
 			}
 
-			String authBody = APIBase.encode( "email=" + email + "&password=" + password, true );
+			String authBody = APIBase.encode( "email=" + email + "&password=" + password, true, true );
 			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
 			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
 						

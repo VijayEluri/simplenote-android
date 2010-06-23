@@ -41,7 +41,7 @@ public class Preferences extends PreferenceActivity {
 
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 
-					60 * 1000 * Integer.parseInt(preferences.getString("background", "2")), pendingIntent);
+					60 * 60 * 1000 * Integer.parseInt(preferences.getString("background", "2")), pendingIntent);
 		}
 	}
 }

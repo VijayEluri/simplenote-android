@@ -48,11 +48,11 @@ public class SimpleNote extends ListActivity {
 		mUserEmail = mPrefs.getString("email", "");
 		mUserToken = mPrefs.getString("token", null);
 
-		if (mUserToken == null) {	// Get login credentials
-			Intent intent1 = new Intent( SimpleNote.this, LoginDialog.class );
-			startActivity( intent1 );
+		if (mUserToken == null) { // Get login credentials
+			Intent intent = new Intent( SimpleNote.this, LoginDialog.class );
+			startActivity(intent);
 			SimpleNote.this.finish();
-		} else {						// User is "logged in"
+		} else { // User is "logged in"
 			setContentView(R.layout.notes_list);
 			mDbHelper = new NotesDbAdapter(this);
 			fillData();
@@ -73,20 +73,20 @@ public class SimpleNote extends ListActivity {
 
 		// Create an array to specify the fields we want to display in the list
 		String[] from = new String[]{
-				NotesDbAdapter.KEY_TITLE,
-				NotesDbAdapter.KEY_DATESTAMP
+			NotesDbAdapter.KEY_TITLE,
+			NotesDbAdapter.KEY_DATESTAMP
 		};
 
 		// and an array of the fields we want to bind those fields to
 		int[] to = new int[]{
-				R.id.text_title,
-				R.id.text_date
+			R.id.text_title,
+			R.id.text_date
 		};
 
 		// Now create a simple cursor adapter and set it to display
 		SimpleCursorAdapter notes = new SimpleCursorAdapter(this, R.layout.notes_row, notesCursor, from, to);
 		setListAdapter(notes);
-		
+
 		mDbHelper.close();
 	}
 

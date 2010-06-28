@@ -28,7 +28,7 @@ public class NotesDbAdapter {
 	 */
 	private static final String DATABASE_CREATE =
 		"create table notes (_id integer primary key autoincrement, "
-		+ "title text not null, body text not null, "
+		+ "key text not null, title text not null, body text not null, "
 		+ "datestamp text not null, needs_sync boolean default 0);";
 
 	private static final String DATABASE_NAME = "simplenotes_data.db";

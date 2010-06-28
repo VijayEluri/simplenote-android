@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SimpleNote</string>
-    <string name="no_notes">No Notes Yet</string>
-    <string name="menu_insert">Add Note</string>
-    <string name="menu_delete">Delete Note</string>
-    <string name="title">Title</string>
-    <string name="body">Body</string>
-    <string name="confirm">Confirm</string>
-    <string name="edit_note">Edit Note</string>
-	<string name="menu_login">Login</string>
-	<string name="menu_preferences">Settings</string>
-	
+  <string name="app_name">SimpleNote</string>
+  <string name="no_notes">No Notes Yet</string>
+  <string name="menu_insert">Add Note</string>
+  <string name="menu_delete">Delete Note</string>
+  <string name="title">Title</string>
+  <string name="body">Body</string>
+  <string name="confirm">Confirm</string>
+  <string name="edit_note">Edit Note</string>
+  <string name="authenticate">Sign In</string>
+  <string name="email">Email</string>
+  <string name="password">Password</string>
+  <string name="signin">Sign In</string>
+  <string name="menu_login">Login</string>
+  <string name="menu_preferences">Settings</string>
 </resources>

@@ -45,7 +45,6 @@ public class LoginDialog extends Activity {
 	
 	@Override
 	public void onPause() {
-		if ( mThread != null && mThread.isAlive() ) { mThread.stop(); };
 		if ( mProgressDialog != null && mProgressDialog.isShowing() ) { mProgressDialog.dismiss(); }
 		
 		super.onPause();

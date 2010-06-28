@@ -21,9 +21,9 @@ public class LoginDialog extends Activity {
 	private SharedPreferences.Editor mPrefsEditor;
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
-	
+
 	private Thread mThread;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,18 +35,17 @@ public class LoginDialog extends Activity {
 
 		EditText loginBox = (EditText) findViewById(R.id.email);
 		EditText passwordBox = (EditText) findViewById(R.id.password);
-		
+
 		loginBox.setText(mPrefs.getString("email", ""));
 		passwordBox.setText(mPrefs.getString("password", ""));
 
 		Button loginBtn = (Button) findViewById(R.id.loginBtn);
 		loginBtn.setOnClickListener(mLoginButtonClick);
 	}
-	
+
 	@Override
 	public void onPause() {
 		if ( mProgressDialog != null && mProgressDialog.isShowing() ) { mProgressDialog.dismiss(); }
-		
 		super.onPause();
 	}
 
@@ -54,10 +53,10 @@ public class LoginDialog extends Activity {
 		public void run() {
 			EditText loginBox = (EditText) findViewById(R.id.email);
 			EditText passwordBox = (EditText) findViewById(R.id.password);
-			
+
 			String email = loginBox.getText().toString();
 			String password = passwordBox.getText().toString();
-			
+
 			runOnUiThread(new Runnable() {
 				public void run() {
 					mProgressDialog.setMessage("Authenticating...");
@@ -88,12 +87,12 @@ public class LoginDialog extends Activity {
 				mPrefsEditor.putString("password", password);
 				mPrefsEditor.putString("token", authResponse.resp);
 				mPrefsEditor.commit();
-				
+
 				// Refresh the notes when logging in. TODO: Make this happen in the background
 				String logInToken = authResponse.resp.replaceAll("(\\r|\\n)", "");
 				APIHelper apiHelper = new APIHelper();
 				apiHelper.clearAndRefreshNotes(getApplicationContext(), logInToken, email);
-				
+
 				runOnUiThread( new Runnable() {
 					public void run() {
 						mProgressDialog.dismiss();
@@ -105,7 +104,7 @@ public class LoginDialog extends Activity {
 			}
 		}
 	};
-	
+
 	private OnClickListener mLoginButtonClick = new OnClickListener() {
 		public void onClick(View v) {
 			mThread = new Thread(threadProcLogin);

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+        <PreferenceCategory
+                android:title="Background Syncing">
+                <CheckBoxPreference
+                        android:title="Enable Syncing"
+                        android:defaultValue="false"
+                        android:summary="Updates notes in the background"
+                        android:key="background_enabled" />
+                <ListPreference
+                        android:title="Sync Schedule"
+                        android:summary="How often to sync notes"
+                        android:key="background"
+                        android:defaultValue="1"
+                        android:entries="@array/background"
+                        android:entryValues="@array/background_values" />
+        </PreferenceCategory>
+               <PreferenceCategory
+                android:title="SimpleNote Account">
+        <Preference
+                android:title="Login Details"
+                android:summary="Enter your SimpleNote login details"
+                android:key="customPref" />
+        </PreferenceCategory>
+</PreferenceScreen>

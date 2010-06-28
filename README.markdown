@@ -8,4 +8,7 @@ Todo
 - Create note needs to queue a write to the API
 - Delete note functionality
 
+- Edit view should not include title in body of note or should not have a separate title field
+- Edit view body text should be aligned top left, not centered vertically
+
 More information and discussion at [Google Groups](http://groups.google.com/group/simplenote-api/browse_thread/thread/7fc1fc123752fb12)

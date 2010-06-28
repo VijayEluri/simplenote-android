@@ -10,7 +10,8 @@
       </intent-filter>
     </activity>
     <activity android:name=".NoteEdit"/>
-    <activity android:name="LoginDialog" />
+    <activity android:name=".LoginDialog"
+      android:label="@string/authenticate" android:theme="@android:style/Theme.Dialog" />
     <activity android:name=".Preferences" android:label="@string/menu_preferences" />
     <receiver android:process=":remote" android:name="AlarmReceiver"/>
   </application>

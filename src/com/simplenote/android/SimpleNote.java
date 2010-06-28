@@ -49,7 +49,7 @@ public class SimpleNote extends ListActivity {
 		mUserToken = mPrefs.getString("token", null);
 
 		if (mUserToken == null) { // Get login credentials
-			Intent intent = new Intent( SimpleNote.this, LoginDialog.class );
+			Intent intent = new Intent(SimpleNote.this, LoginDialog.class);
 			startActivity(intent);
 			SimpleNote.this.finish();
 		} else { // User is "logged in"

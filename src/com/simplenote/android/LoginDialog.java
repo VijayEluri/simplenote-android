@@ -28,7 +28,7 @@ public class LoginDialog extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mPrefs = getSharedPreferences( Constants.PREFS_NAME, 0);
+		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
 
 		setContentView(R.layout.login);
@@ -36,8 +36,8 @@ public class LoginDialog extends Activity {
 		EditText loginBox = (EditText) findViewById(R.id.email);
 		EditText passwordBox = (EditText) findViewById(R.id.password);
 		
-		loginBox.setText( mPrefs.getString("email", "") );
-		passwordBox.setText( mPrefs.getString("password", "") );
+		loginBox.setText(mPrefs.getString("email", ""));
+		passwordBox.setText(mPrefs.getString("password", ""));
 
 		Button loginBtn = (Button) findViewById(R.id.loginBtn);
 		loginBtn.setOnClickListener(mLoginButtonClick);
@@ -50,7 +50,7 @@ public class LoginDialog extends Activity {
 		
 		super.onPause();
 	}
-	
+
 	private Runnable threadProcLogin = new Runnable() {
 		public void run() {
 			EditText loginBox = (EditText) findViewById(R.id.email);
@@ -59,14 +59,14 @@ public class LoginDialog extends Activity {
 			String email = loginBox.getText().toString();
 			String password = passwordBox.getText().toString();
 			
-			runOnUiThread( new Runnable() {
+			runOnUiThread(new Runnable() {
 				public void run() {
 					mProgressDialog.setMessage("Authenticating...");
 					mProgressDialog.show();
 				}
 			});
-			
-			if ( Constants.LOGGING ) { 
+
+			if (Constants.LOGGING) { 
 				Log.d(Constants.TAG, "Attempting login authentication with API server."); 
 				Log.d(Constants.TAG, "email: " + email + ", password: " + password); 
 			}
@@ -74,7 +74,7 @@ public class LoginDialog extends Activity {
 			String authBody = APIBase.encode( "email=" + email + "&password=" + password, true, true );
 			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
 			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
-						
+
 			if ( authResponse.statusCode == 401 ) { // failed auth login
 				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth failed with API server."); }
 				runOnUiThread( new Runnable() {
@@ -109,9 +109,11 @@ public class LoginDialog extends Activity {
 	
 	private OnClickListener mLoginButtonClick = new OnClickListener() {
 		public void onClick(View v) {
-			mThread = new Thread( threadProcLogin );
-			mProgressDialog = ProgressDialog.show( LoginDialog.this, "Logging in...", "Initializing...");
-			if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Starting login thread"); }
+			mThread = new Thread(threadProcLogin);
+			mProgressDialog = ProgressDialog.show(LoginDialog.this, "Logging in...", "Initializing...");
+			if (Constants.LOGGING) {
+				Log.i(Constants.TAG, "Starting login thread");
+			}
 			mThread.start();
 		}
 	};

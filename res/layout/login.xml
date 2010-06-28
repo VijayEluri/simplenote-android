@@ -1,43 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:id="@+id/loginView"
-	android:layout_width="fill_parent"
-	android:layout_height="fill_parent"
-	android:orientation="vertical">
-		<TextView
-			android:id="@+id/emailLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="15px"
-			android:layout_marginBottom="5px"
-			android:text="Email"
-			android:gravity="center"
-			android:layout_gravity="center_horizontal" />
-		<EditText
-			android:id="@+id/email"
-			android:layout_width="250px"
-			android:layout_height="wrap_content"
-			android:layout_gravity="center_horizontal" />
-		<TextView
-			android:id="@+id/passwordLabel"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5px"
-			android:text="Password"
-			android:layout_gravity="center_horizontal" />
-		<EditText
-			android:id="@+id/password"
-			android:layout_width="250px"
-			android:layout_height="wrap_content"
-			android:layout_marginTop="5px"
-			android:layout_marginBottom="5px"
-			android:typeface="sans"
-			android:password="true"
-			android:layout_gravity="center_horizontal" />
-		<Button
-			android:id="@+id/loginBtn"
-			android:layout_width="70px"
-			android:layout_height="40px"
-			android:text="Login"
-			android:layout_gravity="center_horizontal" />
+    android:id="@+id/loginView"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+  <TextView
+      android:id="@+id/emailLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="15px"
+      android:layout_marginBottom="5px"
+      android:text="Email"
+      android:gravity="center"
+      android:layout_gravity="center_horizontal" />
+  <EditText
+      android:id="@+id/email"
+      android:layout_width="250px"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal" />
+  <TextView
+      android:id="@+id/passwordLabel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5px"
+      android:text="Password"
+      android:layout_gravity="center_horizontal" />
+  <EditText
+      android:id="@+id/password"
+      android:layout_width="250px"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="5px"
+      android:layout_marginBottom="5px"
+      android:typeface="sans"
+      android:password="true"
+      android:layout_gravity="center_horizontal" />
+  <Button
+      android:id="@+id/loginBtn"
+      android:layout_width="70px"
+      android:layout_height="40px"
+      android:text="Login"
+      android:layout_gravity="center_horizontal" />
 </LinearLayout>

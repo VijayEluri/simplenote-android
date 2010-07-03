@@ -2,43 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/loginView"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
   <TextView
       android:id="@+id/emailLabel"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="15dip"
-      android:layout_marginBottom="5dip"
       android:text="@string/email"
       android:gravity="top"
-      android:layout_gravity="left" />
+      style="@style/DialogLabel" />
   <EditText
       android:id="@+id/email"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="left" />
+      style="@style/DialogInput" />
   <TextView
       android:id="@+id/passwordLabel"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="5dip"
       android:text="@string/password"
-      android:layout_gravity="left" />
+      style="@style/DialogLabel" />
   <EditText
       android:id="@+id/password"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="5dip"
-      android:layout_marginBottom="5dip"
-      android:typeface="sans"
-      android:password="true"
-      android:layout_gravity="left" />
+      style="@style/DialogInput"
+      android:password="true" />
   <Button
       android:id="@+id/loginBtn"
+      android:text="@string/signin"
       android:layout_width="70dip"
       android:layout_height="40dip"
-      android:text="@string/signin"
       android:gravity="bottom"
       android:layout_gravity="left" />
 </LinearLayout>

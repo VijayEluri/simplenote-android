@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class LoginDialog extends Activity {
 		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
 
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 		setContentView(R.layout.login);
 
 		EditText loginBox = (EditText) findViewById(R.id.email);
@@ -41,6 +43,7 @@ public class LoginDialog extends Activity {
 
 		Button loginBtn = (Button) findViewById(R.id.loginBtn);
 		loginBtn.setOnClickListener(mLoginButtonClick);
+
 	}
 
 	@Override

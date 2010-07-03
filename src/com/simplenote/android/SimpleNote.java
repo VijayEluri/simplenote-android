@@ -9,14 +9,13 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class SimpleNote extends ListActivity {
 	private static final int ACTIVITY_CREATE=0;
@@ -48,12 +47,11 @@ public class SimpleNote extends ListActivity {
 		mUserEmail = mPrefs.getString("email", "");
 		mUserToken = mPrefs.getString("token", null);
 
+		setContentView(R.layout.notes_list);
 		if (mUserToken == null) { // Get login credentials
 			Intent intent = new Intent(SimpleNote.this, LoginDialog.class);
 			startActivity(intent);
-			SimpleNote.this.finish();
 		} else { // User is "logged in"
-			setContentView(R.layout.notes_list);
 			mDbHelper = new NotesDbAdapter(this);
 			fillData();
 			registerForContextMenu(getListView());
@@ -92,6 +90,7 @@ public class SimpleNote extends ListActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO: Move the menu buttons to /res/menu/menu.xml
 		super.onCreateOptionsMenu(menu);
 		menu.add(0, INSERT_ID, 0, R.string.menu_insert);
 		menu.add(0, LOGIN_ID, 0, R.string.menu_login);

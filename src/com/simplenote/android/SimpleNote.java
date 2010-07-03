@@ -18,9 +18,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 public class SimpleNote extends ListActivity {
-	private static final int ACTIVITY_CREATE=0;
-	private static final int ACTIVITY_EDIT=1;
-	private static final int ACTIVITY_LOGIN=2;
+	private static final int ACTIVITY_CREATE = 0;
+	private static final int ACTIVITY_EDIT = 1;
 
 	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
@@ -29,13 +28,9 @@ public class SimpleNote extends ListActivity {
 
 	private NotesDbAdapter mDbHelper;
 	private SharedPreferences mPrefs;
-	private SharedPreferences.Editor mPrefsEditor;
-	private String mUserEmail;
-	private String mUserPassword;
 	private String mUserToken;
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
-	private Thread mThread;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -43,8 +38,6 @@ public class SimpleNote extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
-		mPrefsEditor = mPrefs.edit();
-		mUserEmail = mPrefs.getString("email", "");
 		mUserToken = mPrefs.getString("token", null);
 
 		setContentView(R.layout.notes_list);

@@ -26,7 +26,7 @@ public class LoginDialog extends Activity {
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
 
-	private Thread mThread;
+	private Thread mThread = null;
 
 	public LoginDialog() {
 		super();
@@ -51,8 +51,10 @@ public class LoginDialog extends Activity {
 		passwordBox.setText(mPrefs.getString("password", ""));
 		passwordBox.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				if (mThread != null) { return true; }
 				mThread = new Thread(signinRunnable);
 				mProgressDialog = ProgressDialog.show(LoginDialog.this, "Logging in...", "Initializing...");
+				Log.d(Constants.TAG, "Created progressDialog: " + mProgressDialog.toString());
 				if (Constants.LOGGING) {
 					Log.i(Constants.TAG, "Starting login thread");
 				}
@@ -63,18 +65,24 @@ public class LoginDialog extends Activity {
 		});
 	}
 
+	private void closeDialog() {
+		Log.d(Constants.TAG, "Closing progressDialog: " + mProgressDialog.toString());
+		mProgressDialog.dismiss();
+		mThread = null;
+	}
+
 	@Override
 	public void onPause() {
 		if ( mProgressDialog != null && mProgressDialog.isShowing() ) {
 			runOnUiThread(new Runnable() {
 				public void run() {
-					mProgressDialog.dismiss();
+					closeDialog();
 				}
 			});
 		}
 		super.onPause();
 	}
-	
+
 	private Runnable signinRunnable = new Runnable() {
 		public void run() {
 			EditText loginBox = (EditText) findViewById(R.id.email);
@@ -102,7 +110,7 @@ public class LoginDialog extends Activity {
 				if (Constants.LOGGING) { Log.i(Constants.TAG, "Login auth failed with API server."); }
 				runOnUiThread(new Runnable() {
 					public void run() {
-						mProgressDialog.dismiss();
+						closeDialog();
 						Toast.makeText( LoginDialog.this, R.string.error_authentication, Toast.LENGTH_LONG).show();
 					}
 				});
@@ -120,8 +128,8 @@ public class LoginDialog extends Activity {
 	
 				runOnUiThread(new Runnable() {
 					public void run() {
-						mProgressDialog.dismiss();
-						Intent intent = new Intent( LoginDialog.this, SimpleNote.class );
+						closeDialog();
+						Intent intent = new Intent(LoginDialog.this, SimpleNote.class);
 						startActivity(intent);
 						LoginDialog.this.finish();
 					}

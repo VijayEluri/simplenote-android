@@ -75,17 +75,17 @@ public class APIHelper {
 	public boolean storeNote(Context context, long rowId, String key, String title, String body, String dateModified) {
 		// Get a new token
 		SharedPreferences mPrefs = context.getSharedPreferences(Constants.PREFS_NAME, 0);
-		mPrefs.getString("token", null);
+		mPrefs.getString(Preferences.TOKEN, null);
 
-		String authBody = APIBase.encode( "email=" + mPrefs.getString("email", "")
-				+ "&password=" + mPrefs.getString("password", ""), true, true );
+		String authBody = APIBase.encode("email=" + mPrefs.getString(Preferences.EMAIL, "")
+				+ "&password=" + mPrefs.getString(Preferences.PASSWORD, ""), true, true );
 		Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
 		
 		if (authResponse.statusCode == 200) { // successful auth login
 			if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
 			String token = authResponse.resp;
 			authBody = APIBase.encode(title + "\n" + body , true, false);
-			authResponse = APIBase.HTTPPost( Constants.API_UPDATE_URL + "?email=" + mPrefs.getString("email", "") 
+			authResponse = APIBase.HTTPPost( Constants.API_UPDATE_URL + "?email=" + mPrefs.getString(Preferences.EMAIL, "") 
 					+ "&auth=" + token, authBody);
 			
 			// Update the note key

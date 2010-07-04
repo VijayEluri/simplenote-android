@@ -42,7 +42,7 @@ public class SimpleNote extends ListActivity {
 
 		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
-		mUserToken = mPrefs.getString("token", null);
+		mUserToken = mPrefs.getString(Preferences.TOKEN, null);
 
 		setContentView(R.layout.notes_list);
 		if (mUserToken == null) { // Get login credentials
@@ -115,9 +115,9 @@ public class SimpleNote extends ListActivity {
 			return true;
 		case CLEAR_TOKEN_ID:
 			Log.i(Constants.TAG, "Clearing saved credentials");
-			mPrefsEditor.putString("email", null);
-			mPrefsEditor.putString("password", null);
-			mPrefsEditor.putString("token", null);
+			mPrefsEditor.putString(Preferences.EMAIL, null);
+			mPrefsEditor.putString(Preferences.PASSWORD, null);
+			mPrefsEditor.putString(Preferences.TOKEN, null);
 			mPrefsEditor.commit();
 		}
 

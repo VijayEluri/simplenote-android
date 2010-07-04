@@ -19,9 +19,12 @@ import android.widget.Toast;
 import com.simplenote.android.APIBase.Response;
 
 public class LoginDialog extends Activity {
-	private String authenticating;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mPrefsEditor;
+
+	private String authenticating;
+	private String initializing;
+	private String loggingIn;
 
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
@@ -35,8 +38,9 @@ public class LoginDialog extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		authenticating = getString(R.string.status_authenticating);
+
+		fetchStrings();
+
 		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
 
@@ -47,13 +51,13 @@ public class LoginDialog extends Activity {
 		EditText loginBox = (EditText) findViewById(R.id.email);
 		EditText passwordBox = (EditText) findViewById(R.id.password);
 
-		loginBox.setText(mPrefs.getString("email", ""));
-		passwordBox.setText(mPrefs.getString("password", ""));
+		loginBox.setText(mPrefs.getString(Preferences.EMAIL, ""));
+		passwordBox.setText(mPrefs.getString(Preferences.PASSWORD, ""));
 		passwordBox.setOnEditorActionListener(new OnEditorActionListener() {
 			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 				if (mThread != null) { return true; }
 				mThread = new Thread(signinRunnable);
-				mProgressDialog = ProgressDialog.show(LoginDialog.this, "Logging in...", "Initializing...");
+				mProgressDialog = ProgressDialog.show(LoginDialog.this, loggingIn, initializing);
 				Log.d(Constants.TAG, "Created progressDialog: " + mProgressDialog.toString());
 				if (Constants.LOGGING) {
 					Log.i(Constants.TAG, "Starting login thread");
@@ -63,6 +67,14 @@ public class LoginDialog extends Activity {
 			}
 			
 		});
+	}
+
+	private void fetchStrings() {
+		if (authenticating == null || initializing == null || loggingIn == null) {
+			authenticating = getString(R.string.status_authenticating);
+			initializing = getString(R.string.status_initializing);
+			loggingIn = getString(R.string.status_loggingin);
+		}
 	}
 
 	private void closeDialog() {
@@ -102,7 +114,7 @@ public class LoginDialog extends Activity {
 				Log.d(Constants.TAG, "email: " + email + ", password: " + password); 
 			}
 	
-			String authBody = APIBase.encode( "email=" + email + "&password=" + password, true, true );
+			String authBody = APIBase.encode("email=" + email + "&password=" + password, true, true);
 			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
 			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
 	
@@ -116,9 +128,9 @@ public class LoginDialog extends Activity {
 				});
 			} else if (authResponse.statusCode == 200) { // successful auth login
 				if (Constants.LOGGING) { Log.i(Constants.TAG, "Login auth success with API server."); }
-				mPrefsEditor.putString("email", email);
-				mPrefsEditor.putString("password", password);
-				mPrefsEditor.putString("token", authResponse.resp);
+				mPrefsEditor.putString(Preferences.EMAIL, email);
+				mPrefsEditor.putString(Preferences.PASSWORD, password);
+				mPrefsEditor.putString(Preferences.TOKEN, authResponse.resp);
 				mPrefsEditor.commit();
 	
 				// Refresh the notes when logging in. TODO: Make this happen in the background

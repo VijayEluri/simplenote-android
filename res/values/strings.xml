@@ -19,6 +19,8 @@
   <string name="menu_delete">Delete Note</string>
   <!-- Status -->
   <string name="status_authenticating">Contacting SimpleNote...</string>
+  <string name="status_initializing">Initializing...</string>
+  <string name="status_loggingin">Signing in</string>
   <!-- Error messages -->
   <string name="error_authentication">Sign in failed, please check your email and password.</string>
 </resources>

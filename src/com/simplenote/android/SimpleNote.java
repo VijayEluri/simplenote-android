@@ -24,10 +24,12 @@ public class SimpleNote extends ListActivity {
 	private static final int INSERT_ID = Menu.FIRST;
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int LOGIN_ID  = Menu.FIRST + 2;
-	private static final int PREFERENCES_ID  = Menu.FIRST + 3;
+	private static final int PREFERENCES_ID = Menu.FIRST + 3;
+	private static final int CLEAR_TOKEN_ID = Menu.FIRST + 4;
 
 	private NotesDbAdapter mDbHelper;
 	private SharedPreferences mPrefs;
+	private SharedPreferences.Editor mPrefsEditor;
 	private String mUserToken;
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
@@ -38,6 +40,7 @@ public class SimpleNote extends ListActivity {
 		super.onCreate(savedInstanceState);
 
 		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
+		mPrefsEditor = mPrefs.edit();
 		mUserToken = mPrefs.getString("token", null);
 
 		setContentView(R.layout.notes_list);
@@ -93,6 +96,7 @@ public class SimpleNote extends ListActivity {
 		menu.add(0, INSERT_ID, 0, R.string.menu_insert);
 		menu.add(0, LOGIN_ID, 0, R.string.menu_login);
 		menu.add(0, PREFERENCES_ID, 0, R.string.menu_preferences);
+		menu.add(0, CLEAR_TOKEN_ID, 0, R.string.menu_clear_credentials);
 		return true;
 	}
 
@@ -109,14 +113,18 @@ public class SimpleNote extends ListActivity {
 			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
 			startActivity(settingsActivity);
 			return true;
+		case CLEAR_TOKEN_ID:	
+			mPrefsEditor.putString("email", null);
+			mPrefsEditor.putString("password", null);
+			mPrefsEditor.putString("token", null);
+			mPrefsEditor.commit();
 		}
 
 		return super.onMenuItemSelected(featureId, item);
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v,
-			ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 	}

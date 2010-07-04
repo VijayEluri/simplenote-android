@@ -65,7 +65,13 @@ public class LoginDialog extends Activity {
 
 	@Override
 	public void onPause() {
-		if ( mProgressDialog != null && mProgressDialog.isShowing() ) { mProgressDialog.dismiss(); }
+		if ( mProgressDialog != null && mProgressDialog.isShowing() ) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					mProgressDialog.dismiss();
+				}
+			});
+		}
 		super.onPause();
 	}
 	
@@ -80,7 +86,6 @@ public class LoginDialog extends Activity {
 			runOnUiThread(new Runnable() {
 				public void run() {
 					mProgressDialog.setMessage(authenticating);
-					mProgressDialog.show();
 				}
 			});
 	

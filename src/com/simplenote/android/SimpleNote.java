@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -112,7 +113,8 @@ public class SimpleNote extends ListActivity {
 			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
 			startActivity(settingsActivity);
 			return true;
-		case CLEAR_TOKEN_ID:	
+		case CLEAR_TOKEN_ID:
+			Log.i(Constants.TAG, "Clearing saved credentials");
 			mPrefsEditor.putString("email", null);
 			mPrefsEditor.putString("password", null);
 			mPrefsEditor.putString("token", null);

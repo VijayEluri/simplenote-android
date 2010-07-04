@@ -2,8 +2,6 @@
 <resources>
   <string name="app_name">SimpleNote</string>
   <string name="no_notes">No Notes Yet</string>
-  <string name="menu_insert">Add Note</string>
-  <string name="menu_delete">Delete Note</string>
   <string name="title">Title</string>
   <string name="body">Body</string>
   <string name="confirm">Confirm</string>
@@ -12,11 +10,15 @@
   <string name="email">Email</string>
   <string name="password">Password</string>
   <string name="signin">Sign In</string>
+  <!-- Menu -->
+  <string name="menu_insert">Add Note</string>
   <string name="menu_login">Login</string>
   <string name="menu_preferences">Settings</string>
+  <string name="menu_clear_credentials">Clear</string>
+  <!-- Context Menu -->
+  <string name="menu_delete">Delete Note</string>
   <!-- Status -->
   <string name="status_authenticating">Contacting SimpleNote...</string>
   <!-- Error messages -->
   <string name="error_authentication">Sign in failed, please check your username and password</string>
-  
 </resources>

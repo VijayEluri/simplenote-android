@@ -2,14 +2,11 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    style="@style/FullWidth">
   <TextView
       android:id="@+id/text_title"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content" />
+      style="@style/FullWidth" />
   <TextView
       android:id="@+id/text_date"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content" />
+      style="@style/FullWidth" />
 </LinearLayout>

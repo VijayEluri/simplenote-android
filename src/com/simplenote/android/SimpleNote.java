@@ -52,6 +52,11 @@ public class SimpleNote extends ListActivity {
 	}
 
 	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+	}
+
+	@Override
 	public void onStop() {
 		if ( mDbHelper != null ) { mDbHelper.close(); }
 		super.onStop();

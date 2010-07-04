@@ -19,19 +19,25 @@ import android.widget.Toast;
 import com.simplenote.android.APIBase.Response;
 
 public class LoginDialog extends Activity {
-	private SharedPreferences mPrefs;
-	private SharedPreferences.Editor mPrefsEditor;
+	private final String authenticating;
+	private final SharedPreferences mPrefs;
+	private final SharedPreferences.Editor mPrefsEditor;
+
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
 
 	private Thread mThread;
 
+	public LoginDialog() {
+		super();
+		authenticating = getString(R.string.status_authenticating);
+		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
+		mPrefsEditor = mPrefs.edit();
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
-		mPrefsEditor = mPrefs.edit();
 
 		setContentView(R.layout.login);
 		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
@@ -64,7 +70,7 @@ public class LoginDialog extends Activity {
 
 			runOnUiThread(new Runnable() {
 				public void run() {
-					mProgressDialog.setMessage("Authenticating...");
+					mProgressDialog.setMessage(authenticating);
 					mProgressDialog.show();
 				}
 			});
@@ -83,7 +89,7 @@ public class LoginDialog extends Activity {
 				runOnUiThread( new Runnable() {
 					public void run() {
 						mProgressDialog.dismiss();
-						Toast.makeText( LoginDialog.this, "Error authenticating with server", Toast.LENGTH_LONG).show();
+						Toast.makeText( LoginDialog.this, R.string.error_authentication, Toast.LENGTH_LONG).show();
 					}
 				});
 			} else if (authResponse.statusCode == 200) { // successful auth login

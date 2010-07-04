@@ -14,4 +14,9 @@
   <string name="signin">Sign In</string>
   <string name="menu_login">Login</string>
   <string name="menu_preferences">Settings</string>
+  <!-- Status -->
+  <string name="status_authenticating">Contacting SimpleNote...</string>
+  <!-- Error messages -->
+  <string name="error_authentication">Sign in failed, please check your username and password</string>
+  
 </resources>

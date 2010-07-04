@@ -19,9 +19,9 @@ import android.widget.Toast;
 import com.simplenote.android.APIBase.Response;
 
 public class LoginDialog extends Activity {
-	private final String authenticating;
-	private final SharedPreferences mPrefs;
-	private final SharedPreferences.Editor mPrefsEditor;
+	private String authenticating;
+	private SharedPreferences mPrefs;
+	private SharedPreferences.Editor mPrefsEditor;
 
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
@@ -30,14 +30,15 @@ public class LoginDialog extends Activity {
 
 	public LoginDialog() {
 		super();
-		authenticating = getString(R.string.status_authenticating);
-		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
-		mPrefsEditor = mPrefs.edit();
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		authenticating = getString(R.string.status_authenticating);
+		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
+		mPrefsEditor = mPrefs.edit();
 
 		setContentView(R.layout.login);
 		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);

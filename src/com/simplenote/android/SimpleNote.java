@@ -45,8 +45,7 @@ public class SimpleNote extends ListActivity {
 
 		setContentView(R.layout.notes_list);
 		if (mUserToken == null) { // Get login credentials
-			Intent intent = new Intent(SimpleNote.this, LoginDialog.class);
-			startActivity(intent);
+			loginUser();
 		} else { // User is "logged in"
 			mDbHelper = new NotesDbAdapter(this);
 			fillData();
@@ -147,9 +146,8 @@ public class SimpleNote extends ListActivity {
 	}
 
 	private void loginUser() {
-		Intent i = new Intent(this, LoginDialog.class);
+		Intent i = new Intent(SimpleNote.this, LoginDialog.class);
 		startActivity(i);
-		SimpleNote.this.finish();
 	}
 
 	@Override

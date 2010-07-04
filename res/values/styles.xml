@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <style name="DialogLabel">
+    <item name="android:layout_marginTop">10dip</item>
     <item name="android:layout_marginRight">10dip</item>
-    <item name="android:layout_marginBottom">10dip</item>
+    <item name="android:layout_marginBottom">7dip</item>
     <item name="android:layout_marginLeft">10dip</item>
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">left</item>
+    <item name="android:maxLines">1</item>
   </style>
   <style name="DialogInput">
     <item name="android:layout_marginRight">10dip</item>
@@ -14,5 +16,19 @@
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">left</item>
+    <item name="android:maxLines">1</item>
+  </style>
+  <style name="DialogButton">
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:layout_gravity">right</item>
+    <item name="android:layout_marginTop">7dip</item>
+    <item name="android:layout_marginRight">10dip</item>
+    <item name="android:layout_marginBottom">10dip</item>
+    <item name="android:paddingTop">10dip</item>
+    <item name="android:paddingRight">15dip</item>
+    <item name="android:paddingBottom">15dip</item>
+    <item name="android:paddingLeft">15dip</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
   </style>
 </resources>

@@ -11,20 +11,20 @@
       style="@style/DialogLabel" />
   <EditText
       android:id="@+id/email"
+      android:inputType="textEmailAddress"
       style="@style/DialogInput" />
   <TextView
       android:id="@+id/passwordLabel"
       android:text="@string/password"
+      android:layout_marginTop="1dip"
       style="@style/DialogLabel" />
   <EditText
       android:id="@+id/password"
-      style="@style/DialogInput"
-      android:password="true" />
+      android:password="true"
+      android:imeOptions="actionGo"
+      style="@style/DialogInput" />
   <Button
       android:id="@+id/loginBtn"
       android:text="@string/signin"
-      android:layout_width="70dip"
-      android:layout_height="40dip"
-      android:gravity="bottom"
-      android:layout_gravity="left" />
+      style="@style/DialogButton" />
 </LinearLayout>

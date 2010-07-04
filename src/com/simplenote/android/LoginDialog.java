@@ -93,16 +93,16 @@ public class LoginDialog extends Activity {
 			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
 			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
 	
-			if ( authResponse.statusCode == 401 ) { // failed auth login
-				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth failed with API server."); }
-				runOnUiThread( new Runnable() {
+			if (authResponse.statusCode == 401) { // failed auth login
+				if (Constants.LOGGING) { Log.i(Constants.TAG, "Login auth failed with API server."); }
+				runOnUiThread(new Runnable() {
 					public void run() {
 						mProgressDialog.dismiss();
 						Toast.makeText( LoginDialog.this, R.string.error_authentication, Toast.LENGTH_LONG).show();
 					}
 				});
 			} else if (authResponse.statusCode == 200) { // successful auth login
-				if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
+				if (Constants.LOGGING) { Log.i(Constants.TAG, "Login auth success with API server."); }
 				mPrefsEditor.putString("email", email);
 				mPrefsEditor.putString("password", password);
 				mPrefsEditor.putString("token", authResponse.resp);
@@ -113,7 +113,7 @@ public class LoginDialog extends Activity {
 				APIHelper apiHelper = new APIHelper();
 				apiHelper.clearAndRefreshNotes(getApplicationContext(), logInToken, email);
 	
-				runOnUiThread( new Runnable() {
+				runOnUiThread(new Runnable() {
 					public void run() {
 						mProgressDialog.dismiss();
 						Intent intent = new Intent( LoginDialog.this, SimpleNote.class );

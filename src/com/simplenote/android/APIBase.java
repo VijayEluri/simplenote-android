@@ -38,7 +38,7 @@ public class APIBase {
 			out.flush();
 			
 			// Get the response from the server
-			BufferedReader in = new BufferedReader (new InputStreamReader( conn.getInputStream() ));
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192);
 			StringBuilder sb = new StringBuilder();
 			
 			for ( String line = in.readLine(); line != null; line = in.readLine() ) {
@@ -81,7 +81,7 @@ public class APIBase {
 			conn.connect();
 
 			// Get response from the server
-			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192);
 			StringBuilder sb = new StringBuilder();
 
 			for (String line = in.readLine(); line != null; line = in.readLine()) {
@@ -118,9 +118,9 @@ public class APIBase {
 	public static String encode(String str, Boolean base64Encode, boolean urlEncode) {
 		if (urlEncode) {
 			try {
-				return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str, "UTF-8" ).getBytes() ) : URLEncoder.encode( str, "UTF-8" );
+				return base64Encode ? Base64.encodeBytes(URLEncoder.encode(str, "UTF-8").getBytes()) : URLEncoder.encode(str, "UTF-8");
 			} catch (UnsupportedEncodingException e) {
-				return base64Encode ? Base64.encodeBytes( URLEncoder.encode( str ).getBytes() ) : URLEncoder.encode( str );
+				return base64Encode ? Base64.encodeBytes(URLEncoder.encode(str).getBytes()) : URLEncoder.encode(str);
 			}
 		} else {
 			return base64Encode ? Base64.encodeBytes(str.getBytes()) : str;

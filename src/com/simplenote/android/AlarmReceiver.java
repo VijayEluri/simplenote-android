@@ -10,10 +10,12 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class AlarmReceiver extends BroadcastReceiver {
+	private static final String LOGGING_TAG = Constants.TAG + "AlarmReceiver";
+
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		try {
-			if (Constants.LOGGING) { Log.i(Constants.TAG, "Running Alarm!"); }
+			Log.i(LOGGING_TAG, "Running Alarm!");
 
 			Bundle bundle = intent.getExtras();
 			String email = bundle.getString(Preferences.EMAIL);

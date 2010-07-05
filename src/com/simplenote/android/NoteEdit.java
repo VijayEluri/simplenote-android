@@ -30,12 +30,10 @@ public class NoteEdit extends Activity {
 
 		Button confirmButton = (Button) findViewById(R.id.confirm);
 
-		mRowId = (savedInstanceState == null) ? null :
-			(Long) savedInstanceState.getSerializable(NotesDbAdapter.KEY_ROWID);
+		mRowId = (savedInstanceState == null) ? null : (Long) savedInstanceState.getSerializable(NotesDbAdapter.KEY_ROWID);
 		if (mRowId == null) {
 			Bundle extras = getIntent().getExtras();
-			mRowId = extras != null ? extras.getLong(NotesDbAdapter.KEY_ROWID)
-									: null;
+			mRowId = extras != null ? extras.getLong(NotesDbAdapter.KEY_ROWID) : null;
 		}
 
 		populateFields();
@@ -94,7 +92,7 @@ public class NoteEdit extends Activity {
 				mRowId = id;
 			}
 			
-			APIHelper.storeNote(this.getApplicationContext(), mRowId, "", title, body, datestamp);
+			APIHelper.storeNote(this, mRowId, "", title, body, datestamp);
 		} else {
 			mDbHelper.updateNote("key_" + title, title, body, datestamp);
 		}

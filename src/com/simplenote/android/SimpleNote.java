@@ -30,6 +30,8 @@ public class SimpleNote extends ListActivity {
 	private static final int PREFERENCES_ID = Menu.FIRST + 3;
 	private static final int CLEAR_TOKEN_ID = Menu.FIRST + 4;
 
+	private static final String LOGGING_TAG = Constants.TAG + "SimpleNote";
+
 	private final NotesDbAdapter mDbHelper;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mPrefsEditor;
@@ -127,11 +129,11 @@ public class SimpleNote extends ListActivity {
 			loginUser();
 			return true;
 		case PREFERENCES_ID:
-			Intent settingsActivity = new Intent(getBaseContext(), Preferences.class);
+			Intent settingsActivity = new Intent(this, Preferences.class);
 			startActivity(settingsActivity);
 			return true;
 		case CLEAR_TOKEN_ID:
-			Log.i(Constants.TAG, "Clearing saved credentials");
+			Log.i(LOGGING_TAG, "Clearing saved credentials");
 			mPrefsEditor.putString(Preferences.EMAIL, null);
 			mPrefsEditor.putString(Preferences.PASSWORD, null);
 			mPrefsEditor.putString(Preferences.TOKEN, null);

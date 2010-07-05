@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.simplenote.android.APIBase.Response;
 
 public class LoginDialog extends Activity {
+	private static final String LOGGING_TAG = Constants.TAG + "LoginDialog";
+
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mPrefsEditor;
 
@@ -58,10 +60,8 @@ public class LoginDialog extends Activity {
 				if (mThread != null) { return true; }
 				mThread = new Thread(signinRunnable);
 				mProgressDialog = ProgressDialog.show(LoginDialog.this, loggingIn, initializing);
-				Log.d(Constants.TAG, "Created progressDialog: " + mProgressDialog.toString());
-				if (Constants.LOGGING) {
-					Log.i(Constants.TAG, "Starting login thread");
-				}
+				Log.d(LOGGING_TAG, "Created progressDialog: " + mProgressDialog.toString());
+				Log.i(LOGGING_TAG, "Starting login thread");
 				mThread.start();
 				return false;
 			}
@@ -78,7 +78,7 @@ public class LoginDialog extends Activity {
 	}
 
 	private void closeDialog() {
-		Log.d(Constants.TAG, "Closing progressDialog: " + mProgressDialog.toString());
+		Log.d(LOGGING_TAG, "Closing progressDialog: " + mProgressDialog.toString());
 		mProgressDialog.dismiss();
 		mThread = null;
 	}
@@ -110,12 +110,12 @@ public class LoginDialog extends Activity {
 				}
 			});
 
-			Log.d(Constants.TAG, "Attempting login authentication with API server.");
+			Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
 			String authBody = APIBase.encode("email=" + email + "&password=" + password, true, true);
 			Response authResponse = APIBase.HTTPPost(Constants.API_LOGIN_URL, authBody);
 
 			if (authResponse.statusCode == 401) { // failed auth login
-				Log.i(Constants.TAG, "Login auth failed with API server.");
+				Log.i(LOGGING_TAG, "Login auth failed with API server.");
 				runOnUiThread(new Runnable() {
 					public void run() {
 						closeDialog();
@@ -123,7 +123,7 @@ public class LoginDialog extends Activity {
 					}
 				});
 			} else if (authResponse.statusCode == 200) { // successful auth login
-				Log.i(Constants.TAG, "Login auth success with API server.");
+				Log.i(LOGGING_TAG, "Login auth success with API server.");
 				mPrefsEditor.putString(Preferences.EMAIL, email);
 				mPrefsEditor.putString(Preferences.PASSWORD, password);
 				mPrefsEditor.putString(Preferences.TOKEN, authResponse.resp.replaceAll("(\\r|\\n)", ""));

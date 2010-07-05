@@ -13,31 +13,32 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 public class NotesDbAdapter {
+	/* Sql Column names */
 	public static final String KEY_KEY = "key";
 	public static final String KEY_TITLE = "title";
 	public static final String KEY_BODY = "body";
 	public static final String KEY_ROWID = "_id";
 	public static final String KEY_DATESTAMP = "datestamp";
-
-	private static final String TAG = "SimpleNote NotesDbAdapter";
-	private DatabaseHelper mDbHelper;
-	private SQLiteDatabase mDb;
-
-	/**
-	 * Database creation sql statement
-	 */
-	private static final String DATABASE_CREATE =
-		"create table notes (_id integer primary key autoincrement, "
-		+ "key text not null, title text not null, body text not null, "
-		+ "datestamp text not null, needs_sync boolean default 0);";
-
+	/* Database information/names */
 	private static final String DATABASE_NAME = "simplenotes_data.db";
 	private static final String DATABASE_TABLE = "notes";
 	private static final int DATABASE_VERSION = 2;
 
+	private static final String LOGGING_TAG = Constants.TAG + "NotesDbAdapter";
+	
+	private DatabaseHelper mDbHelper;
+	private SQLiteDatabase mDb;
 	private final Context mCtx;
 
 	private static class DatabaseHelper extends SQLiteOpenHelper {
+		/**
+		 * Database creation sql statement
+		 */
+		private static final String DATABASE_CREATE =
+			"create table notes (_id integer primary key autoincrement, "
+			+ "key text not null, title text not null, body text not null, "
+			+ "datestamp text not null, needs_sync boolean default 0);";
+
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
 		}
@@ -49,20 +50,14 @@ public class NotesDbAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
-					+ newVersion);
-
-			final String V2_UPGRADE_SQL = "create table notes (_id integer primary key autoincrement, "
-				+ "key text not null, title text not null, body text not null, "
-				+ "datestamp text not null, needs_sync boolean default 0);";
-
+			Log.w(LOGGING_TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
 			switch (oldVersion) {
 				case 1:
-					Log.i(TAG, "** now upgrading from v1 to v2;");
+					Log.i(LOGGING_TAG, "** now upgrading from v1 to v2;");
 					db.execSQL("drop table notes;");
-					db.execSQL(V2_UPGRADE_SQL);
+					db.execSQL(DATABASE_CREATE);
 				default:
-					Log.i(TAG, "** upgrade steps complete.");
+					Log.i(LOGGING_TAG, "** upgrade steps complete.");
 					break;
 			}
 		}
@@ -91,7 +86,7 @@ public class NotesDbAdapter {
 		if (mDb == null || !mDb.isOpen()) {
 			mDbHelper = new DatabaseHelper(mCtx);
 			mDb = mDbHelper.getWritableDatabase();
-			Log.i(TAG, "SimpleNote SQLite Database Now Open");
+			Log.i(LOGGING_TAG, "SimpleNote SQLite Database Now Open");
 		}
 		return this;
 	}
@@ -124,7 +119,7 @@ public class NotesDbAdapter {
 		initialValues.put(KEY_BODY, body);
 		initialValues.put(KEY_DATESTAMP, datestamp);
 
-		if ( Constants.LOGGING ) { Log.i(TAG, "Inserting new note into DB"); }
+		Log.i(LOGGING_TAG, "Inserting new note into DB");
 		return mDb.insert(DATABASE_TABLE, null, initialValues);
 	}
 	

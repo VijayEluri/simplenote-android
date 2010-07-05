@@ -38,15 +38,15 @@ public class APIHelper {
 				String key = jsonNote.getString("key");
 				Date modify = parseDate(jsonNote.getString("modify"));
 
-				if (! jsonNote.getString("deleted").equals("true")) {
-					if (! (checkNoteExists(dbHelper, key) && ! dbHelper.checkNewerNote(key, modify))) {		
+				if (!jsonNote.getString("deleted").equals("true")) {
+					if (!(checkNoteExists(dbHelper, key) && !dbHelper.checkNewerNote(key, modify))) {
 						if (dbHelper.checkNewerNote(key, modify)) {
-							if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Note " + key + " is newer on server - retrieving"); }
+							Log.i(Constants.TAG, "Note " + key + " is newer on server - retrieving");
 							dbHelper.deleteNote(key);
 						} else {
-							if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Note " + key + " is missing from device - retrieving"); }
+							Log.i(Constants.TAG, "Note " + key + " is missing from device - retrieving");
 						}
-						
+
 						authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + token + "&email=" + email);
 						String title = authResponse.resp;
 						if (title.indexOf('\n') > -1) {
@@ -78,7 +78,7 @@ public class APIHelper {
 		Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
 		
 		if (authResponse.statusCode == 200) { // successful auth login
-			if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Login auth success with API server."); }
+			Log.i(Constants.TAG, "Login auth success with API server.");
 			String token = authResponse.resp;
 			authBody = APIBase.encode(title + "\n" + body , true, false);
 			authResponse = APIBase.HTTPPost( Constants.API_UPDATE_URL + "?email=" + mPrefs.getString(Preferences.EMAIL, "") 

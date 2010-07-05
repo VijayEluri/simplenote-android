@@ -110,9 +110,7 @@ public class LoginDialog extends Activity {
 				}
 			});
 
-			Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
-			String authBody = APIBase.encode("email=" + email + "&password=" + password, true, true);
-			Response authResponse = APIBase.HTTPPost(Constants.API_LOGIN_URL, authBody);
+			Response authResponse = APIHelper.getLoginResponse(email,password);
 
 			if (authResponse.statusCode == 401) { // failed auth login
 				Log.i(LOGGING_TAG, "Login auth failed with API server.");

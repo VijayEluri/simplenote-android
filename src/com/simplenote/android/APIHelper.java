@@ -1,6 +1,5 @@
 package com.simplenote.android;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,6 +15,15 @@ import android.util.Log;
 import com.simplenote.android.APIBase.Response;
 
 public class APIHelper {
+	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static final String LOGGING_TAG = Constants.TAG + "APIHelper";
+
+	public static APIBase.Response getLoginResponse(String email, String password) {
+		Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
+		String authBody = APIBase.encode("email=" + email + "&password=" + password, true, true);
+		return APIBase.HTTPPost(Constants.API_LOGIN_URL, authBody);
+	}
+
 	public static void clearAndRefreshNotes(NotesDbAdapter dbHelper, String token, String email) {
 		dbHelper.open();
 		dbHelper.deleteAllNotes();
@@ -69,37 +77,27 @@ public class APIHelper {
 	public static boolean storeNote(Context context, long rowId, String key, String title, String body, String dateModified) {
 		// Get a new token
 		SharedPreferences mPrefs = context.getSharedPreferences(Constants.PREFS_NAME, 0);
-		mPrefs.getString(Preferences.TOKEN, null);
+		String email = mPrefs.getString(Preferences.EMAIL, "");
+		String token = mPrefs.getString(Preferences.TOKEN, null);
 
-		String authBody = APIBase.encode("email=" + mPrefs.getString(Preferences.EMAIL, "")
-				+ "&password=" + mPrefs.getString(Preferences.PASSWORD, ""), true, true );
-		Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
-		
-		if (authResponse.statusCode == 200) { // successful auth login
-			Log.i(Constants.TAG, "Login auth success with API server.");
-			String token = authResponse.resp;
-			authBody = APIBase.encode(title + "\n" + body , true, false);
-			authResponse = APIBase.HTTPPost( Constants.API_UPDATE_URL + "?email=" + mPrefs.getString(Preferences.EMAIL, "") 
-					+ "&auth=" + token, authBody);
+		String noteBody = APIBase.encode(title + "\n" + body , true, false);
+		Response res = APIBase.HTTPPost(Constants.API_UPDATE_URL + "?email=" + email + "&auth=" + token, noteBody);
 
-			// Update the note key
-			NotesDbAdapter dbHelper = new NotesDbAdapter(context);
-			dbHelper.open();
-			dbHelper.addKeyToNote(rowId, authResponse.resp.replaceAll("(\\r|\\n)", ""));
-			dbHelper.close();
-		}
+		// Update the note key
+		NotesDbAdapter dbHelper = new NotesDbAdapter(context);
+		dbHelper.open();
+		dbHelper.addKeyToNote(rowId, res.resp.replaceAll("(\\r|\\n)", ""));
+		dbHelper.close();
 
 		return false;
 	}
 
 	public static Date parseDate(String date) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return dateFormat.parse(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		return new Date();
 	}
 }

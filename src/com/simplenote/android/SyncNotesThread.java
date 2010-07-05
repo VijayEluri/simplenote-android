@@ -1,6 +1,5 @@
 package com.simplenote.android;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 
@@ -23,8 +22,7 @@ public class SyncNotesThread extends Thread {
 	@Override
 	public void run() {
 		// Fetch the notes from the server
-		APIHelper apiHelper = new APIHelper();
-		apiHelper.clearAndRefreshNotes(dbHelper, token, email);
+		APIHelper.clearAndRefreshNotes(dbHelper, token, email);
 		mHandler.sendMessage(new Message());
 	}
 }

@@ -94,8 +94,7 @@ public class NoteEdit extends Activity {
 				mRowId = id;
 			}
 			
-			APIHelper apiHelper = new APIHelper();
-			apiHelper.storeNote(this.getApplicationContext(), mRowId, "", title, body, datestamp);
+			APIHelper.storeNote(this.getApplicationContext(), mRowId, "", title, body, datestamp);
 		} else {
 			mDbHelper.updateNote("key_" + title, title, body, datestamp);
 		}

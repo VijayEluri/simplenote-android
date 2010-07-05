@@ -15,7 +15,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 		try {
 			if (Constants.LOGGING) { Log.i(Constants.TAG, "Running Alarm!"); }
 
-			APIHelper apiHelper = new APIHelper();
 			Bundle bundle = intent.getExtras();
 			String email = bundle.getString(Preferences.EMAIL);
 			String password = bundle.getString(Preferences.PASSWORD);
@@ -24,9 +23,9 @@ public class AlarmReceiver extends BroadcastReceiver {
 			Response authResponse = APIBase.HTTPPost(Constants.API_LOGIN_URL, authBody);
 
 			if (authResponse.statusCode == 200) { // successful auth login
-				String logInToken = authResponse.resp.replaceAll("(\\r|\\n)", "");
-				apiHelper.refreshNotes(new NotesDbAdapter(context), logInToken, email);
 				Log.i(Constants.TAG, "Login auth success with API server.");
+				String token = authResponse.resp.replaceAll("(\\r|\\n)", "");
+				APIHelper.refreshNotes(new NotesDbAdapter(context), token, email);
 			}
 		} catch (Exception e) {
 			Toast.makeText(context, "There was an error somewhere, but we still received an alarm", Toast.LENGTH_LONG).show();

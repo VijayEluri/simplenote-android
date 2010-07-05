@@ -16,16 +16,14 @@ import android.util.Log;
 import com.simplenote.android.APIBase.Response;
 
 public class APIHelper {
-	private NotesDbAdapter mDbHelper;
-
-	public void clearAndRefreshNotes(NotesDbAdapter dbHelper, String token, String email) {
+	public static void clearAndRefreshNotes(NotesDbAdapter dbHelper, String token, String email) {
 		dbHelper.open();
 		dbHelper.deleteAllNotes();
 		
 		refreshNotes(dbHelper, token, email);
 	}
 
-	public void refreshNotes(NotesDbAdapter dbHelper, String token, String email) {
+	public static void refreshNotes(NotesDbAdapter dbHelper, String token, String email) {
 		Response authResponse = APIBase.HTTPGet(Constants.API_NOTES_URL + "?auth=" + token + "&email=" + email);
 
 		JSONArray jsonNotes;
@@ -64,11 +62,11 @@ public class APIHelper {
 		}
 	}
 
-	private boolean checkNoteExists(NotesDbAdapter dbHelper, String key) {
+	private static boolean checkNoteExists(NotesDbAdapter dbHelper, String key) {
 		return (dbHelper.fetchNote(key).getCount() > 0);
 	}
 
-	public boolean storeNote(Context context, long rowId, String key, String title, String body, String dateModified) {
+	public static boolean storeNote(Context context, long rowId, String key, String title, String body, String dateModified) {
 		// Get a new token
 		SharedPreferences mPrefs = context.getSharedPreferences(Constants.PREFS_NAME, 0);
 		mPrefs.getString(Preferences.TOKEN, null);
@@ -85,10 +83,10 @@ public class APIHelper {
 					+ "&auth=" + token, authBody);
 
 			// Update the note key
-			mDbHelper = new NotesDbAdapter(context);
-			mDbHelper.open();
-			mDbHelper.addKeyToNote(rowId, authResponse.resp.replaceAll("(\\r|\\n)", ""));
-			mDbHelper.close();
+			NotesDbAdapter dbHelper = new NotesDbAdapter(context);
+			dbHelper.open();
+			dbHelper.addKeyToNote(rowId, authResponse.resp.replaceAll("(\\r|\\n)", ""));
+			dbHelper.close();
 		}
 
 		return false;

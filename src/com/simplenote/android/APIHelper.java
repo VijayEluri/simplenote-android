@@ -17,36 +17,32 @@ import com.simplenote.android.APIBase.Response;
 
 public class APIHelper {
 	private NotesDbAdapter mDbHelper;
-   
-	public void clearAndRefreshNotes(Context context, String token, String email) {
-		mDbHelper = new NotesDbAdapter(context);
-		mDbHelper.open();
-		mDbHelper.deleteAllNotes();
-		mDbHelper.close();
-		
-		refreshNotes(context, token, email);
-	}
-	
-	public void refreshNotes(Context context, String token, String email) {
-		mDbHelper = new NotesDbAdapter(context);
 
-		Response authResponse = APIBase.HTTPGet(Constants.API_NOTES_URL + "?auth=" + token + "&email=" + email);
+	public void clearAndRefreshNotes(NotesDbAdapter dbHelper, String token, String email) {
+		dbHelper.open();
+		dbHelper.deleteAllNotes();
 		
+		refreshNotes(dbHelper, token, email);
+	}
+
+	public void refreshNotes(NotesDbAdapter dbHelper, String token, String email) {
+		Response authResponse = APIBase.HTTPGet(Constants.API_NOTES_URL + "?auth=" + token + "&email=" + email);
+
 		JSONArray jsonNotes;
 		try {
 			jsonNotes = new JSONArray(authResponse.resp);
-			mDbHelper.open();
+			dbHelper.open();
 
 			for (int i = 0; i < jsonNotes.length(); ++i) {
 				JSONObject jsonNote = jsonNotes.getJSONObject(i);
 				String key = jsonNote.getString("key");
 				Date modify = parseDate(jsonNote.getString("modify"));
-				
+
 				if (! jsonNote.getString("deleted").equals("true")) {
-					if (! (checkNoteExists(key) && ! mDbHelper.checkNewerNote(key, modify))) {		
-						if (mDbHelper.checkNewerNote(key, modify)) {
+					if (! (checkNoteExists(dbHelper, key) && ! dbHelper.checkNewerNote(key, modify))) {		
+						if (dbHelper.checkNewerNote(key, modify)) {
 							if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Note " + key + " is newer on server - retrieving"); }
-							mDbHelper.deleteNote(key);
+							dbHelper.deleteNote(key);
 						} else {
 							if ( Constants.LOGGING ) { Log.i(Constants.TAG, "Note " + key + " is missing from device - retrieving"); }
 						}
@@ -56,22 +52,22 @@ public class APIHelper {
 						if (title.indexOf('\n') > -1) {
 							title = title.substring(0, title.indexOf('\n'));
 						}
-						
-						mDbHelper.createNote(key, title, authResponse.resp, jsonNote.getString("modify"));
+
+						dbHelper.createNote(key, title, authResponse.resp, jsonNote.getString("modify"));
 					}
 				}
 			}	
 		} catch (JSONException e) {
 			e.printStackTrace();
 		} finally {
-			mDbHelper.close();
+			dbHelper.close();
 		}
 	}
 
-	private boolean checkNoteExists(String key) {
-		return (mDbHelper.fetchNote(key).getCount() > 0);
+	private boolean checkNoteExists(NotesDbAdapter dbHelper, String key) {
+		return (dbHelper.fetchNote(key).getCount() > 0);
 	}
-	
+
 	public boolean storeNote(Context context, long rowId, String key, String title, String body, String dateModified) {
 		// Get a new token
 		SharedPreferences mPrefs = context.getSharedPreferences(Constants.PREFS_NAME, 0);
@@ -87,25 +83,25 @@ public class APIHelper {
 			authBody = APIBase.encode(title + "\n" + body , true, false);
 			authResponse = APIBase.HTTPPost( Constants.API_UPDATE_URL + "?email=" + mPrefs.getString(Preferences.EMAIL, "") 
 					+ "&auth=" + token, authBody);
-			
+
 			// Update the note key
 			mDbHelper = new NotesDbAdapter(context);
 			mDbHelper.open();
 			mDbHelper.addKeyToNote(rowId, authResponse.resp.replaceAll("(\\r|\\n)", ""));
 			mDbHelper.close();
 		}
-		
+
 		return false;
 	}
-	
+
 	public static Date parseDate(String date) {
-		DateFormat dateFormat = new SimpleDateFormat("yyyy MMM dd");
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
 			return dateFormat.parse(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		
+
 		return new Date();
 	}
 }

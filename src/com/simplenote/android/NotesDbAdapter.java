@@ -51,11 +51,11 @@ public class NotesDbAdapter {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
 					+ newVersion);
-						
+
 			final String V2_UPGRADE_SQL = "create table notes (_id integer primary key autoincrement, "
 				+ "key text not null, title text not null, body text not null, "
 				+ "datestamp text not null, needs_sync boolean default 0);";
-			
+
 			switch (oldVersion) {
 				case 1:
 					Log.i(TAG, "** now upgrading from v1 to v2;");
@@ -88,16 +88,25 @@ public class NotesDbAdapter {
 	 * @throws SQLException if the database could be neither opened or created
 	 */
 	public NotesDbAdapter open() throws SQLException {
-		mDbHelper = new DatabaseHelper(mCtx);
-		mDb = mDbHelper.getWritableDatabase();
-		if (Constants.LOGGING) { Log.i(TAG, "SQLite Database Now Open"); }
+		if (mDb == null || !mDb.isOpen()) {
+			mDbHelper = new DatabaseHelper(mCtx);
+			mDb = mDbHelper.getWritableDatabase();
+			Log.i(TAG, "SimpleNote SQLite Database Now Open");
+		}
 		return this;
 	}
 
 	public void close() {
-		mDbHelper.close();
+		if (mDbHelper != null) { mDbHelper.close(); }
 	}
 
+	/**
+	 * Check if the database is currently open
+	 * @return true if and only if the writable db exists and is open
+	 */
+	public boolean isOpen() {
+		return mDb != null && mDb.isOpen();
+	}
 
 	/**
 	 * Create a new note using the title and body provided. If the note is

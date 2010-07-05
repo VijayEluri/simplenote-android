@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -28,12 +30,23 @@ public class SimpleNote extends ListActivity {
 	private static final int PREFERENCES_ID = Menu.FIRST + 3;
 	private static final int CLEAR_TOKEN_ID = Menu.FIRST + 4;
 
-	private NotesDbAdapter mDbHelper;
+	private final NotesDbAdapter mDbHelper;
 	private SharedPreferences mPrefs;
 	private SharedPreferences.Editor mPrefsEditor;
-	private String mUserToken;
 	public JSONObject mUserData;
 	public ProgressDialog mProgressDialog;
+
+	public SimpleNote() {
+		mDbHelper = new NotesDbAdapter(this);
+	}
+
+	final Handler noteRefreshHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			fillData();
+			registerForContextMenu(getListView());
+		}
+	};
 
 	/** Called when the activity is first created. */
 	@Override
@@ -42,15 +55,20 @@ public class SimpleNote extends ListActivity {
 
 		mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
 		mPrefsEditor = mPrefs.edit();
-		mUserToken = mPrefs.getString(Preferences.TOKEN, null);
+		String mUserEmail = mPrefs.getString(Preferences.EMAIL, null);
+		String mUserToken = mPrefs.getString(Preferences.TOKEN, null);
 
 		setContentView(R.layout.notes_list);
 		if (mUserToken == null) { // Get login credentials
+			// TODO: Track and handle token expiration
 			loginUser();
 		} else { // User is "logged in"
-			mDbHelper = new NotesDbAdapter(this);
-			fillData();
-			registerForContextMenu(getListView());
+			// create a Handler to react to server response
+			// fetch notes from server using thread
+			// when notes retrieved post a message to Handler to fill data
+			// registerForContextMenu
+			Thread syncNotes = new SyncNotesThread(noteRefreshHandler, mDbHelper, mUserEmail, mUserToken);
+			syncNotes.start();
 		}
 	}
 
@@ -61,7 +79,7 @@ public class SimpleNote extends ListActivity {
 
 	@Override
 	public void onStop() {
-		if ( mDbHelper != null ) { mDbHelper.close(); }
+		if (mDbHelper != null) { mDbHelper.close(); }
 		super.onStop();
 	}
 

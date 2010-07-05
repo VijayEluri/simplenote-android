@@ -102,24 +102,20 @@ public class LoginDialog extends Activity {
 	
 			String email = loginBox.getText().toString();
 			String password = passwordBox.getText().toString();
-	
+
+			// Update UI to say we're sending the request
 			runOnUiThread(new Runnable() {
 				public void run() {
 					mProgressDialog.setMessage(authenticating);
 				}
 			});
-	
-			if (Constants.LOGGING) { 
-				Log.d(Constants.TAG, "Attempting login authentication with API server."); 
-				Log.d(Constants.TAG, "email: " + email + ", password: " + password); 
-			}
-	
+
+			Log.d(Constants.TAG, "Attempting login authentication with API server.");
 			String authBody = APIBase.encode("email=" + email + "&password=" + password, true, true);
-			if ( Constants.LOGGING ) { Log.d(Constants.TAG, "encoded authBody: " + authBody); }
-			Response authResponse = APIBase.HTTPPost( Constants.API_LOGIN_URL, authBody );
-	
+			Response authResponse = APIBase.HTTPPost(Constants.API_LOGIN_URL, authBody);
+
 			if (authResponse.statusCode == 401) { // failed auth login
-				if (Constants.LOGGING) { Log.i(Constants.TAG, "Login auth failed with API server."); }
+				Log.i(Constants.TAG, "Login auth failed with API server.");
 				runOnUiThread(new Runnable() {
 					public void run() {
 						closeDialog();
@@ -127,17 +123,13 @@ public class LoginDialog extends Activity {
 					}
 				});
 			} else if (authResponse.statusCode == 200) { // successful auth login
-				if (Constants.LOGGING) { Log.i(Constants.TAG, "Login auth success with API server."); }
+				Log.i(Constants.TAG, "Login auth success with API server.");
 				mPrefsEditor.putString(Preferences.EMAIL, email);
 				mPrefsEditor.putString(Preferences.PASSWORD, password);
-				mPrefsEditor.putString(Preferences.TOKEN, authResponse.resp);
+				mPrefsEditor.putString(Preferences.TOKEN, authResponse.resp.replaceAll("(\\r|\\n)", ""));
 				mPrefsEditor.commit();
-	
-				// Refresh the notes when logging in. TODO: Make this happen in the background
-				String logInToken = authResponse.resp.replaceAll("(\\r|\\n)", "");
-				APIHelper apiHelper = new APIHelper();
-				apiHelper.clearAndRefreshNotes(getApplicationContext(), logInToken, email);
-	
+
+				// Give control back to SimpleNote Activity
 				runOnUiThread(new Runnable() {
 					public void run() {
 						closeDialog();

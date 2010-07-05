@@ -39,12 +39,11 @@ public class Preferences extends PreferenceActivity {
 		intent.putExtra(EMAIL, mPrefs.getString(EMAIL, ""));
 		intent.putExtra(PASSWORD, mPrefs.getString(PASSWORD, ""));     
 
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(this.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
 		if (preferences.getBoolean(BACKGROUND_ENABLED, false)) {
-			if (Constants.LOGGING) { Log.d(Constants.TAG, "Applying alarm every " + preferences.getString("background", "2")); }
-
+			Log.d(Constants.TAG, "Applying alarm every " + preferences.getString(Preferences.BACKGROUND, "2"));
 			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 			am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 
 					60 * 60 * 1000 * Integer.parseInt(preferences.getString(BACKGROUND, "2")), pendingIntent);

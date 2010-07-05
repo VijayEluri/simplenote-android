@@ -12,6 +12,7 @@ public class Note {
 		this.body = body;
 		this.key = key;
 		this.dateModified = dateModified;
+		this.newlines = 2;
 	}
 
 	public Note(String titleAndBody, String key, String dateModified) {

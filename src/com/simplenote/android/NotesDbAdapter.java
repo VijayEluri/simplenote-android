@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.simplenote.android.model.Note;
+
 public class NotesDbAdapter {
 	/* Sql Column names */
 	public static final String KEY_KEY = "key";
@@ -112,12 +114,12 @@ public class NotesDbAdapter {
 	 * @param body the body of the note
 	 * @return rowId or -1 if failed
 	 */
-	public long createNote(String key, String title, String body, String datestamp) {
+	public long createNote(Note note) {
 		ContentValues initialValues = new ContentValues();
-		initialValues.put(KEY_KEY, key);
-		initialValues.put(KEY_TITLE, title);
-		initialValues.put(KEY_BODY, body);
-		initialValues.put(KEY_DATESTAMP, datestamp);
+		initialValues.put(KEY_KEY, note.getKey());
+		initialValues.put(KEY_TITLE, note.getTitle());
+		initialValues.put(KEY_BODY, note.getBody());
+		initialValues.put(KEY_DATESTAMP, note.getDateModified());
 
 		Log.i(LOGGING_TAG, "Inserting new note into DB");
 		return mDb.insert(DATABASE_TABLE, null, initialValues);
@@ -158,7 +160,7 @@ public class NotesDbAdapter {
 	 * @return Cursor over all notes
 	 */
 	public Cursor fetchAllNotes() {
-		return mDb.query(DATABASE_TABLE, new String[] {KEY_ROWID, KEY_KEY, KEY_TITLE, KEY_BODY, KEY_DATESTAMP}, 
+		return mDb.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_KEY, KEY_TITLE, KEY_BODY, KEY_DATESTAMP },
 			null, null, null, null, null
 		);
 	}
@@ -190,7 +192,7 @@ public class NotesDbAdapter {
 	 */
 	public Cursor fetchNote(String key) throws SQLException {
 		Cursor mCursor = mDb.query(true, DATABASE_TABLE,
-			new String[] { KEY_ROWID, KEY_KEY, KEY_TITLE, KEY_BODY, KEY_DATESTAMP},
+			new String[] { KEY_ROWID, KEY_KEY, KEY_TITLE, KEY_BODY, KEY_DATESTAMP },
 			KEY_KEY + " LIKE '" + key + "'", null, null, null, null, null
 		);
 		if (mCursor != null) {

@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.simplenote.android.APIBase.Response;
+import com.simplenote.android.model.Note;
 
 public class APIHelper {
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -52,14 +53,9 @@ public class APIHelper {
 						} else {
 							Log.i(Constants.TAG, "Note " + key + " is missing from device - retrieving");
 						}
-
 						authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + token + "&email=" + email);
-						String title = authResponse.resp;
-						if (title.indexOf('\n') > -1) {
-							title = title.substring(0, title.indexOf('\n'));
-						}
 
-						dbHelper.createNote(key, title, authResponse.resp, jsonNote.getString("modify"));
+						dbHelper.createNote(new Note(authResponse.resp, key, jsonNote.getString("modify")));
 					}
 				}
 			}	

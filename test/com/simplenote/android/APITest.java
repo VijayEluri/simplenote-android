@@ -1,14 +1,15 @@
 package com.simplenote.android;
 
+import junit.framework.Assert;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.simplenote.android.NotesDbAdapter;
-import com.simplenote.android.APIBase.Response;
-
-import junit.framework.Assert;
 import android.test.AndroidTestCase;
 import android.util.Log;
+
+import com.simplenote.android.APIBase.Response;
+import com.simplenote.android.model.Note;
 
 public class APITest extends AndroidTestCase {
 	public static final String emailAddress = "simplenote@solidstategroup.com";
@@ -38,8 +39,8 @@ public class APITest extends AndroidTestCase {
 			String key = jsonNote.getString("key");
 			authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + logInToken + "&email=" + emailAddress);
 
-			mDbHelper.deleteAllNotes();
-			mDbHelper.createNote(jsonNote.getString("key"), authResponse.resp, authResponse.resp, jsonNote.getString("modify"));
+			;
+			mDbHelper.createNote(new Note(authResponse.resp, jsonNote.getString("key"), jsonNote.getString("modify")));
 		}
 		mDbHelper.close();
 	}

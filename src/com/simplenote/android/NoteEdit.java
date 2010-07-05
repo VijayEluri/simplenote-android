@@ -8,6 +8,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.simplenote.android.model.Note;
+
 public class NoteEdit extends Activity {
 
 	private EditText mTitleText;
@@ -87,7 +89,7 @@ public class NoteEdit extends Activity {
 
 		// TODO: Rationalise this...
 		if (mRowId == null) {
-			long id = mDbHelper.createNote("key_" + title, title, body, datestamp);
+			long id = mDbHelper.createNote(new Note(title, body, "key_" + title, datestamp));
 			if (id > 0) {
 				mRowId = id;
 			}

@@ -11,6 +11,10 @@ import android.util.Log;
 import com.simplenote.android.Constants;
 import com.simplenote.android.model.Note;
 
+/**
+ * A sensible interface to the SimpleNote server API
+ * @author bryanjswift
+ */
 public class SimpleNoteApi extends Api {
 	/** DateFormat provided by SimpleNote API */
 	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -125,6 +129,26 @@ public class SimpleNoteApi extends Api {
 			success = response.status == 200 && response.body.length() > 0;
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);
+		}
+		return success;
+	}
+	/**
+	 * Mark a note as deleted from server
+	 * @param n - note information to remove from the server
+	 * @param auth token from login call
+	 * @param email identifying account to retrieve notes for
+	 * @param callback method collection that handles the response
+	 * @return whether or not the note was successfully removed
+	 */
+	public static boolean delete(final Note n, final String auth, final String email, final HttpCallback callback) {
+		Log.d(LOGGING_TAG, String.format("Deleting not with key %s on simplenote server", n.getKey()));
+		final String data = String.format("?key=%s&auth=%s&email%s", n.getKey(), auth, email);
+		boolean success = false;
+		try {
+			handleResponse(callback, Get(Constants.API_DELETE_URL + data));
+			success = true;
+		} catch (IOException ioe) {
+			callback.onException(Constants.API_DELETE_URL, data, ioe);
 		}
 		return success;
 	}

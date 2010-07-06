@@ -35,8 +35,8 @@ public abstract class Api {
 		try {
 			// Setup connection
 			HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-			conn.setRequestMethod( "POST" );
-			conn.setDoOutput( true );
+			conn.setRequestMethod("POST");
+			conn.setDoOutput(true);
 			conn.connect();
 			// Send POST data to the server
 			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
@@ -96,15 +96,30 @@ public abstract class Api {
 		sb = null;
 		return response;
 	}
-	
+	/**
+	 * Quick way to URL encode a String
+	 * @param str to encode
+	 * @return URL encoded String
+	 */
 	public static String encode(String str) {
-		return encode( str, false, true ); // Don't Base64 encode by default
+		return encode(str, false, true); // Don't Base64 encode by default
 	}
-	
+	/**
+	 * Encode a String, optionally with base64 as well as URL encoding
+	 * @param str to encode
+	 * @param base64Encode - whether or not to use base64 encoding
+	 * @return encoded String
+	 */
 	public static String encode(String str, Boolean base64Encode) {
-		return encode( str, false, true ); // Don't Base64 encode by default
+		return encode(str, base64Encode, true);
 	}
-	
+	/**
+	 * Encode a String, optionally with base64, optionally with URL encoding
+	 * @param str to encode
+	 * @param base64Encode - whether or not to use base64 encoding
+	 * @param urlEncode - whether or not to use URL encoding
+	 * @return encoded String
+	 */
 	public static String encode(String str, boolean base64Encode, boolean urlEncode) {
 		if (urlEncode) {
 			try {

@@ -6,10 +6,10 @@ public class Constants {
 	public static final String PREFS_NAME = "SimpleNotePrefs";
 	/** Logging tag prefix */
 	public static final String TAG = "SimpleNote:";
-
 	// Message Codes
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
-
+	// Activity for result request Codes
+	public static final int REQUEST_LOGIN = 32568;
 	// API Base URL
 	public static final String API_BASE_URL   = "https://simple-note.appspot.com/api";
 	public static final String API_LOGIN_URL  = API_BASE_URL + "/login";					// POST

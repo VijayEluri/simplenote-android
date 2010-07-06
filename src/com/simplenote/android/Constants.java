@@ -7,6 +7,9 @@ public class Constants {
 	/** Logging tag prefix */
 	public static final String TAG = "SimpleNote:";
 
+	// Message Codes
+	public static final int MESSAGE_UPDATE_NOTE = 12398;
+
 	// API Base URL
 	public static final String API_BASE_URL   = "https://simple-note.appspot.com/api";
 	public static final String API_LOGIN_URL  = API_BASE_URL + "/login";					// POST

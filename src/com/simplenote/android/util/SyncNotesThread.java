@@ -1,7 +1,10 @@
-package com.simplenote.android;
+package com.simplenote.android.util;
 
 import android.os.Handler;
 import android.os.Message;
+
+import com.simplenote.android.APIHelper;
+import com.simplenote.android.NotesDbAdapter;
 
 public class SyncNotesThread extends Thread {
 	public static final int STATE_DONE = 0;

@@ -9,6 +9,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import com.simplenote.android.util.Base64;
+
 public class APIBase {
 	
 	public static class Response {

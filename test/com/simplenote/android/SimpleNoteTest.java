@@ -1,8 +1,8 @@
 package com.simplenote.android;
 
-import android.test.suitebuilder.TestSuiteBuilder;
 import junit.framework.Test;
 import junit.framework.TestSuite;
+import android.test.suitebuilder.TestSuiteBuilder;
 
 public class SimpleNoteTest extends TestSuite {
 	public static Test suite() {

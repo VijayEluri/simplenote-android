@@ -1,7 +1,6 @@
 package com.simplenote.android.net;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 
 import org.json.JSONArray;
 import org.json.JSONException;

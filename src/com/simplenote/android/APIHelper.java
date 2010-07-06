@@ -55,7 +55,7 @@ public class APIHelper {
 						}
 						authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + token + "&email=" + email);
 
-						dbHelper.createNote(new Note(authResponse.resp, key, jsonNote.getString("modify")));
+						dbHelper.createNote(new Note(0, authResponse.resp, key, jsonNote.getString("modify")));
 					}
 				}
 			}	

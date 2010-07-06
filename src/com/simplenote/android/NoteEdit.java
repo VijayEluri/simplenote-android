@@ -89,7 +89,7 @@ public class NoteEdit extends Activity {
 
 		// TODO: Rationalise this...
 		if (mRowId == null) {
-			long id = mDbHelper.createNote(new Note(title, body, "key_" + title, datestamp));
+			long id = mDbHelper.createNote(new Note(0, title, body, "key_" + title, datestamp));
 			if (id > 0) {
 				mRowId = id;
 			}

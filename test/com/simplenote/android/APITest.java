@@ -40,7 +40,7 @@ public class APITest extends AndroidTestCase {
 			authResponse = APIBase.HTTPGet(Constants.API_NOTE_URL + "?key=" + key + "&auth=" + logInToken + "&email=" + emailAddress);
 
 			;
-			mDbHelper.createNote(new Note(authResponse.resp, jsonNote.getString("key"), jsonNote.getString("modify")));
+			mDbHelper.createNote(new Note(0, authResponse.resp, jsonNote.getString("key"), jsonNote.getString("modify")));
 		}
 		mDbHelper.close();
 	}

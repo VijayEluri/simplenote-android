@@ -158,6 +158,12 @@ public class Note {
 		return new Note(this.title, this.body, this.key, dateModified, this.deleted, this.newlines);
 	}
 	/**
+	 * @return deleted
+	 */
+	public final boolean getDeleted() {
+		return deleted;
+	}
+	/**
 	 * Invokes private constructor to create a new note
 	 * @param deleted of the new Note object
 	 * @return a new Note with deleted updated
@@ -166,7 +172,7 @@ public class Note {
 		return new Note(this.title, this.body, this.key, this.dateModified, deleted, this.newlines);
 	}
 	/**
-	 * Combind title and body fields with the correct number of newlines
+	 * Combine title and body fields with the correct number of newlines
 	 * @return combined title and body fields
 	 */
 	public final String getTitleAndBody() {
@@ -176,5 +182,13 @@ public class Note {
 		}
 		builder.append(body);
 		return builder.toString();
+	}
+	/**
+	 * Create a new Note with updated title and body fields
+	 * @param titleAndBody combined title and body data to update the note with
+	 * @return a new Note with title and body updated
+	 */
+	public final Note setTitleAndBody(String titleAndBody) {
+		return new Note(titleAndBody, key, dateModified, deleted);
 	}
 }

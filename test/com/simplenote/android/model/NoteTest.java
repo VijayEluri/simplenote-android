@@ -4,6 +4,10 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+/**
+ * Tests for Note creation
+ * @author bryanjswift
+ */
 public class NoteTest extends TestCase {
 	public void testNoNewlines() {
 		String txt = "This is a test note without any newlines in it";

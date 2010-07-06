@@ -6,6 +6,11 @@ package com.simplenote.android.net;
  *
  */
 public abstract class HttpCallback {
+	/** Create a static empty callback object */
+	public static final HttpCallback EMPTY;
+	static {
+		EMPTY = new HttpCallback() { };
+	}
 	/**
 	 * Called when the response contained a success status code
 	 * @param body contents of the response

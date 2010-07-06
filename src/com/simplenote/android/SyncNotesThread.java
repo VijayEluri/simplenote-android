@@ -1,0 +1,31 @@
+package com.simplenote.android;
+
+import android.os.Handler;
+import android.os.Message;
+
+import com.simplenote.android.APIHelper;
+import com.simplenote.android.NotesDbAdapter;
+
+public class SyncNotesThread extends Thread {
+	public static final int STATE_DONE = 0;
+	public static final int STATE_RUNNING = 1;
+
+	private final Handler mHandler;
+	private final NotesDbAdapter dbHelper;
+	private final String email;
+	private final String token;
+
+	public SyncNotesThread(Handler h, NotesDbAdapter dbHelper, String email, String token) {
+		mHandler = h;
+		this.dbHelper = dbHelper;
+		this.email = email;
+		this.token = token;
+	}
+
+	@Override
+	public void run() {
+		// Fetch the notes from the server
+		APIHelper.clearAndRefreshNotes(dbHelper, token, email);
+		mHandler.sendMessage(new Message());
+	}
+}

@@ -1,9 +1,11 @@
 package com.simplenote.android.net;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Class to represent what should happen for different HTTP status codes
  * @author bryanjswift
- *
  */
 public abstract class HttpCallback {
 	/** Create a static empty callback object */
@@ -46,6 +48,13 @@ public abstract class HttpCallback {
 	 * @param body contents of the response
 	 */
 	public void onComplete(String body) { }
+	/**
+	 * Called when the request is finished and the status code was anything indicating an error
+	 * @param status code causing the error
+	 * @param body contents of the response
+	 * @param headers included in the response
+	 */
+	public void onError(int status, String body, Map<String, List<String>> headers) { }
 	/**
 	 * Called when an exception is thrown, this isn't really an HTTP case
 	 * @param url requested that caused the exception

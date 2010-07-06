@@ -117,7 +117,7 @@ public class LoginDialog extends Activity {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						closeDialog();
-						Toast.makeText( LoginDialog.this, R.string.error_authentication, Toast.LENGTH_LONG).show();
+						Toast.makeText(LoginDialog.this, R.string.error_authentication, Toast.LENGTH_LONG).show();
 					}
 				});
 			} else if (authResponse.statusCode == 200) { // successful auth login

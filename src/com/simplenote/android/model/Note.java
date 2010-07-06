@@ -1,5 +1,7 @@
 package com.simplenote.android.model;
 
+import java.io.Serializable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,7 +9,10 @@ import org.json.JSONObject;
  * Represents a note from the SimpleNote servers
  * @author bryanjswift
  */
-public class Note {
+public class Note implements Serializable{
+	/** Generated serialVersionUID */
+	private static final long serialVersionUID = -6783055981397528617L;
+	// Private attributes
 	private final long id;
 	private final String title;
 	private final String body;

@@ -22,6 +22,7 @@ public class SimpleNoteApi extends Api {
 	 * @param email address to login with
 	 * @param password to use for logging in
 	 * @param callback method collection that handles the response
+	 * @return the token resulting from the API login call
 	 */
 	public static String login(final String email, final String password, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
@@ -162,6 +163,9 @@ public class SimpleNoteApi extends Api {
 			case 403: callback.on403(response.body); break;
 			case 404: callback.on404(response.body); break;
 			case 500: callback.on500(response.body); break;
+		}
+		if (response.status != 200) {
+			callback.onError(response.status, response.body, response.headers);
 		}
 		callback.onComplete(response.body);
 		return response;

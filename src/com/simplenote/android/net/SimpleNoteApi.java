@@ -16,10 +16,8 @@ import com.simplenote.android.model.Note;
  * @author bryanjswift
  */
 public class SimpleNoteApi extends Api {
-	/** DateFormat provided by SimpleNote API */
-	public static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	/** Prefix for logging statements from the SimpleNoteApi object */
-	public static final String LOGGING_TAG = Constants.TAG + "SimpleNoteApi";
+	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteApi";
 	/**
 	 * Method to invoke the SimpleNote login API
 	 * @param email address to login with

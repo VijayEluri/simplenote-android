@@ -1,4 +1,4 @@
-package com.simplenote.android.util;
+package com.simplenote.android.thread;
 
 import android.os.Bundle;
 import android.os.Handler;

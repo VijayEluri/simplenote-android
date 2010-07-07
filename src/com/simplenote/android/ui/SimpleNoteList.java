@@ -10,10 +10,11 @@ import android.os.Message;
 import android.widget.CursorAdapter;
 import android.widget.SimpleCursorAdapter;
 
+import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
 import com.simplenote.android.persistence.SimpleNoteDao;
-import com.simplenote.android.util.SyncNotesThread;
+import com.simplenote.android.thread.SyncNotesThread;
 
 /**
  * 'Main' Activity to List notes
@@ -63,6 +64,11 @@ public class SimpleNoteList extends ListActivity {
 			((CursorAdapter) getListAdapter()).getCursor().requery();
 		}
 	};
+	/**
+	 * Start up a note syncing thread
+	 * @param email account identifier for notes
+	 * @param auth token used for access after login API call
+	 */
 	private void syncNotes(String email, String auth) {
 		Thread t = new SyncNotesThread(updateNoteHandler, dao, email, auth);
 		t.start();

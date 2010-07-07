@@ -1,8 +1,6 @@
 package com.simplenote.android.thread;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -27,14 +25,19 @@ public class LoginWithCredentials extends Thread {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginWithExistingCredentials";
 	private final Activity context;
 	private final HashMap<String,String> credentials;
+	private final HttpCallback callback;
 	/**
 	 * Create new specialized Thread with credentials information
 	 * @param context from which the thread was invoked
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
 	public LoginWithCredentials(Activity context, HashMap<String,String> credentials) {
+		this(context, credentials, null);
+	}
+	public LoginWithCredentials(Activity context, HashMap<String,String> credentials, HttpCallback callback) {
 		this.context = context;
 		this.credentials = credentials;
+		this.callback = callback;
 	}
 	/**
 	 * Send a login request to the SimpleNote API
@@ -57,18 +60,50 @@ public class LoginWithCredentials extends Thread {
 				} else {
 					Log.i(LOGGING_TAG, "Failed to save new authentication token, uh oh.");
 				}
-				// start note list activity
-				FireIntent.SimpleNoteList(context);
+				if (callback == null) {
+					// start note list activity
+					context.runOnUiThread(new Runnable() {
+						public void run() {
+							FireIntent.SimpleNoteList(context);
+						}
+					});
+				}
 			}
 			/**
 			 * Authentication failed, show login dialog
 			 * @see com.simplenote.android.net.HttpCallback#on401(java.lang.String)
 			 */
-				FireIntent.SigninDialog(context);
-				Log.d(LOGGING_TAG, String.format("Authentication failed with status code %i", status));
-				Toast.makeText(context, R.string.error_authentication_stored, Toast.LENGTH_LONG).show();
 			@Override
 			public void onError(final Response response) {
+				Log.d(LOGGING_TAG, String.format("Authentication failed with status code %i", response.status));
+				if (callback == null) {
+					// Automatic login failed so show the dialog
+					context.runOnUiThread(new Runnable() {
+						public void run() {
+							Toast.makeText(context, R.string.error_authentication_stored, Toast.LENGTH_LONG).show();
+							FireIntent.SigninDialog(context);
+						}
+					});
+				}
+			}
+			/**
+			 * If an HttpCallback were provided in the constructor execute them here
+			 * @see com.simplenote.android.net.HttpCallback#onComplete(com.simplenote.android.net.Api.Response)
+			 */
+			@Override
+			public void onComplete(final Response response) {
+				if (callback != null) {
+					SimpleNoteApi.handleResponse(callback, response);
+				}
+			}
+			/**
+			 * @see com.simplenote.android.net.HttpCallback#onException(java.lang.String, java.lang.String, java.lang.Throwable)
+			 */
+			@Override
+			public void onException(final String url, final String data, final Throwable t) {
+				if (callback != null) {
+					callback.onException(url, data, t);
+				}
 			}
 		});
 	}

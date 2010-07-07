@@ -3,6 +3,7 @@ package com.simplenote.android.ui;
 import java.util.HashMap;
 
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,6 +51,16 @@ public class SimpleNoteList extends ListActivity {
 		setListAdapter(notesAdapter);
 	}
 	/**
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+			case Constants.REQUEST_LOGIN: handleSigninResult(resultCode, data); break;
+		}
+	}
+	/**
 	 * Message handler which should update the UI when a message with a Note is received
 	 */
 	private Handler updateNoteHandler = new Handler() {
@@ -72,5 +83,14 @@ public class SimpleNoteList extends ListActivity {
 	private void syncNotes(String email, String auth) {
 		Thread t = new SyncNotesThread(updateNoteHandler, dao, email, auth);
 		t.start();
+	}
+	/**
+	 * Deal with the results of the REQUEST_LOGIN Activity start
+	 * @param resultCode how the LoginDialog Activity finished
+	 * @param data the intent that started the LoginDialog Activity
+	 */
+	private void handleSigninResult(final int resultCode, final Intent data) {
+		// Assume this only gets called when LoginDialog completed successfully
+		FireIntent.SimpleNoteList(this);
 	}
 }

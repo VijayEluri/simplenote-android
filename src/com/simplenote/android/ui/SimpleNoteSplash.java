@@ -1,17 +1,14 @@
 package com.simplenote.android.ui;
 
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.EditText;
 
 import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
@@ -42,8 +39,8 @@ public class SimpleNoteSplash extends Activity {
 			// token expired, get new token from API
 			(new LoginWithExistingCredentials(this, credentials)).start();
 		} else {
-			// start login dialog because we don't have any data stored
-			showSigninDialog();
+			// set up events for the splash screen
+			setupSplashFields();
 		}
 	}
 	/**
@@ -57,8 +54,36 @@ public class SimpleNoteSplash extends Activity {
 		}
 	}
 	/**
-	 * Start the SimpleNoteList Activity
+	 * Attach focus event listeners to the EditTexts in the layout
 	 */
+	private void setupSplashFields() {
+		EditText email = (EditText) findViewById(R.id.email);
+		EditText password = (EditText) findViewById(R.id.password);
+		TextAsLabelFocusChangeListener passwordFocusChangeListener =
+			new TextAsLabelFocusChangeListener(password, getString(R.string.password)) {
+				/**
+				 * @see com.simplenote.android.view.TextAsLabelFocusChangeListener#onFocus()
+				 */
+				@Override
+				protected void onFocus() {
+					super.onFocus();
+					field.setTransformationMethod(new PasswordTransformationMethod());
+				}
+				/**
+				 * @see com.simplenote.android.view.TextAsLabelFocusChangeListener#onBlur()
+				 */
+				@Override
+				protected void onBlur() {
+					super.onBlur();
+					Editable value = field.getText();
+					Log.d(Constants.TAG + "passwordFocusChangeListener", "Initial: " + initial + " :: Current: " + value.toString());
+					if (value.toString().equals(initial)) {
+						field.setTransformationMethod(null);
+					}
+				}
+			};
+		email.setOnFocusChangeListener(new TextAsLabelFocusChangeListener(email, getString(R.string.email)));
+		password.setOnFocusChangeListener(passwordFocusChangeListener);
 	}
 	/**
 	 * Deal with the results of the REQUEST_LOGIN Activity start

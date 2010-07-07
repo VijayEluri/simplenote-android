@@ -4,6 +4,13 @@
   <style name="NoTitleDialogTheme" parent="@android:style/Theme.Dialog">
     <item name="android:windowNoTitle">true</item>
   </style>
+  <!-- Splash Styles -->
+  <style name="SplashHeader">
+    <item name="android:gravity">top</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
   <!-- Dialog Styles -->
   <style name="DialogLabel">
     <item name="android:layout_marginTop">10dip</item>

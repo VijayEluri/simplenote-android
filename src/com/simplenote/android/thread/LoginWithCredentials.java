@@ -22,7 +22,7 @@ import com.simplenote.android.ui.FireIntent;
  * Uses the SimpleNoteApi to login with existing credentials which must be provided
  * @author bryanjswift
  */
-public class LoginWithExistingCredentials extends Thread {
+public class LoginWithCredentials extends Thread {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginWithExistingCredentials";
 	private final Activity context;
 	private final HashMap<String,String> credentials;
@@ -30,7 +30,7 @@ public class LoginWithExistingCredentials extends Thread {
 	 * Create new specialized Thread with credentials information
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
-	public LoginWithExistingCredentials(Activity context, HashMap<String,String> credentials) {
+	public LoginWithCredentials(Activity context, HashMap<String,String> credentials) {
 		this.context = context;
 		this.credentials = credentials;
 	}

@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 
 import com.simplenote.android.Constants;
 import com.simplenote.android.model.Note;
+import com.simplenote.android.net.Api.Response;
 
 /**
  * Exercise the SimpleNoteApi class
@@ -18,27 +19,27 @@ public class SimpleNoteApiTest extends TestCase {
 
 	private abstract class FailingCallback extends HttpCallback {
 		@Override
-		public void on200(String body) {
+		public void on200(Response response) {
 			fail("Should not have returned a 200 response code");
 		}
 		@Override
-		public void on400(String body) {
+		public void on400(Response response) {
 			fail("Should not have returned a 400 response code");
 		}
 		@Override
-		public void on401(String body) {
+		public void on401(Response response) {
 			fail("Should not have returned a 401 response code");
 		}
 		@Override
-		public void on403(String body) {
+		public void on403(Response response) {
 			fail("Should not have returned a 403 response code");
 		}
 		@Override
-		public void on404(String body) {
+		public void on404(Response response) {
 			fail("Should not have returned a 404 response code");
 		}
 		@Override
-		public void on500(String body) {
+		public void on500(Response response) {
 			fail("Should not have returned a 500 response code");
 		}
 		@Override
@@ -52,8 +53,8 @@ public class SimpleNoteApiTest extends TestCase {
 	public void testSuccessfulLogin() {
 		SimpleNoteApi.login(emailAddress, password, new FailingCallback() {
 			@Override
-			public void on200(String body) {
-				assertTrue(body.length() > 0);
+			public void on200(Response response) {
+				assertTrue(response.body.length() > 0);
 			}
 		});
 	}
@@ -63,7 +64,7 @@ public class SimpleNoteApiTest extends TestCase {
 	public void testFailingLogin() {
 		SimpleNoteApi.login(emailAddress, "password", new FailingCallback() {
 			@Override
-			public void on401(String body) {
+			public void on401(Response response) {
 				// if we are here we should pass
 			}
 		});
@@ -74,22 +75,22 @@ public class SimpleNoteApiTest extends TestCase {
 	public void testIndexAndNoteRetrieval() {
 		String validToken = SimpleNoteApi.login(emailAddress, password, new FailingCallback() {
 			@Override
-			public void on200(String body) {
-				assertTrue(body.length() > 0);
+			public void on200(Response response) {
+				assertTrue(response.body.length() > 0);
 			}
 		});
 		Note[] notes = SimpleNoteApi.index(validToken, emailAddress, new FailingCallback() {
 			@Override
-			public void on200(String body) {
-				assertTrue(body.length() > 0);
+			public void on200(Response response) {
+				assertTrue(response.body.length() > 0);
 			}
 		});
 		assertTrue(notes.length > 0);
 		Note note = SimpleNoteApi.retrieve(notes[0], validToken, emailAddress, new FailingCallback() {
 			@Override
-			public void on200(String body) {
+			public void on200(Response response) {
 				// If we are here we passed
-				noteBody = body;
+				noteBody = response.body;
 			}
 		});
 		assertEquals(note.getTitleAndBody(), noteBody);

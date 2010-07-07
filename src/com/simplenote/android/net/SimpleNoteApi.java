@@ -155,19 +155,19 @@ public class SimpleNoteApi extends Api {
 	 * @param callback method collection to handle response
 	 * @param response object from an HTTP request
 	 */
-	private static Response handleResponse(final HttpCallback callback, final Response response) {
+	public static Response handleResponse(final HttpCallback callback, final Response response) {
 		switch (response.status) {
-			case 200: callback.on200(response.body); break;
-			case 400: callback.on400(response.body); break;
-			case 401: callback.on401(response.body); break;
-			case 403: callback.on403(response.body); break;
-			case 404: callback.on404(response.body); break;
-			case 500: callback.on500(response.body); break;
+			case 200: callback.on200(response); break;
+			case 400: callback.on400(response); break;
+			case 401: callback.on401(response); break;
+			case 403: callback.on403(response); break;
+			case 404: callback.on404(response); break;
+			case 500: callback.on500(response); break;
 		}
 		if (response.status != 200) {
-			callback.onError(response.status, response.body, response.headers);
+			callback.onError(response);
 		}
-		callback.onComplete(response.body);
+		callback.onComplete(response);
 		return response;
 	}
 }

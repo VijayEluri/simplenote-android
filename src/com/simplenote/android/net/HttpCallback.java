@@ -1,7 +1,6 @@
 package com.simplenote.android.net;
 
-import java.util.List;
-import java.util.Map;
+import com.simplenote.android.net.Api.Response;
 
 /**
  * Class to represent what should happen for different HTTP status codes
@@ -17,44 +16,44 @@ public abstract class HttpCallback {
 	 * Called when the response contained a success status code
 	 * @param body contents of the response
 	 */
-	public void on200(String body) { }
+	public void on200(Response response) { }
 	/**
 	 * Bad Request
 	 * @param body contents of the response
 	 */
-	public void on400(String body) { }
+	public void on400(Response response) { }
 	/**
 	 * Unauthorized
 	 * @param body contents of the response
 	 */
-	public void on401(String body) { }
+	public void on401(Response response) { }
 	/**
 	 * Forbidden
 	 * @param body contents of the response
 	 */
-	public void on403(String body) { }
+	public void on403(Response response) { }
 	/**
 	 * Not Found
 	 * @param body contents of the response
 	 */
-	public void on404(String body) { }
+	public void on404(Response response) { }
 	/**
 	 * Server error
 	 * @param body contents of the response
 	 */
-	public void on500(String body) { }
+	public void on500(Response response) { }
 	/**
 	 * Called when the request is finished no matter what the response was
 	 * @param body contents of the response
 	 */
-	public void onComplete(String body) { }
+	public void onComplete(Response response) { }
 	/**
 	 * Called when the request is finished and the status code was anything indicating an error
 	 * @param status code causing the error
 	 * @param body contents of the response
 	 * @param headers included in the response
 	 */
-	public void onError(int status, String body, Map<String, List<String>> headers) { }
+	public void onError(Response response) { }
 	/**
 	 * Called when an exception is thrown, this isn't really an HTTP case
 	 * @param url requested that caused the exception

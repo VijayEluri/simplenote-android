@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.preference.PreferenceActivity;
@@ -61,6 +62,45 @@ public class Preferences extends PreferenceActivity {
 		SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
 		HashMap<String,String> values = getStringPreferences(prefs, new String[] { Preferences.EMAIL, Preferences.PASSWORD, Preferences.TOKEN });
 		return values;
+	}
+	/**
+	 * Save login data into preferences
+	 * @param context from which to retrieve preferences
+	 * @param email to save
+	 * @param password to save
+	 * @param auth to save
+	 * @return a HashMap with preference keys and values
+	 */
+	public static HashMap<String,String> setLoginPreferences(Context context, String email, String password, String auth) {
+		HashMap<String,String> values = new HashMap<String,String>();
+		Editor editor = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+		editor.putString(EMAIL, email).putString(PASSWORD, password).putString(TOKEN, auth);
+		editor.commit();
+		values.put(EMAIL, email);
+		values.put(PASSWORD, password);
+		values.put(TOKEN, auth);
+		return values;
+	}
+	/**
+	 * Save login data into preferences, shortcut for setLoginPreferences(context, email, password, null);
+	 * @param context from which to retrieve preferences
+	 * @param email to save
+	 * @param password to save
+	 * @return a HashMap with preference keys and values
+	 */
+	public static HashMap<String,String> setLoginPreferences(Context context, String email, String password) {
+		return setLoginPreferences(context, email, password, null);
+	}
+	/**
+	 * Save authorization token into preferences
+	 * @param context from which to retrieve preferences
+	 * @param auth to save
+	 * @return true if the new values were successfully written to persistent storage.
+	 */
+	public static boolean setAuthToken(Context context, String auth) {
+		Editor editor = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+		editor.putString(TOKEN, auth);
+		return editor.commit();
 	}
 	/**
 	 * Get a set of String values from the Preferences, key won't exist if the default value is returned

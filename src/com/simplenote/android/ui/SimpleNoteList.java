@@ -15,6 +15,7 @@ import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
 import com.simplenote.android.persistence.SimpleNoteDao;
+import com.simplenote.android.thread.LoginWithCredentials;
 import com.simplenote.android.thread.SyncNotesThread;
 
 /**
@@ -28,6 +29,7 @@ public class SimpleNoteList extends ListActivity {
 	 * Create a dao to store using this as the context
 	 */
 	public SimpleNoteList() {
+		super();
 		this.dao = new SimpleNoteDao(this);
 	}
 	/**
@@ -37,8 +39,13 @@ public class SimpleNoteList extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-		// sync notes in a background thread
-		syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
+		// check the token exists first and if not authenticate with existing username/password
+		if (credentials.containsKey(Preferences.TOKEN)) {
+			// sync notes in a background thread
+			syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
+		} else {
+			(new LoginWithCredentials(this, credentials)).start();
+		}
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Cursor notes = dao.retrieveAll();
@@ -81,7 +88,7 @@ public class SimpleNoteList extends ListActivity {
 	 * @param auth token used for access after login API call
 	 */
 	private void syncNotes(String email, String auth) {
-		Thread t = new SyncNotesThread(updateNoteHandler, dao, email, auth);
+		final Thread t = new SyncNotesThread(updateNoteHandler, dao, email, auth);
 		t.start();
 	}
 	/**
@@ -91,6 +98,9 @@ public class SimpleNoteList extends ListActivity {
 	 */
 	private void handleSigninResult(final int resultCode, final Intent data) {
 		// Assume this only gets called when LoginDialog completed successfully
-		FireIntent.SimpleNoteList(this);
+		if (resultCode == RESULT_OK) {
+			final Bundle extras = data.getExtras();
+			syncNotes(extras.getString(Preferences.EMAIL), extras.getString(Preferences.TOKEN));
+		}
 	}
 }

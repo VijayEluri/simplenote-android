@@ -146,7 +146,7 @@ public class SimpleNoteDao {
 			Cursor cursor = db.query(DATABASE_TABLE, columns, BaseColumns._ID + "=" + id, null, null, null, null);
 			if (cursor.moveToFirst()) { // there is something in the Cursor so create a Note
 				CursorWrapper c = new CursorWrapper(cursor);
-				result = new Note(c.getLong(BaseColumns._ID),c.getString(KEY), c.getString(TITLE), c.getString(BODY), c.getString(MODIFY), c.getBoolean(DELETED));
+				result = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
 			}
 			db.setTransactionSuccessful();
 			db.endTransaction();
@@ -170,7 +170,7 @@ public class SimpleNoteDao {
 			Cursor cursor = db.query(DATABASE_TABLE, columns, KEY + " LIKE '" + key + "'", null, null, null, null);
 			if (cursor.moveToFirst()) { // there is something in the Cursor so create a Note
 				CursorWrapper c = new CursorWrapper(cursor);
-				result = new Note(c.getLong(BaseColumns._ID),c.getString(KEY), c.getString(TITLE), c.getString(BODY), c.getString(MODIFY), c.getBoolean(DELETED));
+				result = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
 			}
 			db.setTransactionSuccessful();
 			db.endTransaction();

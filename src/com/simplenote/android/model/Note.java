@@ -14,41 +14,27 @@ public class Note implements Serializable{
 	private static final long serialVersionUID = -6783055981397528617L;
 	// Private attributes
 	private final long id;
-	private final String title;
-	private final String body;
+	private final String titleAndBody;
 	private final String key;
 	private final String dateModified;
 	private final boolean deleted;
 
 	/**
-	 * Private constructor taking all fields
+	 * Constructor to create a Note from body, key, dateModified, and deleted
+	 *
+	 * Must parse the title from the body
 	 * @param id of the note
-	 * @param title of the note
-	 * @param body of the note
+	 * @param titleAndBody - title of the note followed by the body of the note, separated by one or more new lines
 	 * @param key from SimpleNote servers for this note
 	 * @param dateModified - the last modification was made on this date (server or local)
-	 * @param deleted - whether or not the Note is 'deleted'
+	 * @param deleted - whether or not the note is marked for deletion on the server
 	 */
-	public Note(final long id, final String title, final String body, final String key, final String dateModified, final boolean deleted) {
+	public Note(final long id, String titleAndBody, final String key, final String dateModified, final boolean deleted) {
 		this.id = id;
-		this.title = title;
-		this.body = body;
+		this.titleAndBody = titleAndBody;
 		this.key = key;
 		this.dateModified = dateModified;
 		this.deleted = deleted;
-	}
-	/**
-	 * Create a Note from all four pieces of information
-	 *
-	 * Defaults to two new lines between title and body text
-	 * @param id of the note
-	 * @param title of the note (really just the first line of body)
-	 * @param body of the note
-	 * @param key from SimpleNote servers for this note
-	 * @param dateModified - the last modification was made on this date (server or local)
-	 */
-	public Note(final long id, final String title, final String body, final String key, final String dateModified) {
-		this(id, title, body, key, dateModified, false);
 	}
 	/**
 	 * Create a Note from body, key and dateModified
@@ -63,30 +49,6 @@ public class Note implements Serializable{
 		this(id, titleAndBody, key, dateModified, false);
 	}
 	/**
-	 * Private Constructor to create a Note from body, key, dateModified, and deleted
-	 *
-	 * Must parse the title from the body
-	 * @param id of the note
-	 * @param titleAndBody - title of the note followed by the body of the note, separated by one or more new lines
-	 * @param key from SimpleNote servers for this note
-	 * @param dateModified - the last modification was made on this date (server or local)
-	 * @param deleted - whether or not the note is marked for deletion on the server
-	 */
-	private Note(final long id, String titleAndBody, final String key, final String dateModified, final boolean deleted) {
-		int idxNewline = titleAndBody.indexOf("\n");
-		this.id = id;
-		if (idxNewline != -1) {
-			this.title = titleAndBody.substring(0,idxNewline);
-			this.body = titleAndBody;
-		} else {
-			this.title = titleAndBody;
-			this.body = "";
-		}
-		this.key = key;
-		this.dateModified = dateModified;
-		this.deleted = deleted;
-	}
-	/**
 	 * Create a placeholder index note
 	 * @param id of the note
 	 * @param key from SimpleNote servers for this note
@@ -94,7 +56,7 @@ public class Note implements Serializable{
 	 * @param deleted - whether or not the note is marked for deletion on the server
 	 */
 	public Note(final long id, final String key, final String dateModified, final boolean deleted) {
-		this(id, null, null, key, dateModified, deleted);
+		this(id, null, key, dateModified, deleted);
 	}
 	/**
 	 * Create a Note from a JSONObject
@@ -102,7 +64,7 @@ public class Note implements Serializable{
 	 * @throws JSONException if a mapping doesn't exist or a coercion can't be made
 	 */
 	public Note(final JSONObject object) throws JSONException {
-		this(-1, "", "", object.getString("key"), object.getString("modify"), object.getBoolean("deleted"));
+		this(-1, "", object.getString("key"), object.getString("modify"), object.getBoolean("deleted"));
 	}
 	/**
 	 * @return id
@@ -116,12 +78,19 @@ public class Note implements Serializable{
 	 * @return a new Note with id updated
 	 */
 	public final Note setId(final long id) {
-		return new Note(id, this.title, this.body, this.key, this.dateModified, this.deleted);
+		return new Note(id, this.titleAndBody, this.key, this.dateModified, this.deleted);
 	}
 	/**
 	 * @return title
 	 */
 	public final String getTitle() {
+		final int idxNewline = titleAndBody.indexOf("\n");
+		final String title;
+		if (idxNewline != -1) {
+			title = titleAndBody.substring(0,idxNewline);
+		} else {
+			title = titleAndBody;
+		}
 		return title;
 	}
 	/**
@@ -130,13 +99,20 @@ public class Note implements Serializable{
 	 * @return a new Note with title updated
 	 */
 	public final Note setTitle(final String title) {
-		return new Note(this.id, title, this.body, this.key, this.dateModified, this.deleted);
+		final int idxNewline = this.titleAndBody.indexOf("\n");
+		final String titleAndBody;
+		if (idxNewline > 0) {
+			titleAndBody = title + this.titleAndBody.substring(idxNewline);
+		} else {
+			titleAndBody = title + this.titleAndBody;
+		}
+		return new Note(this.id, titleAndBody, this.key, this.dateModified, this.deleted);
 	}
 	/**
 	 * @return body
 	 */
 	public final String getBody() {
-		return body;
+		return titleAndBody;
 	}
 	/**
 	 * Invokes private constructor to create a new note
@@ -144,7 +120,7 @@ public class Note implements Serializable{
 	 * @return a new Note with body updated
 	 */
 	public final Note setBody(final String body) {
-		return new Note(this.id, this.title, body, this.key, this.dateModified, this.deleted);
+		return new Note(this.id, body, this.key, this.dateModified, this.deleted);
 	}
 	/**
 	 * @return key
@@ -158,7 +134,7 @@ public class Note implements Serializable{
 	 * @return a new Note with key updated
 	 */
 	public final Note setKey(final String key) {
-		return new Note(this.id, this.title, this.body, key, this.dateModified, this.deleted);
+		return new Note(this.id, this.titleAndBody, key, this.dateModified, this.deleted);
 	}
 	/**
 	 * @return dateModified
@@ -172,7 +148,7 @@ public class Note implements Serializable{
 	 * @return a new Note with dateModified updated
 	 */
 	public final Note setDateModified(final String dateModified) {
-		return new Note(this.id, this.title, this.body, this.key, dateModified, this.deleted);
+		return new Note(this.id, this.titleAndBody, this.key, dateModified, this.deleted);
 	}
 	/**
 	 * @return deleted
@@ -186,7 +162,7 @@ public class Note implements Serializable{
 	 * @return a new Note with deleted updated
 	 */
 	public final Note setDeleted(final boolean deleted) {
-		return new Note(this.id, this.title, this.body, this.key, this.dateModified, deleted);
+		return new Note(this.id, this.titleAndBody, this.key, this.dateModified, deleted);
 	}
 	/**
 	 * Combine title and body fields

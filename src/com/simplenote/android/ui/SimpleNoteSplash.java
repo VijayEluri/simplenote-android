@@ -13,6 +13,7 @@ import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
 import com.simplenote.android.view.TextAsLabelFocusChangeListener;
+import com.simplenote.android.widget.LoginActionListener;
 
 /**
  * Main Activity for SimpleNote application
@@ -44,9 +45,9 @@ public class SimpleNoteSplash extends Activity {
 	 * Attach focus event listeners to the EditTexts in the layout
 	 */
 	private void setupSplashFields() {
-		EditText email = (EditText) findViewById(R.id.email);
-		EditText password = (EditText) findViewById(R.id.password);
-		TextAsLabelFocusChangeListener passwordFocusChangeListener =
+		final EditText email = (EditText) findViewById(R.id.email);
+		final EditText password = (EditText) findViewById(R.id.password);
+		final TextAsLabelFocusChangeListener passwordFocusChangeListener =
 			new TextAsLabelFocusChangeListener(password, getString(R.string.password)) {
 				/**
 				 * @see com.simplenote.android.view.TextAsLabelFocusChangeListener#onFocus()
@@ -70,5 +71,6 @@ public class SimpleNoteSplash extends Activity {
 			};
 		email.setOnFocusChangeListener(new TextAsLabelFocusChangeListener(email, getString(R.string.email)));
 		password.setOnFocusChangeListener(passwordFocusChangeListener);
+		password.setOnEditorActionListener(new LoginActionListener(this, email, password));
 	}
 }

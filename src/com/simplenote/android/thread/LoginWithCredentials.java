@@ -75,7 +75,7 @@ public class LoginWithCredentials extends Thread {
 			 */
 			@Override
 			public void onError(final Response response) {
-				Log.d(LOGGING_TAG, String.format("Authentication failed with status code %i", response.status));
+				Log.d(LOGGING_TAG, String.format("Authentication failed with status code %d", response.status));
 				if (callback == null) {
 					// Automatic login failed so show the dialog
 					context.runOnUiThread(new Runnable() {

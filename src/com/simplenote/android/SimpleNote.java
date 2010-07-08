@@ -20,8 +20,6 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import com.simplenote.android.SyncNotesThread;
-
 public class SimpleNote extends ListActivity {
 	private static final int ACTIVITY_CREATE = 0;
 	private static final int ACTIVITY_EDIT = 1;

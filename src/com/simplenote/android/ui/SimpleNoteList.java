@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
+import android.util.Log;
 import android.view.View;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
@@ -26,6 +27,7 @@ import com.simplenote.android.thread.SyncNotesThread;
  * @author bryanjswift
  */
 public class SimpleNoteList extends ListActivity {
+	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
 	/** Interface for accessing the SimpleNote database on the device */
 	private final SimpleNoteDao dao;
 	/**
@@ -41,6 +43,11 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			Log.d(LOGGING_TAG, "Resuming from a saved state");
+			FireIntent.EditNote(this, savedInstanceState.getLong(BaseColumns._ID),
+					savedInstanceState.getString(SimpleNoteDao.BODY));
+		}
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Cursor notes = dao.retrieveAll();
@@ -66,6 +73,7 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
+		Log.d(LOGGING_TAG, String.format("onActivityResult firing with resultCode: %d", resultCode));
 		switch (requestCode) {
 			case Constants.REQUEST_LOGIN: handleSigninResult(resultCode, data); break;
 			case Constants.REQUEST_EDIT: handleNoteEditResult(resultCode, data); break;
@@ -77,9 +85,7 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onListItemClick(final ListView l, final View v, final int position, final long id) {
 		super.onListItemClick(l, v, position, id);
-		Intent intent = new Intent(this, SimpleNoteEdit.class);
-		intent.putExtra(BaseColumns._ID, id);
-		startActivityForResult(intent, Constants.REQUEST_EDIT);
+		FireIntent.EditNote(this, id, null);
 	}
 	/**
 	 * Message handler which should update the UI when a message with a Note is received
@@ -129,9 +135,10 @@ public class SimpleNoteList extends ListActivity {
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
 		switch (resultCode) {
 			case RESULT_OK:
-				// modified
+				// Note modified, refresh the list
 				Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
 				message.sendToTarget();
+				// Send updated note to the server
 				break;
 			case RESULT_CANCELED:
 				// not modified

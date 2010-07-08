@@ -5,6 +5,7 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ViewGroup.LayoutParams;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -47,6 +48,7 @@ public class LoginDialog extends Activity {
 			 */
 			@Override
 			public void on200(final Response response) {
+				Log.d(LOGGING_TAG, "Authentication successful, closing dialog");
 				Intent intent = new Intent();
 				intent.putExtra(Preferences.EMAIL, email.getText().toString());
 				intent.putExtra(Preferences.TOKEN, response.body);

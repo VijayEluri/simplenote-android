@@ -49,7 +49,7 @@ public class LoginDialog extends Activity {
 			@Override
 			public void on200(final Response response) {
 				Log.d(LOGGING_TAG, "Authentication successful, closing dialog");
-				Intent intent = new Intent();
+				Intent intent = getIntent();
 				intent.putExtra(Preferences.EMAIL, email.getText().toString());
 				intent.putExtra(Preferences.TOKEN, response.body);
 				LoginDialog.this.setResult(Activity.RESULT_OK, intent);

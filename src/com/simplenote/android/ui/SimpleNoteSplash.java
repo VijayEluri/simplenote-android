@@ -12,6 +12,8 @@ import android.widget.EditText;
 import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
+import com.simplenote.android.net.Api.Response;
+import com.simplenote.android.net.HttpCallback;
 import com.simplenote.android.view.TextAsLabelFocusChangeListener;
 import com.simplenote.android.widget.LoginActionListener;
 
@@ -71,6 +73,15 @@ public class SimpleNoteSplash extends Activity {
 			};
 		email.setOnFocusChangeListener(new TextAsLabelFocusChangeListener(email, getString(R.string.email)));
 		password.setOnFocusChangeListener(passwordFocusChangeListener);
-		password.setOnEditorActionListener(new LoginActionListener(this, email, password));
+		password.setOnEditorActionListener(new LoginActionListener(this, email, password, new HttpCallback() {
+			/**
+			 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
+			 */
+			@Override
+			public void on200(Response response) {
+				FireIntent.SimpleNoteList(SimpleNoteSplash.this);
+				SimpleNoteSplash.this.finish();
+			}
+		}));
 	}
 }

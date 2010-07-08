@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.EditText;
@@ -17,6 +16,7 @@ import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
 import com.simplenote.android.net.Api.Response;
 import com.simplenote.android.net.HttpCallback;
+import com.simplenote.android.net.SimpleNoteApi;
 import com.simplenote.android.thread.LoginWithCredentials;
 
 public class LoginActionListener implements OnEditorActionListener {
@@ -26,16 +26,30 @@ public class LoginActionListener implements OnEditorActionListener {
 	private final EditText password;
 	private final String loggingIn;
 	private final String authenticating;
+	private final HttpCallback callback;
 	/**
 	 * 
 	 * @param context
+	 * @param email
+	 * @param password
 	 */
-	public LoginActionListener(final Activity context, EditText email, EditText password) {
+	public LoginActionListener(Activity context, EditText email, EditText password) {
+		this(context, email, password, null);
+	}
+	/**
+	 * 
+	 * @param context
+	 * @param email
+	 * @param password
+	 * @param callback
+	 */
+	public LoginActionListener(Activity context, EditText email, EditText password, HttpCallback callback) {
 		this.context = context;
 		this.email = email;
 		this.password = password;
 		this.authenticating = context.getString(R.string.status_authenticating);
 		this.loggingIn = context.getString(R.string.status_loggingin);
+		this.callback = callback;
 	}
 	/**
 	 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
@@ -57,11 +71,6 @@ public class LoginActionListener implements OnEditorActionListener {
 			@Override
 			public void on200(Response response) {
 				dialog.dismiss();
-				Intent intent = new Intent();
-				intent.putExtra(Preferences.EMAIL, emailValue);
-				intent.putExtra(Preferences.TOKEN, response.body);
-				context.setResult(Activity.RESULT_OK, intent);
-				context.finish();
 			}
 			/**
 			 * @see com.simplenote.android.net.HttpCallback#onError(com.simplenote.android.net.Api.Response)
@@ -75,6 +84,25 @@ public class LoginActionListener implements OnEditorActionListener {
 				});
 				Preferences.setPassword(context, null);
 				dialog.dismiss();
+			}
+			/**
+			 * If an HttpCallback was provided in the constructor execute them here
+			 * @see com.simplenote.android.net.HttpCallback#onComplete(com.simplenote.android.net.Api.Response)
+			 */
+			@Override
+			public void onComplete(final Response response) {
+				if (callback != null) {
+					SimpleNoteApi.handleResponse(callback, response);
+				}
+			}
+			/**
+			 * @see com.simplenote.android.net.HttpCallback#onException(java.lang.String, java.lang.String, java.lang.Throwable)
+			 */
+			@Override
+			public void onException(final String url, final String data, final Throwable t) {
+				if (callback != null) {
+					callback.onException(url, data, t);
+				}
 			}
 		})).start();
 		return false;

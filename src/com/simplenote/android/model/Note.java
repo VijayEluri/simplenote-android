@@ -127,7 +127,7 @@ public class Note implements Serializable{
 	 * @throws JSONException if a mapping doesn't exist or a coercion can't be made
 	 */
 	public Note(final JSONObject object) throws JSONException {
-		this(0, "", "", object.getString("key"), object.getString("modify"), object.getBoolean("deleted"), 0);
+		this(-1, "", "", object.getString("key"), object.getString("modify"), object.getBoolean("deleted"), 0);
 	}
 	/**
 	 * @return id

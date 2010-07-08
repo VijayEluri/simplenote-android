@@ -97,7 +97,6 @@ public class SimpleNoteDao {
 	 * @return the Note if it was saved successfully, null otherwise
 	 */
 	public Note save(Note note) {
-		Log.i(LOGGING_TAG, "Inserting new note into DB");
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Note result = null;
 		/* Setup values */
@@ -112,11 +111,13 @@ public class SimpleNoteDao {
 		try {
 			db.beginTransaction();
 			if (note.getId() < 0) { // If no id set then must be creating a new note
+				Log.i(LOGGING_TAG, "Inserting new note into DB");
 				long id = db.insert(DATABASE_TABLE, null, values);
 				if (id > -1) {
 					result = note.setId(id);
 				}
 			} else { // id exists, updating existing note
+				Log.i(LOGGING_TAG, String.format("Updating note with id: %d", note.getId()));
 				int rows = db.update(DATABASE_TABLE, values, BaseColumns._ID + "=" + note.getId(), null);
 				if (rows == 1) {
 					result = note;

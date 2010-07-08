@@ -103,6 +103,17 @@ public class Preferences extends PreferenceActivity {
 		return editor.commit();
 	}
 	/**
+	 * Save password into preferences
+	 * @param context from which to retrieve preferences
+	 * @param password to save
+	 * @return true if the new values were successfully written to persistent storage.
+	 */
+	public static boolean setPassword(Context context, String password) {
+		Editor editor = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+		editor.putString(PASSWORD, password);
+		return editor.commit();
+	}
+	/**
 	 * Get a set of String values from the Preferences, key won't exist if the default value is returned
 	 * @param context from which to retrieve preferences
 	 * @param keys of the preference values to retrieve

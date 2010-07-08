@@ -1,11 +1,18 @@
 package com.simplenote.android;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
+/**
+ * Hold constants for the SimpleNote application
+ */
 public class Constants {
 	/** Name of stored preferences */
 	public static final String PREFS_NAME = "SimpleNotePrefs";
 	/** Logging tag prefix */
 	public static final String TAG = "SimpleNote:";
+	// Dates
+	public static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
 	// Message Codes
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
 	// Activity for result request Codes

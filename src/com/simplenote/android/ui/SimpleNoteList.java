@@ -38,14 +38,6 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-		// check the token exists first and if not authenticate with existing username/password
-		if (credentials.containsKey(Preferences.TOKEN)) {
-			// sync notes in a background thread
-			syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
-		} else {
-			(new LoginWithCredentials(this, credentials)).start();
-		}
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Cursor notes = dao.retrieveAll();
@@ -56,6 +48,14 @@ public class SimpleNoteList extends ListActivity {
 		// Now create a simple cursor adapter and set it to display
 		SimpleCursorAdapter notesAdapter = new SimpleCursorAdapter(this, R.layout.notes_row, notes, from, to);
 		setListAdapter(notesAdapter);
+		// check the token exists first and if not authenticate with existing username/password
+		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+		if (credentials.containsKey(Preferences.TOKEN)) {
+			// sync notes in a background thread
+			syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
+		} else {
+			(new LoginWithCredentials(this, credentials)).start();
+		}
 	}
 	/**
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -79,7 +79,11 @@ public class SimpleNoteList extends ListActivity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			// update the UI with the new note by forcing the ListAdapter to requery
-			((CursorAdapter) getListAdapter()).getCursor().requery();
+			runOnUiThread(new Runnable() {
+				public void run() {
+					((CursorAdapter) getListAdapter()).getCursor().requery();
+				}
+			});
 		}
 	};
 	/**

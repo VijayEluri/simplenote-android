@@ -8,7 +8,10 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.BaseColumns;
+import android.view.View;
 import android.widget.CursorAdapter;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.simplenote.android.Constants;
@@ -65,7 +68,18 @@ public class SimpleNoteList extends ListActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 			case Constants.REQUEST_LOGIN: handleSigninResult(resultCode, data); break;
+			case Constants.REQUEST_EDIT: handleNoteEditResult(resultCode, data); break;
 		}
+	}
+	/**
+	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
+	 */
+	@Override
+	protected void onListItemClick(final ListView l, final View v, final int position, final long id) {
+		super.onListItemClick(l, v, position, id);
+		Intent intent = new Intent(this, SimpleNoteEdit.class);
+		intent.putExtra(BaseColumns._ID, id);
+		startActivityForResult(intent, Constants.REQUEST_EDIT);
 	}
 	/**
 	 * Message handler which should update the UI when a message with a Note is received
@@ -105,6 +119,24 @@ public class SimpleNoteList extends ListActivity {
 		if (resultCode == RESULT_OK) {
 			final Bundle extras = data.getExtras();
 			syncNotes(extras.getString(Preferences.EMAIL), extras.getString(Preferences.TOKEN));
+		}
+	}
+	/**
+	 * Deal with the results of the REQUEST_LOGIN Activity
+	 * @param resultCode how the SimpleNoteEdit Activity finished
+	 * @param data the intent that started the SimpleNoteEdit Activity
+	 */
+	private void handleNoteEditResult(final int resultCode, final Intent data) {
+		switch (resultCode) {
+			case RESULT_OK:
+				// modified
+				Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
+				message.sendToTarget();
+				break;
+			case RESULT_CANCELED:
+				// not modified
+				// Since none of the notes were changed nothing should need to be done here
+				break;
 		}
 	}
 }

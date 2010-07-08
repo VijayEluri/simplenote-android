@@ -80,12 +80,25 @@ public class SimpleNoteList extends ListActivity {
 		}
 	}
 	/**
+	 *Edit notes when clicked
 	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
 	 */
 	@Override
 	protected void onListItemClick(final ListView l, final View v, final int position, final long id) {
 		super.onListItemClick(l, v, position, id);
 		FireIntent.EditNote(this, id, null);
+	}
+	/**
+	 * If SimpleNoteEdit saved state then retrieve it and go back to editing
+	 * @see android.app.ListActivity#onRestoreInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		if (state != null) {
+			Log.d(LOGGING_TAG, "Resuming from a saved state");
+			FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
+		}
 	}
 	/**
 	 * Message handler which should update the UI when a message with a Note is received

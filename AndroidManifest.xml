@@ -12,6 +12,7 @@
       </intent-filter>
     </activity>
     <activity android:name=".ui.SimpleNoteList" android:label="@string/app_name" />
+    <activity android:name=".ui.SimpleNoteEdit" android:label="@string/app_name" />
     <activity android:name=".ui.LoginDialog" android:windowNoTitle="true"
       android:label="@string/menu_login" android:theme="@style/NoTitleDialogTheme" />
     <activity android:name=".NoteEdit" />

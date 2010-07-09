@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.BaseColumns;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.EditText;
 
@@ -86,26 +85,53 @@ public class SimpleNoteEdit extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		Log.d(LOGGING_TAG, "Firing onPause and saving note");
-		// save note to database
-		String now = DateFormat.format("yyyy-MM-dd HH:mm:ss.ssssss", new Date()).toString();
-		String body = ((EditText) findViewById(R.id.body)).getText().toString();
-		// get the note as it is from the db
-		final Note dbNote = dao.retrieve(mNoteId);
-		Intent intent = getIntent();
+		Log.d(LOGGING_TAG, "Firing onPause and handling note saving if needed");
 		// if text is unchanged send a CANCELLED result, otherwise save and send an OK result
-		if (mOriginalBody.equals(body)) {
-			setResult(RESULT_CANCELED, intent);
+		if (needsSave() && !mActivityStateSaved) {
+			save();
 		} else {
-			// set new fields on existing note and save it
-			final Note note = dao.save(dbNote.setBody(body).setDateModified(now));
-			intent.putExtra(BaseColumns._ID, note.getId());
-			intent.putExtra(SimpleNoteDao.BODY, note.getBody());
-			intent.putExtra(SimpleNoteDao.MODIFY, note.getDateModified());
-			setResult(RESULT_OK, intent);
+			Intent intent = getIntent();
+			setResult(RESULT_CANCELED, intent);
 		}
-		if (!mActivityStateSaved) {
-			finish();
+	}
+	/**
+	 * @see android.app.Activity#onBackPressed()
+	 */
+	@Override
+	public void onBackPressed() {
+		//super.onBackPressed();
+		Log.d(LOGGING_TAG, "Back button pressed");
+		if (needsSave()) {
+			// save finishes the Activity with an OK result
+			save();
+		} else {
+			// supr.onBackPressed finishes the Activity with a CANCELLED result
+			super.onBackPressed();
 		}
+	}
+	/**
+	 * Checks if the body of the note has been updated compared to what was in the DB
+	 * when this Activity was created
+	 * @return whether or note the note body has changed
+	 */
+	public boolean needsSave() {
+		final String body = ((EditText) findViewById(R.id.body)).getText().toString();
+		return !mOriginalBody.equals(body);
+	}
+	/**
+	 * Saves the note with data from the view and finishes this Activity with an OK result
+	 */
+	private void save() {
+		Log.d(LOGGING_TAG, "Save the note with updated values");
+		final String body = ((EditText) findViewById(R.id.body)).getText().toString();
+		final String now = Constants.serverDateFormat.format(new Date());
+		final Intent intent = getIntent();
+		// get the note as it is from the db, set new fields values and save it
+		final Note note = dao.save(dao.retrieve(mNoteId).setBody(body).setDateModified(now));
+		intent.putExtra(BaseColumns._ID, note.getId());
+		intent.putExtra(SimpleNoteDao.BODY, note.getBody());
+		intent.putExtra(SimpleNoteDao.MODIFY, note.getDateModified());
+		setResult(RESULT_OK, intent);
+		finish();
 	}
 }

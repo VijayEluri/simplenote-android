@@ -95,4 +95,37 @@ public class SimpleNoteApiTest extends TestCase {
 		});
 		assertEquals(note.getTitleAndBody(), noteBody);
 	}
+	/**
+	 * Test we are able to update notes
+	 */
+	public void testNoteUpdate() {
+		String validToken = SimpleNoteApi.login(emailAddress, password, new FailingCallback() {
+			@Override
+			public void on200(Response response) {
+				assertTrue(response.body.length() > 0);
+			}
+		});
+		Note[] notes = SimpleNoteApi.index(validToken, emailAddress, new FailingCallback() {
+			@Override
+			public void on200(Response response) {
+				assertTrue(response.body.length() > 0);
+			}
+		});
+		assertTrue(notes.length > 0);
+		final Note serverNote = SimpleNoteApi.retrieve(notes[0], validToken, emailAddress, new FailingCallback() {
+			@Override
+			public void on200(Response response) {
+				// If we are here we passed
+				noteBody = response.body;
+			}
+		});
+		assertEquals(serverNote.getTitleAndBody(), noteBody);
+		final Note newNote = serverNote.setBody(serverNote.getBody() + "\n Test appended");
+		SimpleNoteApi.update(newNote, validToken, emailAddress, new FailingCallback() {
+			@Override
+			public void on200(Response response) {
+				// passed
+			}
+		});
+	}
 }

@@ -61,7 +61,6 @@ public class NotesAdapter extends BaseAdapter {
 			LayoutInflater inflater = LayoutInflater.from(context);
 			row = (LinearLayout) inflater.inflate(R.layout.notes_row, parent, false);
 		} else {
-			Log.d(LOGGING_TAG, String.format("convertView class is '%s'", convertView.getClass().getName()));
 			row = (LinearLayout) convertView;
 		}
 		((TextView) row.findViewById(R.id.text_title)).setText(notes[position].getTitle());

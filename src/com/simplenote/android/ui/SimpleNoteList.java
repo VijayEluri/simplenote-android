@@ -112,7 +112,7 @@ public class SimpleNoteList extends ListActivity {
 			super.handleMessage(msg);
 			switch (msg.what) {
 				case Constants.MESSAGE_UPDATE_NOTE: handleUpdateNote(msg); break;
-				case Constants.MESSAGE_UPDATE_FINISHED: break;
+				case Constants.MESSAGE_UPDATE_FINISHED: handleUpdateFinished(msg); break;
 				default: break;
 			}
 		}
@@ -121,14 +121,24 @@ public class SimpleNoteList extends ListActivity {
 		 * @param msg with Note information
 		 */
 		private void handleUpdateNote(Message msg) {
-			// update the UI with the new note by forcing the ListAdapter to requery
-			runOnUiThread(new Runnable() {
-				public void run() {
-					final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-					adapter.setNotes(dao.retrieveAll());
-					adapter.notifyDataSetChanged();
-				}
-			});
+			// update the UI with the new note
+			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
+			if (!note.getDeleted()) {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+						adapter.setNotes(dao.retrieveAll());
+						adapter.notifyDataSetChanged();
+					}
+				});
+			}
+		}
+		/**
+		 * Handle the update finished message
+		 * @param msg with Note information
+		 */
+		private void handleUpdateFinished(final Message msg) {
+			// do anything that should be done when sync is finished
 		}
 	};
 	/**

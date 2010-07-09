@@ -4,6 +4,7 @@
 package com.simplenote.android.widget;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.simplenote.android.Constants;
 import com.simplenote.android.R;
 import com.simplenote.android.model.Note;
 
@@ -19,6 +21,7 @@ import com.simplenote.android.model.Note;
  * @author bryanjswift
  */
 public class NotesAdapter extends BaseAdapter {
+	private static final String LOGGING_TAG = Constants.TAG + "NotesAdapter";
 	private final Context context;
 	private Note[] notes;
 	/**
@@ -52,17 +55,18 @@ public class NotesAdapter extends BaseAdapter {
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final View result;
+		final LinearLayout row;
+		Log.d(LOGGING_TAG, String.format("Getting view for '%d' with title '%s'",notes[position].getId(), notes[position].getTitle()));
 		if (convertView == null) {
 			LayoutInflater inflater = LayoutInflater.from(context);
-			LinearLayout row = (LinearLayout) inflater.inflate(R.layout.notes_row, parent, false);
-			((TextView) row.findViewById(R.id.text_title)).setText(notes[position].getTitle());
-			((TextView) row.findViewById(R.id.text_date)).setText(notes[position].getDateModified());
-			result = row;
+			row = (LinearLayout) inflater.inflate(R.layout.notes_row, parent, false);
 		} else {
-			result = convertView;
+			Log.d(LOGGING_TAG, String.format("convertView class is '%s'", convertView.getClass().getName()));
+			row = (LinearLayout) convertView;
 		}
-		return result;
+		((TextView) row.findViewById(R.id.text_title)).setText(notes[position].getTitle());
+		((TextView) row.findViewById(R.id.text_date)).setText(notes[position].getDateModified());
+		return row;
 	}
 	/**
 	 * @return the notes

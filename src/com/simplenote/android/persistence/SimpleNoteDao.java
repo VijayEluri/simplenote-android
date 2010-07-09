@@ -191,7 +191,7 @@ public class SimpleNoteDao {
 		Cursor result = null;
 		try {
 			db.beginTransaction();
-			result = db.query(DATABASE_TABLE, columns, null, null, null, null, MODIFY + " DESC");
+			result = db.query(DATABASE_TABLE, columns, DELETED + " = 0", null, null, null, MODIFY + " DESC");
 			db.setTransactionSuccessful();
 			db.endTransaction();
 		} finally {

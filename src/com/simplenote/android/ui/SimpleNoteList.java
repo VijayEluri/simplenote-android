@@ -186,6 +186,7 @@ public class SimpleNoteList extends ListActivity {
 					@Override
 					public void on200(Response response) {
 						super.on200(response);
+						Log.d(LOGGING_TAG, String.format("Successfully updated note '%s' on server", response.body));
 						// Set needs sync to false in db
 					}
 					/**
@@ -194,6 +195,7 @@ public class SimpleNoteList extends ListActivity {
 					@Override
 					public void on401(Response response) {
 						super.on401(response);
+						Log.d(LOGGING_TAG, "Unauthorized to update note on server");
 						// User unauthorized, get new token and try again
 					}
 					/**
@@ -202,6 +204,7 @@ public class SimpleNoteList extends ListActivity {
 					@Override
 					public void on404(Response response) {
 						super.on404(response);
+						Log.d(LOGGING_TAG, "Note not found on server");
 						// Note doesn't exist, create it
 					}
 				});

@@ -42,7 +42,6 @@ public class SyncNotesThread extends Thread {
 		// Fetch the notes from the server
 		Note[] notes = SimpleNoteApi.index(token, email, HttpCallback.EMPTY);
 		Message message = null;
-		Bundle bundle = null;
 		for (Note serverNote : notes) {
 			Note dbNote = dao.retrieveByKey(serverNote.getKey());
 			if (dbNote == null || (serverNote.getDateModified().compareTo(dbNote.getDateModified()) > 0)) {
@@ -57,9 +56,10 @@ public class SyncNotesThread extends Thread {
 				// we have a note and it is up to date
 			}
 			message = Message.obtain(handler, Constants.MESSAGE_UPDATE_NOTE);
-			bundle = new Bundle();
-			bundle.putSerializable(Note.class.getName(), dbNote);
+			message.setData(new Bundle());
+			message.getData().putSerializable(Note.class.getName(), dbNote);
 			message.sendToTarget();
 		}
+		Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
 	}
 }

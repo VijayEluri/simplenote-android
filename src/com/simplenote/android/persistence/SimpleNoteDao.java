@@ -126,10 +126,9 @@ public class SimpleNoteDao {
 			if (note != null) {
 				db.setTransactionSuccessful();
 			}
-			db.endTransaction();
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			db.endTransaction();
+			db.close();
 		}
 		return result;
 	}
@@ -140,20 +139,21 @@ public class SimpleNoteDao {
 	 */
 	public Note retrieve(long id) {
 		Log.i(LOGGING_TAG, String.format("Retrieving note with id '%d' from DB", id));
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		final SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Note result = null;
+		Cursor cursor = null;
 		try {
 			db.beginTransaction();
-			Cursor cursor = db.query(DATABASE_TABLE, columns, BaseColumns._ID + "=" + id, null, null, null, null);
+			cursor = db.query(DATABASE_TABLE, columns, BaseColumns._ID + "=" + id, null, null, null, null);
 			if (cursor.moveToFirst()) { // there is something in the Cursor so create a Note
 				CursorWrapper c = new CursorWrapper(cursor);
 				result = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
 			}
 			db.setTransactionSuccessful();
-			db.endTransaction();
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			db.endTransaction();
+			db.close();
+			cursor.close();
 		}
 		return result;
 	}
@@ -164,20 +164,21 @@ public class SimpleNoteDao {
 	 */
 	public Note retrieveByKey(String key) {
 		Log.i(LOGGING_TAG, String.format("Retrieving note with key '%s' from DB", key));
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		final SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Note result = null;
+		Cursor cursor = null;
 		try {
 			db.beginTransaction();
-			Cursor cursor = db.query(DATABASE_TABLE, columns, KEY + " LIKE '" + key + "'", null, null, null, null);
+			cursor = db.query(DATABASE_TABLE, columns, KEY + " LIKE '" + key + "'", null, null, null, null);
 			if (cursor.moveToFirst()) { // there is something in the Cursor so create a Note
 				CursorWrapper c = new CursorWrapper(cursor);
 				result = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
 			}
 			db.setTransactionSuccessful();
-			db.endTransaction();
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			db.endTransaction();
+			cursor.close();
+			db.close();
 		}
 		return result;
 	}
@@ -185,20 +186,26 @@ public class SimpleNoteDao {
 	 * Retrieve a Cursor of all Notes in database ordered by modified date, descending
 	 * @return Cursor containing all notes
 	 */
-	public Cursor retrieveAll() {
+	public Note[] retrieveAll() {
 		Log.i(LOGGING_TAG, "Getting all notes from DB");
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor result = null;
+		Cursor cursor = null;
+		Note[] notes = new Note[0];
 		try {
 			db.beginTransaction();
-			result = db.query(DATABASE_TABLE, columns, DELETED + " = 0", null, null, null, MODIFY + " DESC");
+			cursor = db.query(DATABASE_TABLE, columns, DELETED + " = 0", null, null, null, MODIFY + " DESC");
 			db.setTransactionSuccessful();
 			db.endTransaction();
+			notes = new Note[cursor.getCount()];
+			CursorWrapper c = new CursorWrapper(cursor);
+			while (cursor != null && cursor.moveToNext()) {
+				notes[cursor.getPosition()] = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
+			}
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			cursor.close();
+			db.close();
 		}
-		return result;
+		return notes;
 	}
 	/**
 	 * Mark a Note for deletion in the database
@@ -218,10 +225,9 @@ public class SimpleNoteDao {
 			int rows = db.update(DATABASE_TABLE, args, BaseColumns._ID + "=" + note.getId(), null);
 			success = rows == 1;
 			if (success) { db.setTransactionSuccessful(); }
-			db.endTransaction();
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			db.endTransaction();
+			db.close();
 		}
 		return success;
 	}
@@ -240,10 +246,9 @@ public class SimpleNoteDao {
 			int rows = db.delete(DATABASE_TABLE, BaseColumns._ID + "=" + note.getId(), null);
 			success = rows == 1;
 			if (success) { db.setTransactionSuccessful(); }
-			db.endTransaction();
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			db.endTransaction();
+			db.close();
 		}
 		return success;
 	}
@@ -261,10 +266,9 @@ public class SimpleNoteDao {
 			int rows = db.delete(DATABASE_TABLE, null, null);
 			success = rows > 0;
 			if (success) { db.setTransactionSuccessful(); }
-			db.endTransaction();
 		} finally {
-			// I think the dbs should be closed but I'm getting "Invalid statement in fillWindow()" errors
-			//db.close();
+			db.endTransaction();
+			db.close();
 		}
 		return success;
 	}

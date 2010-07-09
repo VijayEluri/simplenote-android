@@ -1,26 +1,31 @@
 package com.simplenote.android.ui;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
 import android.view.View;
-import android.widget.CursorAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
+import com.simplenote.android.model.Note;
+import com.simplenote.android.net.Api.Response;
+import com.simplenote.android.net.HttpCallback;
+import com.simplenote.android.net.SimpleNoteApi;
 import com.simplenote.android.persistence.SimpleNoteDao;
 import com.simplenote.android.thread.LoginWithCredentials;
 import com.simplenote.android.thread.SyncNotesThread;
+import com.simplenote.android.widget.NotesAdapter;
 
 /**
  * 'Main' Activity to List notes
@@ -50,13 +55,9 @@ public class SimpleNoteList extends ListActivity {
 		}
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
-		Cursor notes = dao.retrieveAll();
-		// Create an array to specify the fields we want to display in the list
-		String[] from = new String[] { SimpleNoteDao.TITLE, SimpleNoteDao.MODIFY };
-		// and an array of the fields we want to bind those fields to
-		int[] to = new int[] { R.id.text_title, R.id.text_date };
+		Note[] notes = dao.retrieveAll();
 		// Now create a simple cursor adapter and set it to display
-		SimpleCursorAdapter notesAdapter = new SimpleCursorAdapter(this, R.layout.notes_row, notes, from, to);
+		ListAdapter notesAdapter = new NotesAdapter(this, notes);
 		setListAdapter(notesAdapter);
 		// check the token exists first and if not authenticate with existing username/password
 		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
@@ -109,12 +110,54 @@ public class SimpleNoteList extends ListActivity {
 		 * @see android.os.Handler#handleMessage(android.os.Message)
 		 */
 		@Override
-		public void handleMessage(Message msg) {
+		public void handleMessage(final Message msg) {
 			super.handleMessage(msg);
+			switch (msg.what) {
+				case Constants.MESSAGE_UPDATE_NOTE: handleUpdateNote(msg); break;
+				case Constants.MESSAGE_UPDATE_FINISHED: break;
+				default: break;
+			}
+		}
+		/**
+		 * Handle the update note message
+		 * @param msg with Note information
+		 */
+		private void handleUpdateNote(Message msg) {
+			final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+			final Note[] existingNotes = adapter.getNotes();
+			final Note[] notes;
+			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
+			if (note.getDeleted()) { return; }
+			int index = Arrays.binarySearch(existingNotes, note, noteComparator);
+			if (index < 0) {
+				Log.d(LOGGING_TAG, String.format("Adding note at index '%d' to notes of length '%d'", index, (existingNotes.length + 1)));
+				int length = existingNotes.length + 1;
+				index = -(index + 1);
+				notes = new Note[length];
+				try {
+					for (int i = 0; i < length; i++) {
+						if (i < index) {
+							notes[i] = existingNotes[i];
+						} else if (i == index) {
+							notes[i] = note;
+						} else {
+							notes[i] = existingNotes[i - 1];
+						}
+						Log.d(LOGGING_TAG, String.format("Added note at index: %d", index));
+					}
+				} catch (RuntimeException e) {
+					Log.e(LOGGING_TAG, String.format("Error adding note at index '%d' to notes of length '%d'", index, (existingNotes.length + 1)));
+					throw e;
+				}
+			} else {
+				existingNotes[index] = note;
+				notes = existingNotes;
+			}
 			// update the UI with the new note by forcing the ListAdapter to requery
 			runOnUiThread(new Runnable() {
 				public void run() {
-					((CursorAdapter) getListAdapter()).getCursor().requery();
+					adapter.setNotes(notes);
+					adapter.notifyDataSetChanged();
 				}
 			});
 		}
@@ -148,15 +191,57 @@ public class SimpleNoteList extends ListActivity {
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
 		switch (resultCode) {
 			case RESULT_OK:
+				final Note dbNote = dao.retrieve(data.getExtras().getLong(BaseColumns._ID));
+				Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", dbNote.getKey()));
 				// Note modified, refresh the list
 				Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
+				message.setData(new Bundle());
+				message.getData().putSerializable(Note.class.getName(), dbNote);
 				message.sendToTarget();
 				// Send updated note to the server
+				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+				SimpleNoteApi.update(dbNote, credentials.get(Preferences.TOKEN), credentials.get(Preferences.EMAIL), new HttpCallback() {
+					/**
+					 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
+					 */
+					@Override
+					public void on200(Response response) {
+						super.on200(response);
+						// Set needs sync to false in db
+					}
+					/**
+					 * @see com.simplenote.android.net.HttpCallback#on401(com.simplenote.android.net.Api.Response)
+					 */
+					@Override
+					public void on401(Response response) {
+						super.on401(response);
+						// User unauthorized, get new token and try again
+					}
+					/**
+					 * @see com.simplenote.android.net.HttpCallback#on404(com.simplenote.android.net.Api.Response)
+					 */
+					@Override
+					public void on404(Response response) {
+						super.on404(response);
+						// Note doesn't exist, create it
+					}
+				});
 				break;
 			case RESULT_CANCELED:
 				// not modified
-				// Since none of the notes were changed nothing should need to be done here
+				// Since the note wasn't changed nothing should need to be done here
 				break;
 		}
 	}
+	/**
+	 * Comparator to sort notes based on date modified String
+	 */
+	private final Comparator<Note> noteComparator = new Comparator<Note>() {
+		/**
+		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 */
+		public int compare(Note note1, Note note2) {
+			return note2.getModified().compareTo(note1.getModified());
+		}
+	};
 }

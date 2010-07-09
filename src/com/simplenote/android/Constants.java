@@ -12,7 +12,8 @@ public class Constants {
 	/** Logging tag prefix */
 	public static final String TAG = "SimpleNote:";
 	// Dates
-	public static final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
+	public static final DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
+	public static final DateFormat displayDateFormat = new SimpleDateFormat("dd MMM yyyy");
 	// Message Codes
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
 	public static final int MESSAGE_UPDATE_FINISHED = 9732145;

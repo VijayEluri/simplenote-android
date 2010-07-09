@@ -22,6 +22,9 @@ public class Note implements Serializable{
 	private final String key;
 	private final String dateModified;
 	private final boolean deleted;
+	// Memoizable fields
+	private String title;
+	private Date modified;
 
 	/**
 	 * Constructor to create a Note from body, key, dateModified, and deleted
@@ -88,12 +91,13 @@ public class Note implements Serializable{
 	 * @return title
 	 */
 	public final String getTitle() {
-		final int idxNewline = titleAndBody.indexOf("\n");
-		final String title;
-		if (idxNewline != -1) {
-			title = titleAndBody.substring(0,idxNewline);
-		} else {
-			title = titleAndBody;
+		if (title == null) {
+			final int idxNewline = titleAndBody.indexOf("\n");
+			if (idxNewline != -1) {
+				title = titleAndBody.substring(0,idxNewline);
+			} else {
+				title = titleAndBody;
+			}
 		}
 		return title;
 	}
@@ -151,13 +155,14 @@ public class Note implements Serializable{
 	 * @return Date parsed from dateModified
 	 */
 	public final Date getModified() {
-		Date date = null;
-		try {
-			date = Constants.format.parse(dateModified);
-		} catch (ParseException e) {
-			e.printStackTrace();
+		if (modified == null) {
+			try {
+				modified = Constants.serverDateFormat.parse(dateModified);
+			} catch (ParseException e) {
+				modified = null;
+			}
 		}
-		return date;
+		return modified;
 	}
 	/**
 	 * Invokes private constructor to create a new note

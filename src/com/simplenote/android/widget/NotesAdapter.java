@@ -22,7 +22,9 @@ import com.simplenote.android.model.Note;
  */
 public class NotesAdapter extends BaseAdapter {
 	private static final String LOGGING_TAG = Constants.TAG + "NotesAdapter";
-	private final Context context;
+	// Immutable Adapter state
+	private final LayoutInflater inflater;
+	// Mutable Adapter state
 	private Note[] notes;
 	/**
 	 * Default constructor for converting Note objects to ListView rows
@@ -30,7 +32,7 @@ public class NotesAdapter extends BaseAdapter {
 	 * @param notes to use as data
 	 */
 	public NotesAdapter(Context context, Note[] notes) {
-		this.context = context;
+		this.inflater = LayoutInflater.from(context);
 		this.notes = notes;
 	}
 	/**
@@ -56,15 +58,21 @@ public class NotesAdapter extends BaseAdapter {
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
 		final LinearLayout row;
-		Log.d(LOGGING_TAG, String.format("Getting view for '%d' with title '%s'",notes[position].getId(), notes[position].getTitle()));
+		final Note note = notes[position];
+		Log.d(LOGGING_TAG, String.format("Getting view for '%d' with title '%s'",note.getId(), note.getTitle()));
 		if (convertView == null) {
-			LayoutInflater inflater = LayoutInflater.from(context);
 			row = (LinearLayout) inflater.inflate(R.layout.notes_row, parent, false);
 		} else {
 			row = (LinearLayout) convertView;
 		}
-		((TextView) row.findViewById(R.id.text_title)).setText(notes[position].getTitle());
-		((TextView) row.findViewById(R.id.text_date)).setText(notes[position].getDateModified());
+		final String modified;
+		if (note.getModified() == null) {
+			modified = note.getDateModified();
+		} else {
+			modified = Constants.displayDateFormat.format(note.getModified());
+		}
+		((TextView) row.findViewById(R.id.text_title)).setText(note.getTitle());
+		((TextView) row.findViewById(R.id.text_date)).setText(modified);
 		return row;
 	}
 	/**

@@ -1,7 +1,5 @@
 package com.simplenote.android.ui;
 
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 
 import android.app.ListActivity;
@@ -123,40 +121,11 @@ public class SimpleNoteList extends ListActivity {
 		 * @param msg with Note information
 		 */
 		private void handleUpdateNote(Message msg) {
-			final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-			final Note[] existingNotes = adapter.getNotes();
-			final Note[] notes;
-			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
-			if (note.getDeleted()) { return; }
-			int index = Arrays.binarySearch(existingNotes, note, noteComparator);
-			if (index < 0) {
-				Log.d(LOGGING_TAG, String.format("Adding note at index '%d' to notes of length '%d'", index, (existingNotes.length + 1)));
-				int length = existingNotes.length + 1;
-				index = -(index + 1);
-				notes = new Note[length];
-				try {
-					for (int i = 0; i < length; i++) {
-						if (i < index) {
-							notes[i] = existingNotes[i];
-						} else if (i == index) {
-							notes[i] = note;
-						} else {
-							notes[i] = existingNotes[i - 1];
-						}
-						Log.d(LOGGING_TAG, String.format("Added note at index: %d", index));
-					}
-				} catch (RuntimeException e) {
-					Log.e(LOGGING_TAG, String.format("Error adding note at index '%d' to notes of length '%d'", index, (existingNotes.length + 1)));
-					throw e;
-				}
-			} else {
-				existingNotes[index] = note;
-				notes = existingNotes;
-			}
 			// update the UI with the new note by forcing the ListAdapter to requery
 			runOnUiThread(new Runnable() {
 				public void run() {
-					adapter.setNotes(notes);
+					final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+					adapter.setNotes(dao.retrieveAll());
 					adapter.notifyDataSetChanged();
 				}
 			});
@@ -233,15 +202,4 @@ public class SimpleNoteList extends ListActivity {
 				break;
 		}
 	}
-	/**
-	 * Comparator to sort notes based on date modified String
-	 */
-	private final Comparator<Note> noteComparator = new Comparator<Note>() {
-		/**
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-		 */
-		public int compare(Note note1, Note note2) {
-			return note2.getModified().compareTo(note1.getModified());
-		}
-	};
 }

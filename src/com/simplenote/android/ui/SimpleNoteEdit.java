@@ -26,6 +26,7 @@ public class SimpleNoteEdit extends Activity {
 	// Mutable instance variables
 	private long mNoteId = 0L;
 	private String mOriginalBody = "";
+	private boolean mActivityStateSaved = false;
 	/**
 	 * Default constructor to setup final fields
 	 */
@@ -38,6 +39,7 @@ public class SimpleNoteEdit extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
 		setContentView(R.layout.edit_note);
 		if (savedInstanceState == null) {
 			Bundle extras = getIntent().getExtras();
@@ -54,6 +56,28 @@ public class SimpleNoteEdit extends Activity {
 		}
 		setTitle(getString(R.string.app_name) + " - " + dbNote.getTitle());
 		((EditText) findViewById(R.id.body)).setText(dbNote.getBody());
+	}
+	/**
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.d(LOGGING_TAG, "Resuming SimpleNoteEdit");
+		mActivityStateSaved = false;
+	}
+	/**
+	 * Called before on pause, save data here so SimpleEditNote can be relaunched
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d(LOGGING_TAG, "Saving instance state");
+		mActivityStateSaved = true;
+		// Make sure the note id is set in the saved state
+		outState.putLong(BaseColumns._ID, mNoteId);
+		outState.putString(SimpleNoteDao.BODY, mOriginalBody);
 	}
 	/**
 	 * When user leaves this view save the note and set a result
@@ -80,17 +104,8 @@ public class SimpleNoteEdit extends Activity {
 			intent.putExtra(SimpleNoteDao.MODIFY, note.getDateModified());
 			setResult(RESULT_OK, intent);
 		}
-	}
-	/**
-	 * Called before on pause, save data here so SimpleEditNote can be relaunched
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Log.d(LOGGING_TAG, "Saving instance state");
-		// Make sure the note id is set in the saved state
-		outState.putLong(BaseColumns._ID, mNoteId);
-		outState.putString(SimpleNoteDao.BODY, mOriginalBody);
+		if (!mActivityStateSaved) {
+			finish();
+		}
 	}
 }

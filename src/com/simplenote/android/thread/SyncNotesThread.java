@@ -52,13 +52,13 @@ public class SyncNotesThread extends Thread {
 					serverNote = serverNote.setId(dbNote.getId());
 				}
 				dbNote = dao.save(serverNote);
+				message = Message.obtain(handler, Constants.MESSAGE_UPDATE_NOTE);
+				message.setData(new Bundle());
+				message.getData().putSerializable(Note.class.getName(), dbNote);
+				message.sendToTarget();
 			} else {
 				// we have a note and it is up to date
 			}
-			message = Message.obtain(handler, Constants.MESSAGE_UPDATE_NOTE);
-			message.setData(new Bundle());
-			message.getData().putSerializable(Note.class.getName(), dbNote);
-			message.sendToTarget();
 		}
 		Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
 	}

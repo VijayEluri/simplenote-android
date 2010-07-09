@@ -96,7 +96,7 @@ public class SimpleNoteDao {
 	 * @param note to store
 	 * @return the Note if it was saved successfully, null otherwise
 	 */
-	public Note save(Note note) {
+	synchronized public Note save(Note note) {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		Note result = null;
 		/* Setup values */
@@ -137,7 +137,7 @@ public class SimpleNoteDao {
 	 * @param id of the Note to retrieved
 	 * @return the Note if it exists, null otherwise
 	 */
-	public Note retrieve(long id) {
+	synchronized public Note retrieve(long id) {
 		Log.i(LOGGING_TAG, String.format("Retrieving note with id '%d' from DB", id));
 		final SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Note result = null;
@@ -162,7 +162,7 @@ public class SimpleNoteDao {
 	 * @param key of the Note to retrieved
 	 * @return the Note if it exists, null otherwise
 	 */
-	public Note retrieveByKey(String key) {
+	synchronized public Note retrieveByKey(String key) {
 		Log.i(LOGGING_TAG, String.format("Retrieving note with key '%s' from DB", key));
 		final SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Note result = null;
@@ -186,7 +186,7 @@ public class SimpleNoteDao {
 	 * Retrieve a Cursor of all Notes in database ordered by modified date, descending
 	 * @return Cursor containing all notes
 	 */
-	public Note[] retrieveAll() {
+	synchronized public Note[] retrieveAll() {
 		Log.i(LOGGING_TAG, "Getting all notes from DB");
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = null;
@@ -202,7 +202,7 @@ public class SimpleNoteDao {
 				notes[cursor.getPosition()] = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
 			}
 		} finally {
-			cursor.close();
+			if (cursor != null) { cursor.close(); }
 			db.close();
 		}
 		return notes;
@@ -212,7 +212,7 @@ public class SimpleNoteDao {
 	 * @param note to mark for deletion
 	 * @return whether or not the Note was successfully updated
 	 */
-	public boolean delete(Note note) {
+	synchronized public boolean delete(Note note) {
 		Log.i(LOGGING_TAG, String.format("Marking %s for deletion", note.getKey()));
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;
@@ -236,7 +236,7 @@ public class SimpleNoteDao {
 	 * @param note to remove from the database
 	 * @return whether or not the Note was successfully deleted
 	 */
-	protected boolean kill(Note note) {
+	synchronized protected boolean kill(Note note) {
 		Log.w(LOGGING_TAG, String.format("Killing %s", note.getKey()));
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;
@@ -256,7 +256,7 @@ public class SimpleNoteDao {
 	 * Delete all Note objects from the database
 	 * @return true if any notes deleted, false otherwise
 	 */
-	protected boolean killAll() {
+	synchronized protected boolean killAll() {
 		Log.w(LOGGING_TAG, String.format("Killing all notes"));
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;

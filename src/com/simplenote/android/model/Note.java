@@ -1,9 +1,13 @@
 package com.simplenote.android.model;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.simplenote.android.Constants;
 
 /**
  * Represents a note from the SimpleNote servers
@@ -141,6 +145,19 @@ public class Note implements Serializable{
 	 */
 	public final String getDateModified() {
 		return dateModified;
+	}
+	/**
+	 * Get a Date object from the dateModified String
+	 * @return Date parsed from dateModified
+	 */
+	public final Date getModified() {
+		Date date = null;
+		try {
+			date = Constants.format.parse(dateModified);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return date;
 	}
 	/**
 	 * Invokes private constructor to create a new note

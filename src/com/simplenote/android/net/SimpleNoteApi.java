@@ -96,8 +96,8 @@ public class SimpleNoteApi extends Api {
 	 */
 	public static boolean update(final Note n, final String auth, final String email, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Updating note with key '%s' on simplenote server", n.getKey()));
-		final String urlData =
-			String.format("?key=%s&auth=%s&email=%s&modify=%s", n.getKey(), auth, email, n.getDateModified());
+		final String modifiedDate = encode(n.getDateModified(), false, true);
+		final String urlData = String.format("?key=%s&auth=%s&email=%s&modify=%s", n.getKey(), auth, email, modifiedDate);
 		final String data = encode(n.getTitleAndBody(), true, false);
 		boolean success = false;
 		try {
@@ -118,8 +118,8 @@ public class SimpleNoteApi extends Api {
 	 */
 	public static boolean create(final Note n, final String auth, final String email, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Updating not with key %s on simplenote server", n.getKey()));
-		final String urlData =
-			String.format("?auth=%s&email=%s&create=%s&modify=%s", auth, email, n.getDateModified(), n.getDateModified());
+		final String modifiedDate = encode(n.getDateModified(), false, true);
+		final String urlData = String.format("?key=%s&auth=%s&email=%s&modify=%s", n.getKey(), auth, email, modifiedDate);
 		final String data = encode(n.getTitleAndBody(), true, false);
 		boolean success = false;
 		try {

@@ -45,6 +45,10 @@
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
   </style>
+  <style name="DialogInput.Password">
+    <item name="android:autoText">false</item>
+    <item name="android:capitalize">none</item>
+  </style>
   <!-- List styles -->
   <style name="FullWidth">
     <item name="android:layout_width">fill_parent</item>

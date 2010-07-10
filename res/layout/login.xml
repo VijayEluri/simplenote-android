@@ -23,5 +23,5 @@
       android:password="true"
       android:imeOptions="actionGo"
       android:layout_marginBottom="10dip"
-      style="@style/DialogInput" />
+      style="@style/DialogInput.Password" />
 </LinearLayout>

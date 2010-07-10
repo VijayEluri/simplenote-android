@@ -4,9 +4,9 @@
     android:orientation="vertical"
     style="@style/FullWidth">
   <TextView
-      android:id="@+id/text_title"
+      android:id="@+id/note_title"
       style="@style/FullWidth" />
   <TextView
-      android:id="@+id/text_date"
+      android:id="@+id/note_date"
       style="@style/FullWidth" />
 </LinearLayout>

@@ -71,8 +71,8 @@ public class NotesAdapter extends BaseAdapter {
 		} else {
 			modified = Constants.displayDateFormat.format(note.getModified());
 		}
-		((TextView) row.findViewById(R.id.text_title)).setText(note.getTitle());
-		((TextView) row.findViewById(R.id.text_date)).setText(modified);
+		((TextView) row.findViewById(R.id.note_title)).setText(note.getTitle());
+		((TextView) row.findViewById(R.id.note_date)).setText(modified);
 		return row;
 	}
 	/**

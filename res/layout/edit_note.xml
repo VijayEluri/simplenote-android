@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
   <EditText
-      android:id="@+id/body"
+      android:id="@+id/note_body"
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:layout_weight="1"

@@ -54,7 +54,7 @@ public class SimpleNoteEdit extends Activity {
 			mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
 		}
 		setTitle(getString(R.string.app_name) + " - " + dbNote.getTitle());
-		((EditText) findViewById(R.id.body)).setText(dbNote.getBody());
+		((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
 	}
 	/**
 	 * @see android.app.Activity#onResume()
@@ -115,7 +115,7 @@ public class SimpleNoteEdit extends Activity {
 	 * @return whether or note the note body has changed
 	 */
 	private boolean needsSave() {
-		final String body = ((EditText) findViewById(R.id.body)).getText().toString();
+		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
 		return !mOriginalBody.equals(body);
 	}
 	/**
@@ -123,7 +123,7 @@ public class SimpleNoteEdit extends Activity {
 	 */
 	private void save() {
 		Log.d(LOGGING_TAG, "Save the note with updated values");
-		final String body = ((EditText) findViewById(R.id.body)).getText().toString();
+		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
 		final String now = Constants.serverDateFormat.format(new Date());
 		final Intent intent = getIntent();
 		// get the note as it is from the db, set new fields values and save it

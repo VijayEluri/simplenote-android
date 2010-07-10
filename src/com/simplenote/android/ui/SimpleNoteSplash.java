@@ -47,8 +47,8 @@ public class SimpleNoteSplash extends Activity {
 	 * Attach focus event listeners to the EditTexts in the layout
 	 */
 	private void setupSplashFields() {
-		final EditText email = (EditText) findViewById(R.id.email);
-		final EditText password = (EditText) findViewById(R.id.password);
+		final EditText email = (EditText) findViewById(R.id.splash_email);
+		final EditText password = (EditText) findViewById(R.id.splash_password);
 		final TextAsLabelFocusChangeListener passwordFocusChangeListener =
 			new TextAsLabelFocusChangeListener(password, getString(R.string.password)) {
 				/**

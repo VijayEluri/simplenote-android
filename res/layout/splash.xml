@@ -8,12 +8,12 @@
       android:text="@string/app_name"
       style="@style/SplashHeader" />
   <EditText
-      android:id="@+id/email"
+      android:id="@+id/splash_email"
       android:inputType="textEmailAddress"
       android:text="@string/email"
       style="@style/DialogInput" />
   <EditText
-      android:id="@+id/password"
+      android:id="@+id/splash_password"
       android:text="@string/password"
       android:imeOptions="actionGo"
       android:layout_marginBottom="10dip"

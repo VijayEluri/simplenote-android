@@ -7,6 +7,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.EditText;
 
 import com.simplenote.android.Constants;
@@ -107,6 +110,31 @@ public class SimpleNoteEdit extends Activity {
 		} else {
 			// supr.onBackPressed finishes the Activity with a CANCELLED result
 			super.onBackPressed();
+		}
+	}
+	/**
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_edit, menu);
+		return true;
+	}
+	/**
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_save:
+				save(); // save returns ok
+				return true;
+			case R.id.menu_delete:
+				// delete the note assuming it has an id otherwise just cancel
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 	/**

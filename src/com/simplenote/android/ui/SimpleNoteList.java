@@ -9,6 +9,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -97,6 +100,34 @@ public class SimpleNoteList extends ListActivity {
 		if (state != null) {
 			Log.d(LOGGING_TAG, "Resuming from a saved state");
 			FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
+		}
+	}
+	/**
+	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+	 */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_list, menu);
+		return true;
+	}
+	/**
+	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+			case R.id.menu_refresh:
+				HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+				syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
+				return true;
+			case R.id.menu_preferences:
+				return true;
+			case R.id.menu_add:
+				FireIntent.EditNote(this, 0L, "");
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 	/**

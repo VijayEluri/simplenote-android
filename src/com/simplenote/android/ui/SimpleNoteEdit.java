@@ -114,7 +114,7 @@ public class SimpleNoteEdit extends Activity {
 	 * when this Activity was created
 	 * @return whether or note the note body has changed
 	 */
-	public boolean needsSave() {
+	private boolean needsSave() {
 		final String body = ((EditText) findViewById(R.id.body)).getText().toString();
 		return !mOriginalBody.equals(body);
 	}

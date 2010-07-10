@@ -127,5 +127,11 @@ public class SimpleNoteApiTest extends TestCase {
 				// passed
 			}
 		});
+		SimpleNoteApi.update(serverNote, validToken, emailAddress, new FailingCallback() {
+			@Override
+			public void on200(Response response) {
+				// passed
+			}
+		});
 	}
 }

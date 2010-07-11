@@ -67,7 +67,7 @@ public class SimpleNoteDao {
 			Log.w(LOGGING_TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
 			switch (oldVersion) {
 				default:
-					Log.i(LOGGING_TAG, "** upgrade steps complete.");
+					Log.i(LOGGING_TAG, "No upgrade necessary.");
 					break;
 			}
 		}

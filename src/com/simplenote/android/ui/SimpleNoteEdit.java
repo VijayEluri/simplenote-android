@@ -59,6 +59,8 @@ public class SimpleNoteEdit extends Activity {
 		if (dbNote != null) {
 			setTitle(getString(R.string.app_name) + " - " + dbNote.getTitle());
 			((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
+		} else {
+			setTitle(getString(R.string.app_name) + " - " + getString(R.string.new_note));
 		}
 	}
 	/**

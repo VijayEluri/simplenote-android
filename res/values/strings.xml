@@ -5,6 +5,7 @@
   <string name="title">Title</string>
   <string name="body">Body</string>
   <string name="confirm">Confirm</string>
+  <string name="new_note">New Note</string>
   <string name="edit_note">Edit Note</string>
   <string name="authenticate">Sign In</string>
   <string name="email">Email</string>

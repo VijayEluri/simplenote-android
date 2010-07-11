@@ -53,6 +53,7 @@ public class SimpleNoteList extends ListActivity {
 			Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
 			FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
 		}
+		Log.d(LOGGING_TAG, "Firing up the note list");
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Note[] notes = dao.retrieveAll();
@@ -124,7 +125,7 @@ public class SimpleNoteList extends ListActivity {
 				FireIntent.Preferences(this);
 				return true;
 			case R.id.menu_add:
-				FireIntent.EditNote(this, 0L, "");
+				FireIntent.EditNote(this, Constants.DEFAULT_ID, "");
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -204,20 +205,27 @@ public class SimpleNoteList extends ListActivity {
 				final Bundle extras = data.getExtras();
 				final Note dbNote = dao.retrieve(extras.getLong(BaseColumns._ID));
 				// Note modified, refresh the list
-				Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
-				message.setData(new Bundle());
-				message.getData().putSerializable(Note.class.getName(), dbNote);
-				message.sendToTarget();
+				updateNotesFor(dbNote);
 				// Send updated note to the server
 				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 				final String email = credentials.get(Preferences.EMAIL);
 				final String auth = credentials.get(Preferences.TOKEN);
 				Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", dbNote.getKey()));
-				final HttpCallback serverSaveCallback = new ServerSaveCallback();
 				if (extras.getBoolean(SimpleNoteDao.KEY)) {
-					SimpleNoteApi.update(dbNote, auth, email, serverSaveCallback);
+					SimpleNoteApi.update(dbNote, auth, email, new ServerSaveCallback(dbNote));
 				} else {
-					SimpleNoteApi.create(dbNote, auth, email, serverSaveCallback);
+					SimpleNoteApi.create(dbNote, auth, email, new ServerSaveCallback(dbNote) {
+						/**
+						 * Update the key for the note that was saved
+						 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
+						 */
+						public void on200(Response response) {
+							super.on200(response);
+							final Note savedNote = dao.save(this.note.setKey(response.body));
+							// Note modified, refresh the list
+							updateNotesFor(savedNote);
+						}
+					});
 				}
 				break;
 			case RESULT_CANCELED:
@@ -231,6 +239,14 @@ public class SimpleNoteList extends ListActivity {
 	 * @author bryanjswift
 	 */
 	private class ServerSaveCallback extends HttpCallback {
+		protected final Note note;
+		/**
+		 * Create a callback related to the note which was saved
+		 * @param note trying to be saved to the server
+		 */
+		public ServerSaveCallback(final Note note) {
+			this.note = note;
+		}
 		/**
 		 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
 		 */
@@ -259,4 +275,15 @@ public class SimpleNoteList extends ListActivity {
 			// Note doesn't exist, create it
 		}
 	};
+	/**
+	 * Internal method to trigger a note refresh
+	 * @param note causing the refresh
+	 */
+	private void updateNotesFor(Note note) {
+		// Note modified, refresh the list
+		Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
+		message.setData(new Bundle());
+		message.getData().putSerializable(Note.class.getName(), note);
+		message.sendToTarget();
+	}
 }

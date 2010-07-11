@@ -1,12 +1,6 @@
 Todo
 ====
 
-- Add search box to (top?) main screen, implement search
-- Sync/merge notes when the application relaunches
-- Create note needs to queue a write to the API
-- Delete note functionality
-- Edit view should not include title in body of note or should not have a separate title field
-- Implement daily API usage count
-- Track and handle login token expiration
+Todo items are listed in [Github issues for simplenote-android](http://github.com/bryanjswift/simplenote-android/issues)
 
 More information and discussion at [Google Groups](http://groups.google.com/group/simplenote-api/browse_thread/thread/7fc1fc123752fb12)

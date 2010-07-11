@@ -84,6 +84,7 @@ public class SimpleNoteEdit extends Activity {
 		// Make sure the note id is set in the saved state
 		outState.putLong(BaseColumns._ID, mNoteId);
 		outState.putString(SimpleNoteDao.BODY, mOriginalBody);
+		outState.putInt(Constants.REQUEST_KEY, Constants.REQUEST_EDIT);
 	}
 	/**
 	 * When user leaves this view save the note and set a result

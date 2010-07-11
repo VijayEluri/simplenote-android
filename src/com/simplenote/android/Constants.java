@@ -20,6 +20,7 @@ public class Constants {
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
 	public static final int MESSAGE_UPDATE_FINISHED = 9732145;
 	// Activity for result request Codes
+	public static final String REQUEST_KEY = "ActivityRequest";
 	public static final int REQUEST_LOGIN = 32568;
 	public static final int REQUEST_EDIT = 9138171;
 	// API Base URL

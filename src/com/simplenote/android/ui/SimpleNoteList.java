@@ -47,12 +47,11 @@ public class SimpleNoteList extends ListActivity {
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
 	 */
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		if (savedInstanceState != null) {
-			Log.d(LOGGING_TAG, "Resuming from a saved state");
-			FireIntent.EditNote(this, savedInstanceState.getLong(BaseColumns._ID),
-					savedInstanceState.getString(SimpleNoteDao.BODY));
+	protected void onCreate(Bundle savedState) {
+		super.onCreate(savedState);
+		if (savedState != null && savedState.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
+			Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
+			FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
 		}
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
@@ -97,8 +96,8 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onRestoreInstanceState(Bundle state) {
 		super.onRestoreInstanceState(state);
-		if (state != null) {
-			Log.d(LOGGING_TAG, "Resuming from a saved state");
+		if (state != null && state.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
+			Log.d(LOGGING_TAG, "Resuming edit note from a saved state");
 			FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
 		}
 	}

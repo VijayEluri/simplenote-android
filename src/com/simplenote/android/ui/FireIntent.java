@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.provider.BaseColumns;
 
 import com.simplenote.android.Constants;
+import com.simplenote.android.Preferences;
 import com.simplenote.android.persistence.SimpleNoteDao;
 
 /**
@@ -42,5 +43,13 @@ public class FireIntent {
 	public static void SigninDialog(final Activity context) {
 		Intent i = new Intent(context, LoginDialog.class);
 		context.startActivityForResult(i, Constants.REQUEST_LOGIN);
+	}
+	/**
+	 * Start the Preferences Activity
+	 * @param context Activity for which the intent is firing
+	 */
+	public static void Preferences(final Activity context) {
+		Intent settings = new Intent(context, Preferences.class);
+		context.startActivity(settings);
 	}
 }

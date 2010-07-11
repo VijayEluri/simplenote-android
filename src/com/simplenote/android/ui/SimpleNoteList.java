@@ -121,6 +121,7 @@ public class SimpleNoteList extends ListActivity {
 				syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
 				return true;
 			case R.id.menu_preferences:
+				FireIntent.Preferences(this);
 				return true;
 			case R.id.menu_add:
 				FireIntent.EditNote(this, 0L, "");

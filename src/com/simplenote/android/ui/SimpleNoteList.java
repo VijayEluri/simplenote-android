@@ -20,8 +20,8 @@ import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
 import com.simplenote.android.model.Note;
-import com.simplenote.android.net.Api.Response;
-import com.simplenote.android.net.HttpCallback;
+import com.simplenote.android.net.ServerCreateCallback;
+import com.simplenote.android.net.ServerSaveCallback;
 import com.simplenote.android.net.SimpleNoteApi;
 import com.simplenote.android.persistence.SimpleNoteDao;
 import com.simplenote.android.thread.LoginWithCredentials;
@@ -212,20 +212,9 @@ public class SimpleNoteList extends ListActivity {
 				final String auth = credentials.get(Preferences.TOKEN);
 				Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", dbNote.getKey()));
 				if (extras.getBoolean(SimpleNoteDao.KEY)) {
-					SimpleNoteApi.update(dbNote, auth, email, new ServerSaveCallback(dbNote));
+					SimpleNoteApi.update(dbNote, auth, email, new ServerSaveCallback(this, dbNote));
 				} else {
-					SimpleNoteApi.create(dbNote, auth, email, new ServerSaveCallback(dbNote) {
-						/**
-						 * Update the key for the note that was saved
-						 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
-						 */
-						public void on200(Response response) {
-							super.on200(response);
-							final Note savedNote = dao.save(this.note.setKey(response.body));
-							// Note modified, refresh the list
-							updateNotesFor(savedNote);
-						}
-					});
+					SimpleNoteApi.create(dbNote, auth, email, new ServerCreateCallback(this, dbNote));
 				}
 				break;
 			case RESULT_CANCELED:
@@ -234,47 +223,6 @@ public class SimpleNoteList extends ListActivity {
 				break;
 		}
 	}
-	/**
-	 * Specialized HttpCallback to handle respsonses when trying to save notes to the server
-	 * @author bryanjswift
-	 */
-	private class ServerSaveCallback extends HttpCallback {
-		protected final Note note;
-		/**
-		 * Create a callback related to the note which was saved
-		 * @param note trying to be saved to the server
-		 */
-		public ServerSaveCallback(final Note note) {
-			this.note = note;
-		}
-		/**
-		 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
-		 */
-		@Override
-		public void on200(Response response) {
-			super.on200(response);
-			Log.d(LOGGING_TAG, String.format("Successfully saved note '%s' on server", response.body));
-			// Set needs sync to false in db
-		}
-		/**
-		 * @see com.simplenote.android.net.HttpCallback#on401(com.simplenote.android.net.Api.Response)
-		 */
-		@Override
-		public void on401(Response response) {
-			super.on401(response);
-			Log.d(LOGGING_TAG, "Unauthorized to save note on server");
-			// User unauthorized, get new token and try again
-		}
-		/**
-		 * @see com.simplenote.android.net.HttpCallback#on404(com.simplenote.android.net.Api.Response)
-		 */
-		@Override
-		public void on404(Response response) {
-			super.on404(response);
-			Log.d(LOGGING_TAG, "Note not found on server");
-			// Note doesn't exist, create it
-		}
-	};
 	/**
 	 * Internal method to trigger a note refresh
 	 * @param note causing the refresh

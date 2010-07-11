@@ -1,16 +1,11 @@
 package com.simplenote.android.net;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.util.Log;
 
 import com.simplenote.android.Constants;
-import com.simplenote.android.Preferences;
 import com.simplenote.android.model.Note;
 import com.simplenote.android.net.Api.Response;
-import com.simplenote.android.net.SimpleNoteApi;
-import com.simplenote.android.persistence.SimpleNoteDao;
 
 /**
  * Specialized ServerSaveCallback for creating a new note
@@ -31,6 +26,7 @@ public class ServerCreateCallback extends ServerSaveCallback {
 	 */
 	public void on200(Response response) {
 		super.on200(response);
+		Log.d(LOGGING_TAG, "Updating key for created note");
 		// this only modifies the key, no need to refresh list
 		dao.save(this.note.setKey(response.body));
 	}

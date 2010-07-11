@@ -183,8 +183,8 @@ public class SimpleNoteDao {
 		return result;
 	}
 	/**
-	 * Retrieve a Cursor of all Notes in database ordered by modified date, descending
-	 * @return Cursor containing all notes
+	 * Retrieve a Note[] of all Notes in database ordered by modified date, descending
+	 * @return Note[] containing all undeleted notes
 	 */
 	synchronized public Note[] retrieveAll() {
 		Log.i(LOGGING_TAG, "Getting all notes from DB");
@@ -194,13 +194,32 @@ public class SimpleNoteDao {
 		try {
 			db.beginTransaction();
 			cursor = db.query(DATABASE_TABLE, columns, DELETED + " = 0", null, null, null, MODIFY + " DESC");
-			db.setTransactionSuccessful();
+			if (cursor != null) { db.setTransactionSuccessful(); }
 			db.endTransaction();
-			notes = new Note[cursor.getCount()];
-			CursorWrapper c = new CursorWrapper(cursor);
-			while (cursor != null && cursor.moveToNext()) {
-				notes[cursor.getPosition()] = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
-			}
+			notes = cursorToNotes(cursor);
+		} finally {
+			if (cursor != null) { cursor.close(); }
+			db.close();
+		}
+		return notes;
+	}
+	/**
+	 * Retrieve all notes that need to be synchronized with SimpleNote's servers
+	 * @return Note[] of all unsynchronized notes
+	 */
+	synchronized public Note[] retrieveUnsynced() {
+		Log.i(LOGGING_TAG, "Getting all unsynchronized notes from DB");
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor cursor = null;
+		Note[] notes = new Note[0];
+		try {
+			db.beginTransaction();
+			cursor = db.query(DATABASE_TABLE, columns, // table, columns to select
+					NEEDS_SYNC + " = 1", // where clause
+					null, null, null, MODIFY + " DESC"); // __, __, __, order by
+			if (cursor != null) { db.setTransactionSuccessful(); }
+			db.endTransaction();
+			notes = cursorToNotes(cursor);
 		} finally {
 			if (cursor != null) { cursor.close(); }
 			db.close();
@@ -225,6 +244,29 @@ public class SimpleNoteDao {
 			int rows = db.update(DATABASE_TABLE, args, BaseColumns._ID + "=" + note.getId(), null);
 			success = rows == 1;
 			if (success) { db.setTransactionSuccessful(); }
+		} finally {
+			db.endTransaction();
+			db.close();
+		}
+		return success;
+	}
+	/**
+	 * Mark a Note as up to date with the server in the database
+	 * @param note to mark synchronized
+	 * @return whether or not the note was successfully updated
+	 */
+	synchronized public boolean markSynced(Note note) {
+		final SQLiteDatabase db = dbHelper.getWritableDatabase();
+		final ContentValues values = new ContentValues();	
+		values.put(NEEDS_SYNC, true);
+		boolean success = false;
+		try {
+			db.beginTransaction();
+			int rows = db.update(DATABASE_TABLE, values, BaseColumns._ID + " = " + note.getId(), null);
+			if (rows == 1) {
+				success = true;
+				db.setTransactionSuccessful();
+			}
 		} finally {
 			db.endTransaction();
 			db.close();
@@ -271,5 +313,18 @@ public class SimpleNoteDao {
 			db.close();
 		}
 		return success;
+	}
+	/**
+	 * Turn a cursor into an array of Note objects
+	 * @param cursor to read data from
+	 * @return an array of Notes with data from provided Cursor
+	 */
+	private Note[] cursorToNotes(Cursor cursor) {
+		final CursorWrapper c = new CursorWrapper(cursor);
+		final Note[] notes = new Note[cursor.getCount()];
+		while (cursor != null && cursor.moveToNext()) {
+			notes[cursor.getPosition()] = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
+		}
+		return notes;
 	}
 }

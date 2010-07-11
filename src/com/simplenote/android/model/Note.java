@@ -44,6 +44,14 @@ public class Note implements Serializable{
 		this.deleted = deleted;
 	}
 	/**
+	 * Constructor for making a new Note without an existing id or key
+	 * @param titleAndBody - title of the note followed by the body of the note, separated by one or more new lines
+	 * @param dateModified - the last modification was made on this date (server or local)
+	 */
+	public Note(final String titleAndBody, final String dateModified) {
+		this(Constants.DEFAULT_ID, titleAndBody, "", dateModified, false);
+	}
+	/**
 	 * Create a Note from body, key and dateModified
 	 *
 	 * Must parse the title from the body
@@ -67,11 +75,12 @@ public class Note implements Serializable{
 	}
 	/**
 	 * Create a Note from a JSONObject
+	 * JSONObjects will not have body fields/values
 	 * @param object representing a bare bones note
 	 * @throws JSONException if a mapping doesn't exist or a coercion can't be made
 	 */
 	public Note(final JSONObject object) throws JSONException {
-		this(-1, "", object.getString("key"), object.getString("modify"), object.getBoolean("deleted"));
+		this(Constants.DEFAULT_ID, "", object.getString("key"), object.getString("modify"), object.getBoolean("deleted"));
 	}
 	/**
 	 * @return id

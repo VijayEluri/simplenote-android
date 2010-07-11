@@ -11,6 +11,8 @@ public class Constants {
 	public static final String PREFS_NAME = "SimpleNotePrefs";
 	/** Logging tag prefix */
 	public static final String TAG = "SimpleNote:";
+	// Note Default Values
+	public static final long DEFAULT_ID = -1L;
 	// Dates
 	public static final DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
 	public static final DateFormat displayDateFormat = new SimpleDateFormat("dd MMM yyyy");

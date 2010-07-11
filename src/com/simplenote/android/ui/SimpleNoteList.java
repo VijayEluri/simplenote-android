@@ -201,8 +201,8 @@ public class SimpleNoteList extends ListActivity {
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
 		switch (resultCode) {
 			case RESULT_OK:
-				final Note dbNote = dao.retrieve(data.getExtras().getLong(BaseColumns._ID));
-				Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", dbNote.getKey()));
+				final Bundle extras = data.getExtras();
+				final Note dbNote = dao.retrieve(extras.getLong(BaseColumns._ID));
 				// Note modified, refresh the list
 				Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
 				message.setData(new Bundle());
@@ -210,35 +210,15 @@ public class SimpleNoteList extends ListActivity {
 				message.sendToTarget();
 				// Send updated note to the server
 				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-				SimpleNoteApi.update(dbNote, credentials.get(Preferences.TOKEN), credentials.get(Preferences.EMAIL), new HttpCallback() {
-					/**
-					 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
-					 */
-					@Override
-					public void on200(Response response) {
-						super.on200(response);
-						Log.d(LOGGING_TAG, String.format("Successfully updated note '%s' on server", response.body));
-						// Set needs sync to false in db
-					}
-					/**
-					 * @see com.simplenote.android.net.HttpCallback#on401(com.simplenote.android.net.Api.Response)
-					 */
-					@Override
-					public void on401(Response response) {
-						super.on401(response);
-						Log.d(LOGGING_TAG, "Unauthorized to update note on server");
-						// User unauthorized, get new token and try again
-					}
-					/**
-					 * @see com.simplenote.android.net.HttpCallback#on404(com.simplenote.android.net.Api.Response)
-					 */
-					@Override
-					public void on404(Response response) {
-						super.on404(response);
-						Log.d(LOGGING_TAG, "Note not found on server");
-						// Note doesn't exist, create it
-					}
-				});
+				final String email = credentials.get(Preferences.EMAIL);
+				final String auth = credentials.get(Preferences.TOKEN);
+				Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", dbNote.getKey()));
+				final HttpCallback serverSaveCallback = new ServerSaveCallback();
+				if (extras.getBoolean(SimpleNoteDao.KEY)) {
+					SimpleNoteApi.update(dbNote, auth, email, serverSaveCallback);
+				} else {
+					SimpleNoteApi.create(dbNote, auth, email, serverSaveCallback);
+				}
 				break;
 			case RESULT_CANCELED:
 				// not modified
@@ -246,4 +226,37 @@ public class SimpleNoteList extends ListActivity {
 				break;
 		}
 	}
+	/**
+	 * Specialized HttpCallback to handle respsonses when trying to save notes to the server
+	 * @author bryanjswift
+	 */
+	private class ServerSaveCallback extends HttpCallback {
+		/**
+		 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)
+		 */
+		@Override
+		public void on200(Response response) {
+			super.on200(response);
+			Log.d(LOGGING_TAG, String.format("Successfully saved note '%s' on server", response.body));
+			// Set needs sync to false in db
+		}
+		/**
+		 * @see com.simplenote.android.net.HttpCallback#on401(com.simplenote.android.net.Api.Response)
+		 */
+		@Override
+		public void on401(Response response) {
+			super.on401(response);
+			Log.d(LOGGING_TAG, "Unauthorized to save note on server");
+			// User unauthorized, get new token and try again
+		}
+		/**
+		 * @see com.simplenote.android.net.HttpCallback#on404(com.simplenote.android.net.Api.Response)
+		 */
+		@Override
+		public void on404(Response response) {
+			super.on404(response);
+			Log.d(LOGGING_TAG, "Note not found on server");
+			// Note doesn't exist, create it
+		}
+	};
 }

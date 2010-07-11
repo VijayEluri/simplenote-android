@@ -164,7 +164,7 @@ public class SimpleNoteEdit extends Activity {
 		if (dbNote != null) {
 			note = dao.save(dbNote.setBody(body).setDateModified(now));
 		} else {
-			note = new Note(body, now);
+			note = dao.save(new Note(body, now));
 		}
 		intent.putExtra(SimpleNoteDao.KEY, dbNote != null);
 		intent.putExtra(BaseColumns._ID, note.getId());

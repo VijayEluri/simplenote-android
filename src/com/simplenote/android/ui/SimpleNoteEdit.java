@@ -155,7 +155,6 @@ public class SimpleNoteEdit extends Activity {
 	 * Saves the note with data from the view and finishes this Activity with an OK result
 	 */
 	private void save() {
-		Log.d(LOGGING_TAG, "Save the note with updated values");
 		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
 		final String now = Constants.serverDateFormat.format(new Date());
 		final Intent intent = getIntent();
@@ -164,8 +163,10 @@ public class SimpleNoteEdit extends Activity {
 		final Note note;
 		if (dbNote != null) {
 			note = dao.save(dbNote.setBody(body).setDateModified(now));
+			Log.d(LOGGING_TAG, String.format("Saved the note '%d' with updated values", note.getId()));
 		} else {
 			note = dao.save(new Note(body, now));
+			Log.d(LOGGING_TAG, String.format("Created the note '%d'", note.getId()));
 		}
 		intent.putExtra(SimpleNoteDao.KEY, dbNote != null);
 		intent.putExtra(BaseColumns._ID, note.getId());

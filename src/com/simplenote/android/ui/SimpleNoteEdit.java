@@ -56,8 +56,10 @@ public class SimpleNoteEdit extends Activity {
 		} else if (savedInstanceState != null && mOriginalBody == null) {
 			mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
 		}
-		setTitle(getString(R.string.app_name) + " - " + dbNote.getTitle());
-		((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
+		if (dbNote != null) {
+			setTitle(getString(R.string.app_name) + " - " + dbNote.getTitle());
+			((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
+		}
 	}
 	/**
 	 * @see android.app.Activity#onResume()
@@ -155,7 +157,14 @@ public class SimpleNoteEdit extends Activity {
 		final String now = Constants.serverDateFormat.format(new Date());
 		final Intent intent = getIntent();
 		// get the note as it is from the db, set new fields values and save it
-		final Note note = dao.save(dao.retrieve(mNoteId).setBody(body).setDateModified(now));
+		final Note dbNote = dao.retrieve(mNoteId);
+		final Note note;
+		if (dbNote != null) {
+			note = dao.save(dbNote.setBody(body).setDateModified(now));
+		} else {
+			note = new Note(body, now);
+		}
+		intent.putExtra(SimpleNoteDao.KEY, dbNote != null);
 		intent.putExtra(BaseColumns._ID, note.getId());
 		intent.putExtra(SimpleNoteDao.BODY, note.getBody());
 		intent.putExtra(SimpleNoteDao.MODIFY, note.getDateModified());

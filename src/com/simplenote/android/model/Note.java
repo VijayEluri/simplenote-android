@@ -22,12 +22,13 @@ public class Note implements Serializable{
 	private final String key;
 	private final String dateModified;
 	private final boolean deleted;
+	private final boolean synced;
 	// Memoizable fields
 	private String title;
 	private Date modified;
 
 	/**
-	 * Constructor to create a Note from body, key, dateModified, and deleted
+	 * Constructor to create a Note from id, body, key, dateModified, deleted and needsSync
 	 *
 	 * Must parse the title from the body
 	 * @param id of the note
@@ -35,13 +36,27 @@ public class Note implements Serializable{
 	 * @param key from SimpleNote servers for this note
 	 * @param dateModified - the last modification was made on this date (server or local)
 	 * @param deleted - whether or not the note is marked for deletion on the server
+	 * @param synced - whether or not the not is in sync with the server
 	 */
-	public Note(final long id, String titleAndBody, final String key, final String dateModified, final boolean deleted) {
+	public Note(final long id, String titleAndBody, final String key, final String dateModified,
+			final boolean deleted, final boolean synced) {
 		this.id = id;
 		this.titleAndBody = titleAndBody;
 		this.key = key;
 		this.dateModified = dateModified;
 		this.deleted = deleted;
+		this.synced = synced;
+	}
+	/**
+	 * Constructor to create a Note from id, body, key, dateModified and deleted
+	 * @param id of the note
+	 * @param titleAndBody - title of the note followed by the body of the note, separated by one or more new lines
+	 * @param key from SimpleNote servers for this note
+	 * @param dateModified - the last modification was made on this date (server or local)
+	 * @param deleted - whether or not the note is marked for deletion on the server
+	 */
+	public Note(final long id, String titleAndBody, final String key, final String dateModified, final boolean deleted) {
+		this(id, titleAndBody, key, dateModified, deleted, false);
 	}
 	/**
 	 * Constructor for making a new Note without an existing id or key
@@ -184,7 +199,7 @@ public class Note implements Serializable{
 	/**
 	 * @return deleted
 	 */
-	public final boolean getDeleted() {
+	public final boolean isDeleted() {
 		return deleted;
 	}
 	/**
@@ -208,6 +223,20 @@ public class Note implements Serializable{
 	 * @return a new Note with title and body updated
 	 */
 	public final Note setTitleAndBody(String titleAndBody) {
-		return new Note(this.id, titleAndBody, key, dateModified, deleted);
+		return new Note(this.id, titleAndBody, this.key, this.dateModified, this.deleted);
+	}
+	/**
+	 * @return synced
+	 */
+	public final boolean isSynced() {
+		return synced;
+	}
+	/**
+	 * Create a new Note with an updated synced field
+	 * @param synced if the new Note is synced or not
+	 * @return a new Note with synced updated
+	 */
+	public final Note setSynced(final boolean synced) {
+		return new Note(this.id, this.titleAndBody, this.key, this.dateModified, this.deleted, synced);
 	}
 }

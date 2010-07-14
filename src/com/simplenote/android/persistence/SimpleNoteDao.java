@@ -22,8 +22,8 @@ public class SimpleNoteDao {
 	public static final String BODY = "body";
 	public static final String MODIFY = "modify";
 	public static final String DELETED = "deleted";
-	public static final String NEEDS_SYNC = "needs_sync";
-	private static final String[] columns = new String[] { BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, NEEDS_SYNC };
+	public static final String SYNCED = "needs_sync";
+	private static final String[] columns = new String[] { BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, SYNCED };
 	/* Database information/names */
 	private static final String DATABASE_NAME = "simplenotes_data.db";
 	private static final String DATABASE_TABLE = "notes";
@@ -51,7 +51,7 @@ public class SimpleNoteDao {
 				"create table %s (%s integer primary key autoincrement, " +
 				"%s text not null, %s text not null, %s text not null, " +
 				"%s text not null, %s boolean default 0, %s boolean default 0);",
-				DATABASE_TABLE, BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, NEEDS_SYNC));
+				DATABASE_TABLE, BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, SYNCED));
 
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -105,8 +105,8 @@ public class SimpleNoteDao {
 		values.put(TITLE, note.getTitle());
 		values.put(BODY, note.getBody());
 		values.put(MODIFY, note.getDateModified());
-		values.put(DELETED, note.getDeleted());
-		values.put(NEEDS_SYNC, true);
+		values.put(DELETED, note.isDeleted());
+		values.put(SYNCED, true);
 		/* Perform query */
 		try {
 			db.beginTransaction();
@@ -215,7 +215,7 @@ public class SimpleNoteDao {
 		try {
 			db.beginTransaction();
 			cursor = db.query(DATABASE_TABLE, columns, // table, columns to select
-					NEEDS_SYNC + " = 1", // where clause
+					SYNCED + " = 1", // where clause
 					null, null, null, MODIFY + " DESC"); // __, __, __, order by
 			if (cursor != null) { db.setTransactionSuccessful(); }
 			db.endTransaction();
@@ -258,7 +258,7 @@ public class SimpleNoteDao {
 	synchronized public boolean markSynced(Note note) {
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		final ContentValues values = new ContentValues();	
-		values.put(NEEDS_SYNC, true);
+		values.put(SYNCED, true);
 		boolean success = false;
 		try {
 			db.beginTransaction();

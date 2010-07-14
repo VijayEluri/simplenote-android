@@ -82,7 +82,7 @@ public class SimpleNoteList extends ListActivity {
 		}
 	}
 	/**
-	 *Edit notes when clicked
+	 * Edit notes when clicked
 	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
 	 */
 	@Override

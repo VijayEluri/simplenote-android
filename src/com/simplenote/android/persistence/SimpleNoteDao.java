@@ -47,11 +47,11 @@ public class SimpleNoteDao {
 		/**
 		 * Database creation sql statement
 		 */
-		private static final String DATABASE_CREATE = String.format(
+		private static final String DATABASE_CREATE = (String.format(
 				"create table %s (%s integer primary key autoincrement, " +
 				"%s text not null, %s text not null, %s text not null, " +
 				"%s text not null, %s boolean default 0, %s boolean default 0);",
-				DATABASE_TABLE, BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, NEEDS_SYNC);
+				DATABASE_TABLE, BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, NEEDS_SYNC));
 
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);

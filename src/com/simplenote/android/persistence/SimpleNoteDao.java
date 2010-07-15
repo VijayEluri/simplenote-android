@@ -85,7 +85,7 @@ public class SimpleNoteDao {
 	 * Class to wrap a Cursor so values can be queried by column name
 	 * @author bryanjswift
 	 */
-	private class CursorWrapper {
+	private static class CursorWrapper {
 		private final Cursor cursor;
 		CursorWrapper(Cursor cursor) {
 			this.cursor = cursor;
@@ -115,7 +115,7 @@ public class SimpleNoteDao {
 		values.put(BODY, note.getBody());
 		values.put(MODIFY, note.getDateModified());
 		values.put(DELETED, note.isDeleted());
-		values.put(SYNCED, true);
+		values.put(SYNCED, note.isSynced());
 		/* Perform query */
 		try {
 			db.beginTransaction();
@@ -289,7 +289,7 @@ public class SimpleNoteDao {
 	 */
 	synchronized protected boolean kill(Note note) {
 		Log.w(LOGGING_TAG, String.format("Killing %s", note.getKey()));
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;
 		/* Perform query */
 		try {
@@ -309,7 +309,7 @@ public class SimpleNoteDao {
 	 */
 	synchronized protected boolean killAll() {
 		Log.w(LOGGING_TAG, String.format("Killing all notes"));
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;
 		/* Perform query */
 		try {
@@ -328,7 +328,7 @@ public class SimpleNoteDao {
 	 * @param cursor to read data from
 	 * @return an array of Notes with data from provided Cursor
 	 */
-	private Note[] cursorToNotes(Cursor cursor) {
+	private static Note[] cursorToNotes(Cursor cursor) {
 		final CursorWrapper c = new CursorWrapper(cursor);
 		final Note[] notes = new Note[cursor.getCount()];
 		while (cursor != null && cursor.moveToNext()) {

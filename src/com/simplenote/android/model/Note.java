@@ -38,8 +38,7 @@ public class Note implements Serializable{
 	 * @param deleted - whether or not the note is marked for deletion on the server
 	 * @param synced - whether or not the not is in sync with the server
 	 */
-	public Note(final long id, String titleAndBody, final String key, final String dateModified,
-			final boolean deleted, final boolean synced) {
+	public Note(final long id, String titleAndBody, final String key, final String dateModified, final boolean deleted, final boolean synced) {
 		this.id = id;
 		this.titleAndBody = titleAndBody;
 		this.key = key;

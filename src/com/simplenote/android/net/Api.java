@@ -15,13 +15,14 @@ import java.util.Map;
 import com.simplenote.android.util.Base64;
 
 public abstract class Api {
-
+	/**
+	 * Class to represent the response from an API call
+	 */
 	public static class Response {
 		public int status;
 		public String body;
 		public Map<String, List<String>> headers;
 	}
-
 	/**
 	 * Sends an HTTP POST request
 	 *

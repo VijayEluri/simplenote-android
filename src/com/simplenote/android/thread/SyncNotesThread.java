@@ -44,20 +44,21 @@ public class SyncNotesThread extends Thread {
 		Message message = null;
 		for (Note serverNote : notes) {
 			Note dbNote = dao.retrieveByKey(serverNote.getKey());
-			if (dbNote == null || (serverNote.getDateModified().compareTo(dbNote.getDateModified()) > 0)) {
+			if (dbNote == null || (serverNote.getModified().compareTo(dbNote.getModified()) > 0)) {
 				// if we don't have the note or the note on the server is newer
 				// then retrieve from the server and save it
 				serverNote = SimpleNoteApi.retrieve(serverNote, token, email, HttpCallback.EMPTY);
 				if (dbNote != null) { // if it's already in the db make sure the id is set
 					serverNote = serverNote.setId(dbNote.getId());
 				}
+				serverNote = serverNote.setSynced(true);
 				dbNote = dao.save(serverNote);
 				message = Message.obtain(handler, Constants.MESSAGE_UPDATE_NOTE);
 				message.setData(new Bundle());
 				message.getData().putSerializable(Note.class.getName(), dbNote);
 				message.sendToTarget();
 			} else {
-				// we have a note and it is up to date
+				// we have a note and it is up to date or more recent than the note on the server
 			}
 		}
 		Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();

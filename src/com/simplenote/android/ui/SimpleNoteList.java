@@ -179,8 +179,10 @@ public class SimpleNoteList extends ListActivity {
 	 * @param auth token used for access after login API call
 	 */
 	private void syncNotes(String email, String auth) {
-		final Thread t = new SyncNotesThread(updateNoteHandler, dao, email, auth);
-		t.start();
+		final Thread sync = new SyncNotesThread(updateNoteHandler, dao, email, auth);
+		final Thread send = new SendNotesThread(this, dao, email, auth);
+		sync.start();
+		send.start();
 	}
 	/**
 	 * Deal with the results of the REQUEST_LOGIN Activity start

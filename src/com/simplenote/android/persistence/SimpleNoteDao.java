@@ -22,12 +22,12 @@ public class SimpleNoteDao {
 	public static final String BODY = "body";
 	public static final String MODIFY = "modify";
 	public static final String DELETED = "deleted";
-	public static final String SYNCED = "needs_sync";
+	public static final String SYNCED = "synced";
 	private static final String[] columns = new String[] { BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, SYNCED };
 	/* Database information/names */
 	private static final String DATABASE_NAME = "simplenotes_data.db";
 	private static final String DATABASE_TABLE = "notes";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	/* Internal constants */
 	private static final String LOGGING_TAG = Constants.TAG + "DAO";
 	/* Internal fields */
@@ -50,8 +50,8 @@ public class SimpleNoteDao {
 		private static final String DATABASE_CREATE = (String.format(
 				"create table %s (%s integer primary key autoincrement, " +
 				"%s text not null, %s text not null, %s text not null, " +
-				"%s text not null, %s boolean default 0, %s boolean default 0);",
-				DATABASE_TABLE, BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, SYNCED));
+				"%s boolean default 0, %s boolean default 1);",
+				DATABASE_TABLE, BaseColumns._ID, KEY, BODY, MODIFY, DELETED, SYNCED));
 
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -66,6 +66,15 @@ public class SimpleNoteDao {
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 			Log.w(LOGGING_TAG, "Upgrading database from version " + oldVersion + " to " + newVersion);
 			switch (oldVersion) {
+				case 1:
+					final String tmpTable = "tmp_notes";
+					final String oldCols = BaseColumns._ID + "," + KEY + "," + BODY + "," + MODIFY + "," + DELETED + ", NOT needs_sync";
+					final String cols = BaseColumns._ID + "," + KEY + "," + BODY + "," + MODIFY + "," + DELETED + "," + SYNCED;
+					db.execSQL(DATABASE_CREATE.replace("table " + DATABASE_TABLE, "table " + tmpTable));
+					db.execSQL("INSERT INTO " + tmpTable + " (" + cols + ") SELECT " + oldCols + " FROM " + DATABASE_TABLE + ";");
+					db.execSQL("DROP TABLE " + DATABASE_TABLE);
+					db.execSQL("ALTER TABLE tmp_notes RENAME TO " + DATABASE_TABLE);
+					break;
 				default:
 					Log.i(LOGGING_TAG, "No upgrade necessary.");
 					break;

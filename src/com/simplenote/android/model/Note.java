@@ -63,7 +63,7 @@ public class Note implements Serializable{
 	 * @param dateModified - the last modification was made on this date (server or local)
 	 */
 	public Note(final String titleAndBody, final String dateModified) {
-		this(Constants.DEFAULT_ID, titleAndBody, "", dateModified, false);
+		this(Constants.DEFAULT_ID, titleAndBody, Constants.DEFAULT_KEY, dateModified, false);
 	}
 	/**
 	 * Create a Note from body, key and dateModified

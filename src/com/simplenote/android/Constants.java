@@ -13,6 +13,7 @@ public class Constants {
 	public static final String TAG = "SimpleNote:";
 	// Note Default Values
 	public static final long DEFAULT_ID = -1L;
+	public static final String DEFAULT_KEY = "__SN__DEFAULT__KEY__";
 	// Dates
 	public static final DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
 	public static final DateFormat displayDateFormat = new SimpleDateFormat("dd MMM yyyy");

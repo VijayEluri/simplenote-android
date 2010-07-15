@@ -38,7 +38,7 @@ public class SendNotesThread extends Thread {
 		// Fetch the notes from the server
 		Note[] notes = dao.retrieveUnsynced();
 		for (Note dbNote : notes) {
-			if (dbNote.getKey().equals("")) {
+			if (dbNote.getKey().equals(Constants.DEFAULT_KEY)) {
 				SimpleNoteApi.create(dbNote, token, email, new ServerCreateCallback(context, dbNote));
 			} else {
 				SimpleNoteApi.update(dbNote, token, email, new ServerSaveCallback(context, dbNote));

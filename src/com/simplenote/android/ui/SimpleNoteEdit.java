@@ -161,8 +161,8 @@ public class SimpleNoteEdit extends Activity {
 		// get the note as it is from the db, set new fields values and save it
 		final Note dbNote = dao.retrieve(mNoteId);
 		final Note note;
-		if (dbNote != null) {
-			note = dao.save(dbNote.setBody(body).setDateModified(now));
+		if (!(dbNote == null || dbNote.getKey.equals(Constants.DEFAULT_KEY))) {
+			note = dao.save(dbNote.setBody(body).setDateModified(now).setSynced(false));
 			Log.d(LOGGING_TAG, String.format("Saved the note '%d' with updated values", note.getId()));
 		} else {
 			note = dao.save(new Note(body, now));

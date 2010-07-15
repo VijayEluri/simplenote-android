@@ -1,6 +1,8 @@
 package com.simplenote.android.net;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -79,7 +81,11 @@ public class SimpleNoteApi extends Api {
 			Response response = handleResponse(callback, Get(Constants.API_NOTE_URL + data));
 			if (response.status == 200) {
 				// May need to get header information from the Response object in order to be sure modify date is in sync with server
-				note = n.setTitleAndBody(response.body);
+				Map<String, List<String>> headers = response.headers;
+				note = n.setTitleAndBody(response.body)
+						.setDeleted(new Boolean(headers.get("note-deleted").get(0)))
+						.setKey(headers.get("note-key").get(0))
+						.setDateModified(headers.get("note-modifydate").get(0));
 			}
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);

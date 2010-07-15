@@ -11,9 +11,6 @@ import com.simplenote.android.net.SimpleNoteApi;
 import com.simplenote.android.persistence.SimpleNoteDao;
 
 public class SyncNotesThread extends Thread {
-	public static final int STATE_DONE = 0;
-	public static final int STATE_RUNNING = 1;
-
 	private final Handler handler;
 	private final SimpleNoteDao dao;
 	private final String email;
@@ -31,7 +28,6 @@ public class SyncNotesThread extends Thread {
 		this.email = email;
 		this.token = token;
 	}
-
 	/**
 	 * Pulls down notes from the server if the server version is newer than the note in the
 	 * database

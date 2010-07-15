@@ -155,7 +155,7 @@ public class SimpleNoteList extends ListActivity {
 		private void handleUpdateNote(Message msg) {
 			// update the UI with the new note
 			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
-			if (!note.getDeleted()) {
+			if (!note.isDeleted()) {
 				runOnUiThread(new Runnable() {
 					public void run() {
 						final NotesAdapter adapter = ((NotesAdapter) getListAdapter());

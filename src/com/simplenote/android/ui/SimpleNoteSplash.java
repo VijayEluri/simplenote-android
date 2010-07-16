@@ -3,6 +3,7 @@ package com.simplenote.android.ui;
 import java.util.HashMap;
 
 import android.app.Activity;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.method.PasswordTransformationMethod;
@@ -30,6 +31,7 @@ public class SimpleNoteSplash extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+		getWindow().setFormat(PixelFormat.RGBA_8888);
 		setContentView(R.layout.splash);
 		if (credentials.containsKey(Preferences.EMAIL) &&
 				(credentials.containsKey(Preferences.TOKEN) || credentials.containsKey(Preferences.PASSWORD))) {

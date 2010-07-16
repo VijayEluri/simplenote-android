@@ -18,12 +18,11 @@ import com.simplenote.android.model.Note;
 public class SimpleNoteDao {
 	/* Sql Column names */
 	public static final String KEY = "key";
-	public static final String TITLE = "title";
 	public static final String BODY = "body";
 	public static final String MODIFY = "modify";
 	public static final String DELETED = "deleted";
 	public static final String SYNCED = "synced";
-	private static final String[] columns = new String[] { BaseColumns._ID, KEY, TITLE, BODY, MODIFY, DELETED, SYNCED };
+	private static final String[] columns = new String[] { BaseColumns._ID, KEY, BODY, MODIFY, DELETED, SYNCED };
 	/* Database information/names */
 	private static final String DATABASE_NAME = "simplenotes_data.db";
 	private static final String DATABASE_TABLE = "notes";
@@ -111,7 +110,6 @@ public class SimpleNoteDao {
 		/* Setup values */
 		ContentValues values = new ContentValues();
 		values.put(KEY, note.getKey());
-		values.put(TITLE, note.getTitle());
 		values.put(BODY, note.getBody());
 		values.put(MODIFY, note.getDateModified());
 		values.put(DELETED, note.isDeleted());

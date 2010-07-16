@@ -4,18 +4,17 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.simplenote.android.Constants;
 import com.simplenote.android.Preferences;
 import com.simplenote.android.R;
 import com.simplenote.android.net.Api.Response;
 import com.simplenote.android.net.HttpCallback;
-import com.simplenote.android.view.TextAsLabelFocusChangeListener;
 import com.simplenote.android.widget.LoginActionListener;
 
 /**
@@ -33,6 +32,8 @@ public class SimpleNoteSplash extends Activity {
 		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		setContentView(R.layout.splash);
+		Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");
+		((TextView) findViewById(R.id.splashLabel)).setTypeface(helveticaBold);
 		if (credentials.containsKey(Preferences.EMAIL) &&
 				(credentials.containsKey(Preferences.TOKEN) || credentials.containsKey(Preferences.PASSWORD))) {
 			// valid token stored
@@ -51,30 +52,6 @@ public class SimpleNoteSplash extends Activity {
 	private void setupSplashFields() {
 		final EditText email = (EditText) findViewById(R.id.splash_email);
 		final EditText password = (EditText) findViewById(R.id.splash_password);
-		final TextAsLabelFocusChangeListener passwordFocusChangeListener =
-			new TextAsLabelFocusChangeListener(password, getString(R.string.password)) {
-				/**
-				 * @see com.simplenote.android.view.TextAsLabelFocusChangeListener#onFocus()
-				 */
-				@Override
-				protected void onFocus() {
-					super.onFocus();
-					field.setTransformationMethod(new PasswordTransformationMethod());
-				}
-				/**
-				 * @see com.simplenote.android.view.TextAsLabelFocusChangeListener#onBlur()
-				 */
-				@Override
-				protected void onBlur() {
-					super.onBlur();
-					Editable value = field.getText();
-					if (value.toString().equals(initial)) {
-						field.setTransformationMethod(null);
-					}
-				}
-			};
-		email.setOnFocusChangeListener(new TextAsLabelFocusChangeListener(email, getString(R.string.email)));
-		password.setOnFocusChangeListener(passwordFocusChangeListener);
 		password.setOnEditorActionListener(new LoginActionListener(this, email, password, new HttpCallback() {
 			/**
 			 * @see com.simplenote.android.net.HttpCallback#on200(com.simplenote.android.net.Api.Response)

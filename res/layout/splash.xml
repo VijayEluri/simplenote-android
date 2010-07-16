@@ -6,21 +6,18 @@
   <ImageView
       android:id="@+id/splashLogo"
       android:src="@drawable/simplenote"
-      android:layout_width="141dip"
-      android:layout_height="141dip" />
+      style="@style/SplashLogo" />
   <TextView
       android:id="@+id/splashLabel"
       android:text="@string/app_name"
       style="@style/SplashHeader" />
   <EditText
       android:id="@+id/splash_email"
-      android:inputType="textEmailAddress"
-      android:text="@string/email"
-      style="@style/DialogInput" />
+      android:hint="@string/email"
+      style="@style/DialogInput.Email" />
   <EditText
       android:id="@+id/splash_password"
-      android:text="@string/password"
-      android:imeOptions="actionGo"
+      android:hint="@string/password"
       android:layout_marginBottom="10dip"
       style="@style/DialogInput.Password" />
 </LinearLayout>

@@ -25,6 +25,7 @@ import com.simplenote.android.net.ServerSaveCallback;
 import com.simplenote.android.net.SimpleNoteApi;
 import com.simplenote.android.persistence.SimpleNoteDao;
 import com.simplenote.android.thread.LoginWithCredentials;
+import com.simplenote.android.thread.SendNotesThread;
 import com.simplenote.android.thread.SyncNotesThread;
 import com.simplenote.android.widget.NotesAdapter;
 

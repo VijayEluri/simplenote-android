@@ -4,7 +4,7 @@
   <application android:label="@string/app_name" android:icon="@drawable/snlogo">
     <uses-library android:name="android.test.runner"/>
     <activity android:name=".ui.SimpleNoteSplash"
-        android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+        android:label="@string/app_name" android:theme="@style/Theme.SimpleNote">
       <intent-filter>
         <action android:name="android.intent.action.MAIN"/>
         <category android:name="android.intent.category.LAUNCHER"/>

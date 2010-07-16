@@ -3,6 +3,11 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+  <ImageView
+      android:id="@+id/splashLogo"
+      android:src="@drawable/simplenote"
+      android:layout_width="141dip"
+      android:layout_height="141dip" />
   <TextView
       android:id="@+id/splashLabel"
       android:text="@string/app_name"

@@ -1,7 +1,7 @@
-/**
- * 
- */
 package com.simplenote.android.widget;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import android.content.Context;
 import android.util.Log;
@@ -24,6 +24,7 @@ public class NotesAdapter extends BaseAdapter {
 	private static final String LOGGING_TAG = Constants.TAG + "NotesAdapter";
 	// Immutable Adapter state
 	private final LayoutInflater inflater;
+	private final DateFormat displayDateFormat;
 	// Mutable Adapter state
 	private Note[] notes;
 	/**
@@ -34,6 +35,7 @@ public class NotesAdapter extends BaseAdapter {
 	public NotesAdapter(Context context, Note[] notes) {
 		this.inflater = LayoutInflater.from(context);
 		this.notes = notes;
+		this.displayDateFormat = new SimpleDateFormat(context.getString(R.string.display_date_format));
 	}
 	/**
 	 * @see android.widget.Adapter#getCount()
@@ -69,7 +71,7 @@ public class NotesAdapter extends BaseAdapter {
 		if (note.getModified() == null) {
 			modified = note.getDateModified();
 		} else {
-			modified = Constants.displayDateFormat.format(note.getModified());
+			modified = displayDateFormat.format(note.getModified());
 		}
 		((TextView) row.findViewById(R.id.note_title)).setText(note.getTitle());
 		((TextView) row.findViewById(R.id.note_date)).setText(modified);

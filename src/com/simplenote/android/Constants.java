@@ -15,8 +15,7 @@ public class Constants {
 	public static final long DEFAULT_ID = -1L;
 	public static final String DEFAULT_KEY = "__SN__DEFAULT__KEY__";
 	// Dates
-	public static final DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.ssssss");
-	public static final DateFormat displayDateFormat = new SimpleDateFormat("dd MMM yyyy");
+	public static final DateFormat serverDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	// Message Codes
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
 	public static final int MESSAGE_UPDATE_FINISHED = 9732145;

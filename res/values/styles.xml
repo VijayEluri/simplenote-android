@@ -39,7 +39,7 @@
     <item name="android:layout_gravity">left</item>
     <item name="android:maxLines">1</item>
   </style>
-  <style name="DialogInput">
+  <style name="Input">
     <item name="android:layout_marginRight">10dip</item>
     <item name="android:layout_marginLeft">10dip</item>
     <item name="android:layout_width">fill_parent</item>
@@ -61,16 +61,23 @@
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
   </style>
-  <style name="DialogInput.Password">
+  <style name="Input.Password">
     <item name="android:autoText">false</item>
     <item name="android:capitalize">none</item>
     <item name="android:imeOptions">actionGo</item>
     <item name="android:inputType">textPassword</item>
-    <item name="android:typeface">sans</item>
   </style>
-  <style name="DialogInput.Email">
+  <style name="Input.Email">
     <item name="android:imeOptions">actionNext</item>
     <item name="android:inputType">textEmailAddress</item>
+  </style>
+  <style name="Input.Password.Splash">
+    <item name="android:background">@drawable/edit_text</item>
+    <item name="android:textSize">30px</item>
+  </style>
+  <style name="Input.Email.Splash">
+    <item name="android:background">@drawable/edit_text</item>
+    <item name="android:textSize">30px</item>
   </style>
   <!-- List styles -->
   <style name="FullWidth">

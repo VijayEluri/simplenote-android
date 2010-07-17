@@ -14,10 +14,10 @@
   <EditText
       android:id="@+id/splash_email"
       android:hint="@string/email"
-      style="@style/DialogInput.Email" />
+      style="@style/Input.Email.Splash" />
   <EditText
       android:id="@+id/splash_password"
       android:hint="@string/password"
       android:layout_marginBottom="10dip"
-      style="@style/DialogInput.Password" />
+      style="@style/Input.Password.Splash" />
 </LinearLayout>

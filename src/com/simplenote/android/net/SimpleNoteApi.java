@@ -123,9 +123,9 @@ public class SimpleNoteApi extends Api {
 	 * @return whether or not the note was successfully updated
 	 */
 	public static boolean create(final Note n, final String auth, final String email, final HttpCallback callback) {
-		Log.d(LOGGING_TAG, String.format("Updating not with key %s on simplenote server", n.getKey()));
+		Log.d(LOGGING_TAG, String.format("Creating note with id %d on simplenote server", n.getId()));
 		final String modifiedDate = encode(n.getDateModified(), false, true);
-		final String urlData = String.format("?key=%s&auth=%s&email=%s&modify=%s", n.getKey(), auth, email, modifiedDate);
+		final String urlData = String.format("?auth=%s&email=%s&modify=%s", auth, email, modifiedDate);
 		final String data = encode(n.getTitleAndBody(), true, false);
 		boolean success = false;
 		try {

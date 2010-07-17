@@ -205,19 +205,19 @@ public class SimpleNoteList extends ListActivity {
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
 		switch (resultCode) {
 			case RESULT_OK:
-				final Bundle extras = data.getExtras();
-				final Note dbNote = dao.retrieve(extras.getLong(BaseColumns._ID));
+				final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
 				// Note modified, refresh the list
-				updateNotesFor(dbNote);
+				updateNotesFor(note);
 				// Send updated note to the server
 				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 				final String email = credentials.get(Preferences.EMAIL);
 				final String auth = credentials.get(Preferences.TOKEN);
-				Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", dbNote.getKey()));
-				if (extras.getBoolean(SimpleNoteDao.KEY)) {
-					SimpleNoteApi.update(dbNote, auth, email, new ServerSaveCallback(this, dbNote));
+				if (note.getKey().equals(Constants.DEFAULT_KEY)) {
+					Log.d(LOGGING_TAG, "Creating a new note on the server");
+					SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(this, note));
 				} else {
-					SimpleNoteApi.create(dbNote, auth, email, new ServerCreateCallback(this, dbNote));
+					Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", note.getKey()));
+					SimpleNoteApi.update(note, auth, email, new ServerSaveCallback(this, note));
 				}
 				break;
 			case RESULT_CANCELED:

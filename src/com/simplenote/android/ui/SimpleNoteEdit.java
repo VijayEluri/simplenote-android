@@ -29,6 +29,7 @@ public class SimpleNoteEdit extends Activity {
 	private long mNoteId = 0L;
 	private String mOriginalBody = "";
 	private boolean mActivityStateSaved = false;
+	private boolean mNoteSaved = false;
 	/**
 	 * Default constructor to setup final fields
 	 */
@@ -136,7 +137,7 @@ public class SimpleNoteEdit extends Activity {
 				save(); // save returns ok
 				return true;
 			case R.id.menu_delete:
-				// delete the note assuming it has an id otherwise just cancel
+				// TODO: delete the note assuming it has an id otherwise just cancel
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -149,7 +150,7 @@ public class SimpleNoteEdit extends Activity {
 	 */
 	private boolean needsSave() {
 		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
-		return !mOriginalBody.equals(body);
+		return !(mNoteSaved || mOriginalBody.equals(body));
 	}
 	/**
 	 * Saves the note with data from the view and finishes this Activity with an OK result
@@ -168,10 +169,9 @@ public class SimpleNoteEdit extends Activity {
 			note = dao.save(new Note(body, now));
 			Log.d(LOGGING_TAG, String.format("Created the note '%d'", note.getId()));
 		}
-		intent.putExtra(SimpleNoteDao.KEY, dbNote != null);
-		intent.putExtra(BaseColumns._ID, note.getId());
-		intent.putExtra(SimpleNoteDao.BODY, note.getBody());
-		intent.putExtra(SimpleNoteDao.MODIFY, note.getDateModified());
+		mNoteId = note.getId();
+		mNoteSaved = true;
+		intent.putExtra(Note.class.getName(), note);
 		setResult(RESULT_OK, intent);
 		finish();
 	}

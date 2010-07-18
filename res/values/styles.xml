@@ -88,6 +88,8 @@
     <item name="android:capitalize">none</item>
     <item name="android:imeOptions">actionGo</item>
     <item name="android:inputType">textPassword</item>
+    <!-- This isn't forcing a sans-serif so it is set in code in SimpleNoteSplash.java -->
+    <item name="android:typeface">sans</item>
   </style>
   <style name="Input.Splash.Email">
     <item name="android:imeOptions">actionNext</item>

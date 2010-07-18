@@ -19,4 +19,8 @@
       android:id="@+id/splash_password"
       android:hint="@string/password"
       style="@style/Input.Splash.Password" />
+  <Button
+      android:id="@+id/splash_login"
+      android:text="@string/signin"
+      style="@style/Button.Splash" />
 </LinearLayout>

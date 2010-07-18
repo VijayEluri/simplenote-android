@@ -63,6 +63,7 @@ public class SimpleNoteApi extends Api {
 		} catch (JSONException jsone) {
 			callback.onException(Constants.API_NOTES_URL, data, jsone);
 		}
+		Log.d(LOGGING_TAG, String.format("%d notes retrieved from server", notes.length));
 		return notes;
 	}
 	/**

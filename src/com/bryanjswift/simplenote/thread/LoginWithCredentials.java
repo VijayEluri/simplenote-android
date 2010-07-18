@@ -22,7 +22,7 @@ import com.bryanjswift.simplenote.ui.FireIntent;
  * @author bryanjswift
  */
 public class LoginWithCredentials extends Thread {
-	private static final String LOGGING_TAG = Constants.TAG + "LoginWithExistingCredentials";
+	private static final String LOGGING_TAG = Constants.TAG + "LoginWithCredentials";
 	private final Activity context;
 	private final HashMap<String,String> credentials;
 	private final HttpCallback callback;

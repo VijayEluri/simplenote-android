@@ -20,7 +20,7 @@ import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.thread.LoginWithCredentials;
 
 public class LoginActionListener implements OnEditorActionListener {
-	private static final String LOGGING_TAG = Constants.TAG + LoginActionListener.class.getName();
+	private static final String LOGGING_TAG = Constants.TAG + "LoginActionListener";
 	private final Activity context;
 	private final EditText email;
 	private final EditText password;
@@ -105,6 +105,6 @@ public class LoginActionListener implements OnEditorActionListener {
 				}
 			}
 		})).start();
-		return false;
+		return true;
 	}
 }

@@ -5,5 +5,5 @@
   <!-- enabled and not focused -->
   <item android:state_enabled="true" android:drawable="@drawable/editbox_background" />
   <!-- default -->
-  <item android:state_enabled="true" android:drawable="@drawable/editbox_background" />
+  <item android:drawable="@drawable/editbox_background" />
 </selector>

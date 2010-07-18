@@ -105,9 +105,22 @@
     <item name="android:layout_marginRight">35dip</item>
     <item name="android:layout_marginBottom">0dip</item>
     <item name="android:layout_marginLeft">35dip</item>
+    <item name="android:textSize">15sp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:typeface">sans</item>
+    <item name="android:shadowDx">1.1</item>
+    <item name="android:shadowDy">1.1</item>
+    <item name="android:shadowRadius">1.1</item>
   </style>
   <style name="Button.Splash.Blue">
     <item name="android:background">@drawable/blue_button</item>
+    <item name="android:textColor">@color/blue_button_color</item>
+    <item name="android:shadowColor">@color/blue_button_shadow_color</item>
+  </style>
+  <style name="Button.Splash.Black">
+    <item name="android:background">@drawable/black_button</item>
+    <item name="android:textColor">@color/black_button_color</item>
+    <item name="android:shadowColor">@color/black_button_shadow_color</item>
   </style>
   <!-- List styles -->
   <style name="FullWidth">

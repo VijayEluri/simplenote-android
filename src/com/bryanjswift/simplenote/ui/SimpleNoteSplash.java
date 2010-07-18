@@ -62,5 +62,6 @@ public class SimpleNoteSplash extends Activity {
 				SimpleNoteSplash.this.finish();
 			}
 		}));
+		password.setTypeface(Typeface.SANS_SERIF);
 	}
 }

@@ -16,9 +16,11 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:textColor">@color/header_color</item>
     <item name="android:shadowColor">@color/header_shadow_color</item>
-    <item name="android:shadowDx">1.3</item>
-    <item name="android:shadowDy">1.3</item>
+    <item name="android:shadowDx">1.1</item>
+    <item name="android:shadowDy">1.1</item>
+    <item name="android:shadowRadius">1.1</item>
     <item name="android:textSize">75px</item>
+    <item name="android:textScaleX">0.9</item>
   </style>
   <style name="SplashLogo">
     <item name="android:layout_width">151px</item>
@@ -39,15 +41,6 @@
     <item name="android:layout_gravity">left</item>
     <item name="android:maxLines">1</item>
   </style>
-  <style name="Input">
-    <item name="android:layout_marginRight">10dip</item>
-    <item name="android:layout_marginLeft">10dip</item>
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_gravity">left</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:textColorHint">@color/hint_color</item>
-  </style>
   <style name="DialogButton">
     <item name="android:gravity">center_vertical</item>
     <item name="android:layout_gravity">right</item>
@@ -61,6 +54,15 @@
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
   </style>
+  <style name="Input">
+    <item name="android:layout_marginRight">10dip</item>
+    <item name="android:layout_marginLeft">10dip</item>
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">left</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColorHint">@color/hint_color</item>
+  </style>
   <style name="Input.Password">
     <item name="android:autoText">false</item>
     <item name="android:capitalize">none</item>
@@ -71,13 +73,25 @@
     <item name="android:imeOptions">actionNext</item>
     <item name="android:inputType">textEmailAddress</item>
   </style>
-  <style name="Input.Password.Splash">
+  <style name="Input.Splash">
+    <item name="android:layout_marginTop">15dip</item>
+    <item name="android:layout_marginRight">35dip</item>
+    <item name="android:layout_marginBottom">0dip</item>
+    <item name="android:layout_marginLeft">35dip</item>
     <item name="android:background">@drawable/edit_text</item>
-    <item name="android:textSize">30px</item>
+    <item name="android:textSize">20sp</item>
+    <item name="android:layout_height">45sp</item>
   </style>
-  <style name="Input.Email.Splash">
-    <item name="android:background">@drawable/edit_text</item>
-    <item name="android:textSize">30px</item>
+  <style name="Input.Splash.Password">
+    <item name="android:layout_marginBottom">15dip</item>
+    <item name="android:autoText">false</item>
+    <item name="android:capitalize">none</item>
+    <item name="android:imeOptions">actionGo</item>
+    <item name="android:inputType">textPassword</item>
+  </style>
+  <style name="Input.Splash.Email">
+    <item name="android:imeOptions">actionNext</item>
+    <item name="android:inputType">textEmailAddress</item>
   </style>
   <!-- List styles -->
   <style name="FullWidth">

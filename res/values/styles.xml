@@ -8,17 +8,19 @@
     <item name="android:windowBackground">@drawable/background</item>
     <item name="android:windowNoTitle">true</item>
   </style>
+  <style name="Shadowed">
+    <item name="android:shadowDx">1.1</item>
+    <item name="android:shadowDy">1.1</item>
+    <item name="android:shadowRadius">1.1</item>
+  </style>
   <!-- Splash Styles -->
-  <style name="SplashHeader">
+  <style name="Shadowed.SplashHeader">
     <item name="android:gravity">top</item>
     <item name="android:layout_gravity">center</item>
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:textColor">@color/header_color</item>
     <item name="android:shadowColor">@color/header_shadow_color</item>
-    <item name="android:shadowDx">1.1</item>
-    <item name="android:shadowDy">1.1</item>
-    <item name="android:shadowRadius">1.1</item>
     <item name="android:textSize">75px</item>
     <item name="android:textScaleX">0.9</item>
   </style>
@@ -28,8 +30,15 @@
     <item name="android:layout_gravity">center</item>
     <item name="android:layout_marginTop">25dip</item>
   </style>
-  <style name="TextAsLabelInputBlur" />
-  <style name="TextAsLabelInputFocus" />
+  <style name="Shadowed.SplashText">
+    <item name="android:layout_marginTop">30dip</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:textSize">15sp</item>
+    <item name="android:textColor">@color/splashtext_color</item>
+    <item name="android:shadowColor">@color/splashtext_shadow_color</item>
+  </style>
   <!-- Dialog Styles -->
   <style name="DialogLabel">
     <item name="android:layout_marginTop">10dip</item>
@@ -40,19 +49,6 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">left</item>
     <item name="android:maxLines">1</item>
-  </style>
-  <style name="DialogButton">
-    <item name="android:gravity">center_vertical</item>
-    <item name="android:layout_gravity">right</item>
-    <item name="android:layout_marginTop">7dip</item>
-    <item name="android:layout_marginRight">10dip</item>
-    <item name="android:layout_marginBottom">10dip</item>
-    <item name="android:paddingTop">10dip</item>
-    <item name="android:paddingRight">15dip</item>
-    <item name="android:paddingBottom">15dip</item>
-    <item name="android:paddingLeft">15dip</item>
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
   </style>
   <!-- Input Styles -->
   <style name="Input">
@@ -75,7 +71,7 @@
     <item name="android:inputType">textEmailAddress</item>
   </style>
   <style name="Input.Splash">
-    <item name="android:layout_marginTop">15dip</item>
+    <item name="android:layout_marginTop">13dip</item>
     <item name="android:layout_marginRight">35dip</item>
     <item name="android:layout_marginBottom">0dip</item>
     <item name="android:layout_marginLeft">35dip</item>
@@ -96,13 +92,23 @@
     <item name="android:inputType">textEmailAddress</item>
   </style>
   <!-- Button Styles -->
-  <style name="Button">
+  <style name="Shadowed.Button">
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">center</item>
   </style>
-  <style name="Button.Splash">
-    <item name="android:layout_marginTop">20dip</item>
+  <style name="Shadowed.Button.Blue">
+    <item name="android:background">@drawable/blue_button</item>
+    <item name="android:textColor">@color/blue_button_color</item>
+    <item name="android:shadowColor">@color/blue_button_shadow_color</item>
+  </style>
+  <style name="Shadowed.Button.Black">
+    <item name="android:background">@drawable/black_button</item>
+    <item name="android:textColor">@color/black_button_color</item>
+    <item name="android:shadowColor">@color/black_button_shadow_color</item>
+  </style>
+  <style name="Shadowed.Button.Splash">
+    <item name="android:layout_marginTop">18dip</item>
     <item name="android:layout_marginRight">35dip</item>
     <item name="android:layout_marginBottom">0dip</item>
     <item name="android:layout_marginLeft">35dip</item>
@@ -110,16 +116,15 @@
     <item name="android:textSize">15sp</item>
     <item name="android:textStyle">bold</item>
     <item name="android:typeface">sans</item>
-    <item name="android:shadowDx">1.1</item>
-    <item name="android:shadowDy">1.1</item>
-    <item name="android:shadowRadius">1.1</item>
   </style>
-  <style name="Button.Splash.Blue">
+  <style name="Shadowed.Button.Splash.Blue">
     <item name="android:background">@drawable/blue_button</item>
     <item name="android:textColor">@color/blue_button_color</item>
     <item name="android:shadowColor">@color/blue_button_shadow_color</item>
   </style>
-  <style name="Button.Splash.Black">
+  <style name="Shadowed.Button.Splash.Black">
+    <item name="android:layout_marginTop">6dip</item>
+    <item name="android:layout_marginBottom">5dip</item>
     <item name="android:background">@drawable/black_button</item>
     <item name="android:textColor">@color/black_button_color</item>
     <item name="android:shadowColor">@color/black_button_shadow_color</item>

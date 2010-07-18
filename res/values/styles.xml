@@ -107,9 +107,7 @@
     <item name="android:layout_marginLeft">35dip</item>
   </style>
   <style name="Button.Splash.Blue">
-    <!--
     <item name="android:background">@drawable/blue_button</item>
-    -->
   </style>
   <!-- List styles -->
   <style name="FullWidth">

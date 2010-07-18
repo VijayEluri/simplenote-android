@@ -22,5 +22,5 @@
   <Button
       android:id="@+id/splash_login"
       android:text="@string/signin"
-      style="@style/Button.Splash" />
+      style="@style/Button.Splash.Blue" />
 </LinearLayout>

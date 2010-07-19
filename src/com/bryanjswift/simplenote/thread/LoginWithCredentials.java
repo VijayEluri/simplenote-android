@@ -3,18 +3,18 @@ package com.bryanjswift.simplenote.thread;
 import java.util.HashMap;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
-import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.ui.FireIntent;
 
 /**
@@ -51,7 +51,7 @@ public class LoginWithCredentials extends Thread {
 			 */
 			@Override
 			public void on200(final Response response) {
-				SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 				Editor editor = prefs.edit();
 				// API successfully returned, store token
 				editor.putString(Preferences.TOKEN, response.body);

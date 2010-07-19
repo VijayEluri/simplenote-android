@@ -15,18 +15,25 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Preferences extends PreferenceActivity {
+	// Constants for the values of preferences
 	public static final String EMAIL = "email"; // String
 	public static final String PASSWORD = "password"; // String
+	public static final String TOKEN = "token"; // String
 	public static final String BACKGROUND_ENABLED = "background_enabled"; // boolean
 	public static final String BACKGROUND = "background"; // int
-	public static final String TOKEN = "token"; // String
-
+	/**
+	 * Set up the preferences view
+	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 	}
-
+	/**
+	 * Schedule a broadcast with the new preferences
+	 * @see android.preference.PreferenceActivity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 		applyPreferences();
@@ -59,7 +66,7 @@ public class Preferences extends PreferenceActivity {
 	 * @return a HashMap with preference keys and values
 	 */
 	public static HashMap<String,String> getLoginPreferences(Context context) {
-		SharedPreferences prefs = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE);
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		HashMap<String,String> values = getStringPreferences(prefs, new String[] { Preferences.EMAIL, Preferences.PASSWORD, Preferences.TOKEN });
 		return values;
 	}
@@ -73,7 +80,7 @@ public class Preferences extends PreferenceActivity {
 	 */
 	public static HashMap<String,String> setLoginPreferences(Context context, String email, String password, String auth) {
 		HashMap<String,String> values = new HashMap<String,String>();
-		Editor editor = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putString(EMAIL, email).putString(PASSWORD, password).putString(TOKEN, auth);
 		editor.commit();
 		values.put(EMAIL, email);
@@ -98,7 +105,7 @@ public class Preferences extends PreferenceActivity {
 	 * @return true if the new values were successfully written to persistent storage.
 	 */
 	public static boolean setAuthToken(Context context, String auth) {
-		Editor editor = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putString(TOKEN, auth);
 		return editor.commit();
 	}
@@ -109,7 +116,7 @@ public class Preferences extends PreferenceActivity {
 	 * @return true if the new values were successfully written to persistent storage.
 	 */
 	public static boolean setPassword(Context context, String password) {
-		Editor editor = context.getSharedPreferences(Constants.PREFS_NAME, Context.MODE_PRIVATE).edit();
+		Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putString(PASSWORD, password);
 		return editor.commit();
 	}

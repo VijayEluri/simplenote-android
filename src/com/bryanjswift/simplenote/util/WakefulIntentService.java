@@ -8,6 +8,8 @@ import android.os.PowerManager.WakeLock;
 
 /**
  * IntentService to do work while the device CPU remains awake
+ *
+ * Code taken from git://github.com/commonsguy/cw-advandroid.git
  * @author bryanjswift
  */
 public abstract class WakefulIntentService extends IntentService {
@@ -25,7 +27,7 @@ public abstract class WakefulIntentService extends IntentService {
 	 * @see android.app.IntentService#onHandleIntent(android.content.Intent)
 	 */
 	@Override
-	protected void onHandleIntent(Intent intent) {
+	protected final void onHandleIntent(Intent intent) {
 		try {
 			acquireLock(this);
 			handleWakefulIntent(intent);

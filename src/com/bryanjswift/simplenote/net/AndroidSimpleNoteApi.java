@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
@@ -17,6 +18,7 @@ import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
  * @author bryanjswift
  */
 public class AndroidSimpleNoteApi extends SimpleNoteApi {
+	private static final String LOGGING_TAG = Constants.TAG + "AndroidSimpleNoteApi";
 	// Private immutable fields
 	private final Context context;
 	private final SimpleNoteDao dao;
@@ -42,6 +44,7 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	 */
 	public void syncDown() {
 		// Fetch the notes from the server
+		Log.d(LOGGING_TAG, "::syncDown");
 		Note[] notes = SimpleNoteApi.index(token, email, HttpCallback.EMPTY);
 		Message message = null;
 		for (Note serverNote : notes) {
@@ -70,6 +73,7 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	 */
 	public void syncUp() {
 		// Fetch the notes from the database
+		Log.d(LOGGING_TAG, "::syncUp");
 		Note[] notes = dao.retrieveUnsynced();
 		for (Note dbNote : notes) {
 			if (dbNote.getKey().equals(Constants.DEFAULT_KEY)) {

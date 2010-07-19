@@ -19,6 +19,8 @@
   <string name="menu_refresh">Refresh</string>
   <string name="menu_save">Save</string>
   <string name="menu_delete">Delete</string>
+  <string name="menu_edit">Edit Note</string>
+  <string name="menu_delete_note">Delete Note</string>
   <!-- Context Menu -->
   <string name="context_delete">Delete Note</string>
   <string name="context_edit">Edit Note</string>

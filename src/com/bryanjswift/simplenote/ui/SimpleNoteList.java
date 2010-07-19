@@ -9,10 +9,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -58,9 +61,11 @@ public class SimpleNoteList extends ListActivity {
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Note[] notes = dao.retrieveAll();
-		// Now create a simple cursor adapter and set it to display
+		// Now create a note adapter and set it to display
 		ListAdapter notesAdapter = new NotesAdapter(this, notes);
 		setListAdapter(notesAdapter);
+		// Make sure onCreateContextMenu is called for long press of notes
+		registerForContextMenu(getListView());
 		// check the token exists first and if not authenticate with existing username/password
 		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 		if (credentials.containsKey(Preferences.TOKEN)) {
@@ -108,7 +113,7 @@ public class SimpleNoteList extends ListActivity {
 	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		final MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_list, menu);
 		return true;
 	}
@@ -130,6 +135,41 @@ public class SimpleNoteList extends ListActivity {
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
+		}
+	}
+	/**
+	 * Create a menu with delete and edit as options
+	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
+	 */
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		final MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu_list_item, menu);
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+		final Note note = (Note) adapter.getItem(info.position);
+		menu.setHeaderTitle(note.getTitle());
+	}
+	/**
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 */
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+		final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+		switch (item.getItemId()) {
+			case R.id.menu_delete_note:
+				final Note note = dao.retrieve(adapter.getItemId(info.position));
+				if (dao.delete(note)) {
+					updateNotesFor(note);
+				}
+				return true;
+			case R.id.menu_edit:
+				FireIntent.EditNote(this, adapter.getItemId(info.position), null);
+				return true;
+			default:
+				return super.onContextItemSelected(item);
 		}
 	}
 	/**

@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.ServerCreateCallback;
 import com.bryanjswift.simplenote.net.ServerSaveCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;

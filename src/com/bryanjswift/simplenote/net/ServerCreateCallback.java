@@ -1,6 +1,6 @@
 package com.bryanjswift.simplenote.net;
 
-import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
@@ -17,7 +17,7 @@ public class ServerCreateCallback extends ServerSaveCallback {
 	 * Create a callback related to the note which was created
 	 * @param note trying to be saved to the server
 	 */
-	public ServerCreateCallback(final Activity context, final Note note) {
+	public ServerCreateCallback(final Context context, final Note note) {
 		super(context, note);
 	}
 	/**

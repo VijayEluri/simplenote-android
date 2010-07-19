@@ -1,6 +1,6 @@
 package com.bryanjswift.simplenote.thread;
 
-import android.app.Activity;
+import android.content.Context;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.model.Note;
@@ -10,7 +10,7 @@ import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 
 public class SendNotesThread extends Thread {
-	private final Activity context;
+	private final Context context;
 	private final SimpleNoteDao dao;
 	private final String email;
 	private final String token;
@@ -21,7 +21,7 @@ public class SendNotesThread extends Thread {
 	 * @param email of account to sync notes for
 	 * @param token authentication token for email
 	 */
-	public SendNotesThread(Activity context, SimpleNoteDao dao, String email, String token) {
+	public SendNotesThread(Context context, SimpleNoteDao dao, String email, String token) {
 		this.context = context;
 		this.dao = dao;
 		this.email = email;

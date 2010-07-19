@@ -2,13 +2,12 @@ package com.bryanjswift.simplenote.net;
 
 import java.util.HashMap;
 
-import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 
@@ -20,13 +19,13 @@ public class ServerSaveCallback extends HttpCallback {
 	private static final String LOGGING_TAG = Constants.TAG + "ServerSaveCallback";
 	// Inheritable fields
 	protected final SimpleNoteDao dao;
-	protected final Activity context;
+	protected final Context context;
 	protected final Note note;
 	/**
 	 * Create a callback related to the note which was saved
 	 * @param note trying to be saved to the server
 	 */
-	public ServerSaveCallback(final Activity context, final Note note) {
+	public ServerSaveCallback(final Context context, final Note note) {
 		super();
 		this.note = note;
 		this.context = context;

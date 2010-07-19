@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string-array name="background">
-    <item>Every Hour</item>
-    <item>Every 2 hours</item>
-    <item>Every 4 hours</item>
-    <item>Every 8 hours</item>
+    <item>@string/every1hour</item>
+    <item>@string/every2hour</item>
+    <item>@string/every4hour</item>
+    <item>@string/every8hour</item>
   </string-array>
   <string-array name="background_values">
     <item>1</item>

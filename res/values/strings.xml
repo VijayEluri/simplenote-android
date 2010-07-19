@@ -33,4 +33,17 @@
   <string name="error_authentication_stored">Sign in failed with saved email and password. Please make sure they are correct and try again.</string>
   <!-- Format -->
   <string name="display_date_format">dd MMM</string>
+  <!-- Preferences -->
+  <string name="pref_background_category">Background Syncing</string>
+  <string name="pref_background_title">Enable Syncing</string>
+  <string name="pref_background_description">Updates notes in the background</string>
+  <string name="pref_frequency_title">Sync Schedule</string>
+  <string name="pref_frequency_description">How often to sync notes</string>
+  <string name="pref_account_category">SimpleNote Account</string>
+  <string name="pref_account_title">Login Details</string>
+  <string name="pref_account_description">Enter your SimpleNote login details</string>
+  <string name="every1hour">Every Hour</string>
+  <string name="every2hour">Every 2 Hours</string>
+  <string name="every4hour">Every 4 Hours</string>
+  <string name="every8hour">Every 8 Hours</string>
 </resources>

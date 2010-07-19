@@ -19,8 +19,8 @@ public abstract class WakefulIntentService extends IntentService {
 	 * Default constructor to create the WakefulIntentService
 	 * @param name
 	 */
-	public WakefulIntentService(String name) {
-		super(name);
+	public WakefulIntentService() {
+		super(LOCK_NAME);
 	}
 	/**
 	 * Get a WakeLock, do some work then release the lock

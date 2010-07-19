@@ -222,7 +222,7 @@ public class SimpleNoteDao {
 		try {
 			db.beginTransaction();
 			cursor = db.query(DATABASE_TABLE, columns, // table, columns to select
-					SYNCED + " = 1", // where clause
+					SYNCED + " = 0", // where clause
 					null, null, null, MODIFY + " DESC"); // __, __, __, order by
 			if (cursor != null) { db.setTransactionSuccessful(); }
 			db.endTransaction();

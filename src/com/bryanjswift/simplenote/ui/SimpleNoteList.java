@@ -176,6 +176,7 @@ public class SimpleNoteList extends ListActivity {
 			case R.id.menu_delete_note:
 				final Note note = dao.retrieve(adapter.getItemId(info.position));
 				if (dao.delete(note)) {
+					// TODO: This should probably send a deleted message and trigger a send
 					updateNotesFor(note);
 				}
 				return true;

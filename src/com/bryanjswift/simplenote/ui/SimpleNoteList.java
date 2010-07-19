@@ -23,6 +23,7 @@ import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.model.Note;
+import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
 import com.bryanjswift.simplenote.net.ServerCreateCallback;
 import com.bryanjswift.simplenote.net.ServerSaveCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
@@ -235,8 +236,9 @@ public class SimpleNoteList extends ListActivity {
 	 * @param auth token used for access after login API call
 	 */
 	private void syncNotes(String email, String auth) {
-		final Thread sync = new SyncNotesThread(updateNoteHandler, dao, email, auth);
-		final Thread send = new SendNotesThread(this, dao, email, auth);
+		final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, updateNoteHandler);
+		final Thread sync = new SyncNotesThread(api);
+		final Thread send = new SendNotesThread(api);
 		sync.start();
 		send.start();
 	}

@@ -1,31 +1,15 @@
 package com.bryanjswift.simplenote.thread;
 
-import android.content.Context;
-
-import com.bryanjswift.simplenote.Constants;
-import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.net.ServerCreateCallback;
-import com.bryanjswift.simplenote.net.ServerSaveCallback;
-import com.bryanjswift.simplenote.net.SimpleNoteApi;
-import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
+import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
 
 public class SendNotesThread extends Thread {
-	private final Context context;
-	private final SimpleNoteDao dao;
-	private final String email;
-	private final String token;
+	private final AndroidSimpleNoteApi api;
 	/**
 	 * Create a thread with all the pieces it needs to update notes
-	 * @param context Android Activity context in which this thread runs
-	 * @param dao interface to the SimpleNote database
-	 * @param email of account to sync notes for
-	 * @param token authentication token for email
+	 * @param api implementation of SimpleNoteApi that relies on Android classes
 	 */
-	public SendNotesThread(Context context, SimpleNoteDao dao, String email, String token) {
-		this.context = context;
-		this.dao = dao;
-		this.email = email;
-		this.token = token;
+	public SendNotesThread(final AndroidSimpleNoteApi api) {
+		this.api = api;
 	}
 	/**
 	 * Pulls down notes from the server if the server version is newer than the note in the
@@ -34,14 +18,6 @@ public class SendNotesThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		// Fetch the notes from the server
-		Note[] notes = dao.retrieveUnsynced();
-		for (Note dbNote : notes) {
-			if (dbNote.getKey().equals(Constants.DEFAULT_KEY)) {
-				SimpleNoteApi.create(dbNote, token, email, new ServerCreateCallback(context, dbNote));
-			} else {
-				SimpleNoteApi.update(dbNote, token, email, new ServerSaveCallback(context, dbNote));
-			}
-		}
+		api.syncUp();
 	}
 }

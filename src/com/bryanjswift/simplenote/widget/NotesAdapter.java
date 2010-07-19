@@ -46,7 +46,7 @@ public class NotesAdapter extends BaseAdapter {
 	/**
 	 * @see android.widget.Adapter#getItem(int)
 	 */
-	public Object getItem(int position) {
+	public Note getItem(int position) {
 		return notes[position];
 	}
 	/**

@@ -1,0 +1,6 @@
+DERIVATIVE WORKS
+================
+
+com.bryanjswift.simplenote.util.WakefulIntentService is a derivative work based
+on code available at http://github.com/commonsguy/cw-advandroid. The base work
+is available in this source distribution as design/code/WakefulIntentService.java

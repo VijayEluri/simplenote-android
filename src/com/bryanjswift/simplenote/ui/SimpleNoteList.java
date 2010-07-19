@@ -38,6 +38,7 @@ import com.bryanjswift.simplenote.widget.NotesAdapter;
  */
 public class SimpleNoteList extends ListActivity {
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
+	private static final String SCROLL_POSITION = "scrollY";
 	/** Interface for accessing the SimpleNote database on the device */
 	private final SimpleNoteDao dao;
 	/**
@@ -53,9 +54,12 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
+		int scrollY = 0;
 		if (savedState != null && savedState.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
 			Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
 			FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
+		} else if (savedState != null) {
+			scrollY = savedState.getInt(SCROLL_POSITION, 0);
 		}
 		Log.d(LOGGING_TAG, "Firing up the note list");
 		// Set content view based on Notes currently in the database
@@ -74,6 +78,8 @@ public class SimpleNoteList extends ListActivity {
 		} else {
 			(new LoginWithCredentials(this, credentials)).start();
 		}
+		// restore the scroll position
+		findViewById(android.R.id.list).scrollTo(0, scrollY);
 	}
 	/**
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -136,6 +142,14 @@ public class SimpleNoteList extends ListActivity {
 			default:
 				return super.onOptionsItemSelected(item);
 		}
+	}
+	/**
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(SCROLL_POSITION, findViewById(android.R.id.list).getScrollY());
 	}
 	/**
 	 * Create a menu with delete and edit as options

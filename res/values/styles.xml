@@ -21,12 +21,12 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:textColor">@color/header_color</item>
     <item name="android:shadowColor">@color/header_shadow_color</item>
-    <item name="android:textSize">75px</item>
+    <item name="android:textSize">50dip</item>
     <item name="android:textScaleX">0.9</item>
   </style>
   <style name="SplashLogo">
-    <item name="android:layout_width">151px</item>
-    <item name="android:layout_height">151px</item>
+    <item name="android:layout_width">100.6666666dip</item>
+    <item name="android:layout_height">100.6666666dip</item>
     <item name="android:layout_gravity">center</item>
     <item name="android:layout_marginTop">25dip</item>
   </style>

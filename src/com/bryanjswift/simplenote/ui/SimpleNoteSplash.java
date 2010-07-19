@@ -15,6 +15,7 @@ import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.Api.Response;
+import com.bryanjswift.simplenote.service.SyncService;
 import com.bryanjswift.simplenote.widget.LoginActionListener;
 
 /**
@@ -29,10 +30,11 @@ public class SimpleNoteSplash extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
+		SyncService.scheduleBroadcast(this); // schedule alarms when application launches
 		setContentView(R.layout.splash);
-		Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");
+		final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+		final Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");
 		((TextView) findViewById(R.id.splashLabel)).setTypeface(helveticaBold);
 		if (credentials.containsKey(Preferences.EMAIL) &&
 				(credentials.containsKey(Preferences.TOKEN) || credentials.containsKey(Preferences.PASSWORD))) {

@@ -2,17 +2,14 @@ package com.bryanjswift.simplenote;
 
 import java.util.HashMap;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
+import com.bryanjswift.simplenote.service.SyncService;
 
 public class Preferences extends PreferenceActivity {
 	// Constants for the values of preferences
@@ -36,29 +33,8 @@ public class Preferences extends PreferenceActivity {
 	 */
 	@Override
 	protected void onStop() {
-		applyPreferences();
+		SyncService.scheduleBroadcast(this);
 		super.onStop();
-	}
-
-	// TODO: Apply these at startup...
-	// TODO: Cancel alarm if checkbox disabled
-	public void applyPreferences() {
-		SharedPreferences mPrefs = getSharedPreferences(Constants.PREFS_NAME, 0);
-
-		// Set up the AlarmManager service
-		Intent intent = new Intent(this, AlarmReceiver.class);
-		intent.putExtra(EMAIL, mPrefs.getString(EMAIL, ""));
-		intent.putExtra(PASSWORD, mPrefs.getString(PASSWORD, ""));
-
-		PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-		if (preferences.getBoolean(BACKGROUND_ENABLED, false)) {
-			Log.d(Constants.TAG, "Applying alarm every " + preferences.getString(Preferences.BACKGROUND, "2"));
-			AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-			am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 
-					60 * 60 * 1000 * Integer.parseInt(preferences.getString(BACKGROUND, "2")), pendingIntent);
-		}
 	}
 	/**
 	 * Get login data from preferences

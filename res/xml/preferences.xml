@@ -13,9 +13,18 @@
       android:entryValues="@array/background_values"
       android:dependency="background_enabled" />
   </PreferenceCategory>
-  <PreferenceCategory android:title="@string/pref_account_category">
-    <Preference android:title="@string/pref_account_title"
-      android:summary="@string/pref_account_description"
-      android:key="customPref" />
-  </PreferenceCategory>
+  <PreferenceScreen android:title="@string/pref_account_category">
+    <EditTextPreference android:title="@string/pref_account_email"
+      android:dialogTitle="@string/pref_account_email"
+      android:key="email" />
+    <EditTextPreference android:title="@string/pref_account_password"
+      android:dialogTitle="@string/pref_account_password"
+      android:key="password" />
+    <com.bryanjswift.simplenote.preference.ClearAccountPreference android:title="@string/pref_account_clear_title"
+      android:key="clearAccount"
+      android:summary="@string/pref_account_clear_description"
+      android:dialogTitle="Clear your credentials?"
+      android:positiveButtonText="Clear 'em"
+      android:negativeButtonText="Keep 'em" />
+  </PreferenceScreen>
 </PreferenceScreen>

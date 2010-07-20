@@ -42,6 +42,10 @@
   <string name="pref_account_category">SimpleNote Account</string>
   <string name="pref_account_title">Login Details</string>
   <string name="pref_account_description">Enter your SimpleNote login details</string>
+  <string name="pref_account_email">Email</string>
+  <string name="pref_account_password">Password</string>
+  <string name="pref_account_clear_title">Clear Account</string>
+  <string name="pref_account_clear_description">Clear all account information and sign out of account</string>
   <string name="every1hour">Every Hour</string>
   <string name="every2hour">Every 2 Hours</string>
   <string name="every4hour">Every 4 Hours</string>

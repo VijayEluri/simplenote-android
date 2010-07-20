@@ -286,7 +286,7 @@ public class SimpleNoteDao {
 	 * @param note to remove from the database
 	 * @return whether or not the Note was successfully deleted
 	 */
-	synchronized protected boolean kill(Note note) {
+	synchronized public boolean kill(Note note) {
 		Log.w(LOGGING_TAG, String.format("Killing %s", note.getKey()));
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;
@@ -306,7 +306,7 @@ public class SimpleNoteDao {
 	 * Delete all Note objects from the database
 	 * @return true if any notes deleted, false otherwise
 	 */
-	synchronized protected boolean killAll() {
+	synchronized public boolean killAll() {
 		Log.w(LOGGING_TAG, String.format("Killing all notes"));
 		final SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;

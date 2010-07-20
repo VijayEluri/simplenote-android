@@ -94,6 +94,7 @@ public class SimpleNoteList extends ListActivity {
 	protected void onResume() {
 		super.onResume();
 		registerReceiver(updateNoteReceiver, new IntentFilter(SimpleNoteList.UPDATE));
+		refreshNotes();
 	}
 	/**
 	 * @see android.app.Activity#onPause()

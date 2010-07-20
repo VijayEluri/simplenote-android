@@ -73,8 +73,8 @@ public class DailyService extends WakefulIntentService {
 		final Intent intent = new Intent(context, DailyService.Starter.class);
 		final PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 		final AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-		am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, (SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_FIFTEEN_MINUTES),
-				AlarmManager.INTERVAL_FIFTEEN_MINUTES, pendingIntent);
+		am.setInexactRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, (SystemClock.elapsedRealtime() + AlarmManager.INTERVAL_DAY),
+				AlarmManager.INTERVAL_DAY, pendingIntent);
 	}
 	/**
 	 * BroadcastReceiver to start up the DailyService

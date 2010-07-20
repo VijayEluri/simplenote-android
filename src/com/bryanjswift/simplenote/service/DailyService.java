@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.bryanjswift.simplenote.service;
 
 import java.util.HashMap;

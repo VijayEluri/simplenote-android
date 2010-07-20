@@ -243,9 +243,9 @@ public class SimpleNoteDao {
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		boolean success = false;
 		/* Setup values */
-		// TODO: This should also mark the note as needing to be synchronized
 		ContentValues args = new ContentValues();
 		args.put(DELETED, true);
+		args.put(SYNCED, false);
 		/* Perform query */
 		try {
 			db.beginTransaction();

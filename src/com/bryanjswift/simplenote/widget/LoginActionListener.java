@@ -14,9 +14,9 @@ import android.widget.Toast;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
-import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.thread.LoginWithCredentials;
 
 public class LoginActionListener implements OnEditorActionListener {

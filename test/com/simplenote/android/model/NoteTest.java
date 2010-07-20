@@ -2,9 +2,9 @@ package com.simplenote.android.model;
 
 import java.util.Date;
 
-import com.bryanjswift.simplenote.model.Note;
-
 import junit.framework.TestCase;
+
+import com.bryanjswift.simplenote.model.Note;
 
 /**
  * Tests for Note creation

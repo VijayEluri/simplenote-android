@@ -4,9 +4,9 @@ import junit.framework.TestCase;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.model.Note;
+import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
-import com.bryanjswift.simplenote.net.Api.Response;
 
 /**
  * Exercise the SimpleNoteApi class

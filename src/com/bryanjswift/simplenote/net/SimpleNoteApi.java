@@ -3,6 +3,7 @@ package com.bryanjswift.simplenote.net;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,6 +18,7 @@ import com.bryanjswift.simplenote.model.Note;
  * @author bryanjswift
  */
 public class SimpleNoteApi extends Api {
+	public static final AtomicInteger count = new AtomicInteger(0);
 	/** Prefix for logging statements from the SimpleNoteApi object */
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteApi";
 	/**
@@ -34,6 +36,8 @@ public class SimpleNoteApi extends Api {
 			token = handleResponse(callback, Post(Constants.API_LOGIN_URL, data)).body;
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_LOGIN_URL, data, ioe);
+		} finally {
+			increment();
 		}
 		return token;
 	}
@@ -62,6 +66,8 @@ public class SimpleNoteApi extends Api {
 			callback.onException(Constants.API_NOTES_URL, data, ioe);
 		} catch (JSONException jsone) {
 			callback.onException(Constants.API_NOTES_URL, data, jsone);
+		} finally {
+			increment();
 		}
 		Log.d(LOGGING_TAG, String.format("%d notes retrieved from server", notes.length));
 		return notes;
@@ -90,6 +96,8 @@ public class SimpleNoteApi extends Api {
 			}
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);
+		} finally {
+			increment();
 		}
 		return note;
 	}
@@ -112,6 +120,8 @@ public class SimpleNoteApi extends Api {
 			success = response.status == 200 && response.body.equals(n.getKey());
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);
+		} finally {
+			increment();
 		}
 		return success;
 	}
@@ -134,6 +144,8 @@ public class SimpleNoteApi extends Api {
 			success = response.status == 200 && response.body.length() > 0;
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);
+		} finally {
+			increment();
 		}
 		return success;
 	}
@@ -154,6 +166,8 @@ public class SimpleNoteApi extends Api {
 			success = true;
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_DELETE_URL, data, ioe);
+		} finally {
+			increment();
 		}
 		return success;
 	}
@@ -176,5 +190,14 @@ public class SimpleNoteApi extends Api {
 		}
 		callback.onComplete(response);
 		return response;
+	}
+	/**
+	 * Increments and logs the API count
+	 * @return count after incrementing
+	 */
+	private synchronized static int increment() {
+		int count = SimpleNoteApi.count.incrementAndGet();
+		Log.d(LOGGING_TAG, String.format("That makes %d API calls since reset", count));
+		return count;
 	}
 }

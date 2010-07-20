@@ -17,6 +17,7 @@ import android.util.Log;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
+import com.bryanjswift.simplenote.ui.SimpleNoteList;
 import com.bryanjswift.simplenote.util.WakefulIntentService;
 
 public class SyncService extends WakefulIntentService {
@@ -77,7 +78,7 @@ public class SyncService extends WakefulIntentService {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			// TODO: If Note list is 'Active' refresh notes
+			sendBroadcast(new Intent(SimpleNoteList.UPDATE));
 		}
 	};
 	/**

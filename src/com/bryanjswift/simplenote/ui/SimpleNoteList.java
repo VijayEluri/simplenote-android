@@ -3,7 +3,10 @@ package com.bryanjswift.simplenote.ui;
 import java.util.HashMap;
 
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -40,6 +43,8 @@ import com.bryanjswift.simplenote.widget.NotesAdapter;
 public class SimpleNoteList extends ListActivity {
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
 	private static final String SCROLL_POSITION = "scrollY";
+	/** Intent Action to update notes via BroadcastReceiver */
+	public static final String UPDATE = SimpleNoteList.class.getName() + ".UPDATE_NOTES";
 	/** Interface for accessing the SimpleNote database on the device */
 	private final SimpleNoteDao dao;
 	/**
@@ -81,6 +86,22 @@ public class SimpleNoteList extends ListActivity {
 		}
 		// restore the scroll position
 		findViewById(android.R.id.list).scrollTo(0, scrollY);
+	}
+	/**
+	 * @see android.app.Activity#onResume()
+	 */
+	@Override
+	protected void onResume() {
+		super.onResume();
+		registerReceiver(updateNoteReceiver, new IntentFilter(SimpleNoteList.UPDATE));
+	}
+	/**
+	 * @see android.app.Activity#onPause()
+	 */
+	@Override
+	protected void onPause() {
+		super.onPause();
+		unregisterReceiver(updateNoteReceiver);
 	}
 	/**
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -189,6 +210,16 @@ public class SimpleNoteList extends ListActivity {
 		}
 	}
 	/**
+	 * BroadcastReceiver which will receive requests to update from background sync services
+	 */
+	public BroadcastReceiver updateNoteReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d(LOGGING_TAG, "Received broadcast to refresh notes in list");
+			refreshNotes();
+		}
+	};
+	/**
 	 * Message handler which should update the UI when a message with a Note is received
 	 */
 	private Handler updateNoteHandler = new Handler() {
@@ -213,13 +244,7 @@ public class SimpleNoteList extends ListActivity {
 			// update the UI with the new note
 			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
 			if (!note.isDeleted()) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-						final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-						adapter.setNotes(dao.retrieveAll());
-						adapter.notifyDataSetChanged();
-					}
-				});
+				refreshNotes();
 			}
 		}
 		/**
@@ -293,5 +318,17 @@ public class SimpleNoteList extends ListActivity {
 		message.setData(new Bundle());
 		message.getData().putSerializable(Note.class.getName(), note);
 		message.sendToTarget();
+	}
+	/**
+	 * Pull notes from database and update the NotesAdapter
+	 */
+	private void refreshNotes() {
+		runOnUiThread(new Runnable() {
+			public void run() {
+				final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+				adapter.setNotes(dao.retrieveAll());
+				adapter.notifyDataSetChanged();
+			}
+		});
 	}
 }

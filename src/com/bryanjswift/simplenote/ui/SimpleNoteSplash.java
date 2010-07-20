@@ -13,8 +13,9 @@ import android.widget.TextView;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
-import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.Api.Response;
+import com.bryanjswift.simplenote.net.HttpCallback;
+import com.bryanjswift.simplenote.service.DailyService;
 import com.bryanjswift.simplenote.service.SyncService;
 import com.bryanjswift.simplenote.widget.LoginActionListener;
 
@@ -32,6 +33,7 @@ public class SimpleNoteSplash extends Activity {
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.RGBA_8888);
 		SyncService.scheduleBroadcast(this); // schedule alarms when application launches
+		DailyService.scheduleBroadcast(this);
 		setContentView(R.layout.splash);
 		final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 		final Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");

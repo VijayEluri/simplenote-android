@@ -77,7 +77,7 @@ public class SyncService extends WakefulIntentService {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
-			// Nothing needs to happen when updating notes in the background
+			// TODO: If Note list is 'Active' refresh notes
 		}
 	};
 	/**

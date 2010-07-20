@@ -37,20 +37,6 @@ public class SyncService extends WakefulIntentService {
 		scheduleBroadcast(this);
 	}
 	/**
-	 * @see android.app.Service#onDestroy()
-	 */
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-	}
-	/**
-	 * @see android.app.Service#onStart(android.content.Intent, int)
-	 */
-	@Override
-	public void onStart(Intent intent, int startId) {
-		super.onStart(intent, startId);
-	}
-	/**
 	 * @see com.bryanjswift.simplenote.util.WakefulIntentService#handleWakefulIntent(android.content.Intent)
 	 */
 	@Override

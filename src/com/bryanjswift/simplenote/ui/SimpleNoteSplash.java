@@ -66,7 +66,7 @@ public class SimpleNoteSplash extends Activity {
 				SimpleNoteSplash.this.finish();
 			}
 		}));
-		// TODO: This should be in styles.xml
+		// FIXME: This doesn't work from styles.xml
 		password.setTypeface(Typeface.SANS_SERIF);
 	}
 }

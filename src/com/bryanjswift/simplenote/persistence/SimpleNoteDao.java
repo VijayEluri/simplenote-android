@@ -26,7 +26,7 @@ public class SimpleNoteDao {
 	/* Database information/names */
 	private static final String DATABASE_NAME = "simplenotes_data.db";
 	private static final String DATABASE_TABLE = "notes";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 3;
 	/* Internal constants */
 	private static final String LOGGING_TAG = Constants.TAG + "DAO";
 	/* Internal fields */
@@ -51,6 +51,8 @@ public class SimpleNoteDao {
 				"%s text not null, %s text not null, %s text not null, " +
 				"%s boolean default 0, %s boolean default 1);",
 				DATABASE_TABLE, BaseColumns._ID, KEY, BODY, MODIFY, DELETED, SYNCED));
+		private static final String INDEX_CREATE = (String.format(
+				"create index if not exists key_index on %s (%s);", DATABASE_TABLE, KEY));
 
 		DatabaseHelper(Context context) {
 			super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,6 +61,7 @@ public class SimpleNoteDao {
 		@Override
 		public void onCreate(SQLiteDatabase db) {
 			db.execSQL(DATABASE_CREATE);
+			db.execSQL(INDEX_CREATE);
 		}
 
 		@Override
@@ -73,7 +76,10 @@ public class SimpleNoteDao {
 					db.execSQL("INSERT INTO " + tmpTable + " (" + cols + ") SELECT " + oldCols + " FROM " + DATABASE_TABLE + ";");
 					db.execSQL("DROP TABLE " + DATABASE_TABLE);
 					db.execSQL("ALTER TABLE tmp_notes RENAME TO " + DATABASE_TABLE);
+					db.execSQL(INDEX_CREATE);
 					break;
+				case 2:
+					db.execSQL(INDEX_CREATE);
 				default:
 					Log.i(LOGGING_TAG, "No upgrade necessary.");
 					break;

@@ -28,6 +28,13 @@
   <string name="status_authenticating">Contacting SimpleNote...</string>
   <string name="status_initializing">Initializing...</string>
   <string name="status_loggingin">Signing in</string>
+  <!-- Status Bar -->
+  <string name="status_credentials_invalid_ticker">SimpleNote account information rejected</string>
+  <string name="status_credentials_invalid_title">SimpleNote Account</string>
+  <string name="status_credentials_invalid_description">Your saved account information was rejected by SimpleNote\'s server. Please re-enter your Email and Password.</string>
+  <string name="status_credentials_missing_ticker">SimpleNote account information missing</string>
+  <string name="status_credentials_missing_title">SimpleNote Account</string>
+  <string name="status_credentials_missing_description">Email and Password are not stored for your account</string>
   <!-- Error messages -->
   <string name="error_authentication">Sign in failed, please check your email and password.</string>
   <string name="error_authentication_stored">Sign in failed with saved email and password. Please make sure they are correct and try again.</string>

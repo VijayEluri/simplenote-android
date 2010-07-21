@@ -23,6 +23,8 @@ public class Constants {
 	public static final String REQUEST_KEY = "ActivityRequest";
 	public static final int REQUEST_LOGIN = 32568;
 	public static final int REQUEST_EDIT = 9138171;
+	// Notifications
+	public static final int NOTIFICATION_CREDENTIALS = 98074121;
 	// API Base URL
 	public static final String API_BASE_URL   = "https://simple-note.appspot.com/api";
 	public static final String API_LOGIN_URL  = API_BASE_URL + "/login";					// POST

@@ -59,8 +59,10 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 				serverNote = serverNote.setSynced(true);
 				dbNote = dao.save(serverNote);
 				message = Message.obtain(handler, Constants.MESSAGE_UPDATE_NOTE);
-				message.setData(new Bundle());
-				message.getData().putSerializable(Note.class.getName(), dbNote);
+				final Bundle data = new Bundle();
+				data.putSerializable(Note.class.getName(), dbNote);
+				data.putBoolean(Constants.DATA_REFRESH_NOTES, true);
+				message.setData(data);
 				message.sendToTarget();
 			} else {
 				// we have a note and it is up to date or more recent than the note on the server

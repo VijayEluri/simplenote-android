@@ -254,7 +254,7 @@ public class SimpleNoteList extends ListActivity {
 				}
 			}
 			// Only refresh if told to.. should only be told to if it's an update from this Activity
-			if (msg.getData().getBoolean(SimpleNoteList.UPDATE)) {
+			if (msg.getData().getBoolean(Constants.DATA_REFRESH_NOTES)) {
 				refreshNotes();
 			}
 		}
@@ -332,7 +332,7 @@ public class SimpleNoteList extends ListActivity {
 		message.setData(new Bundle());
 		final Bundle data = message.getData();
 		data.putSerializable(Note.class.getName(), note);
-		data.putBoolean(SimpleNoteList.UPDATE, refresh);
+		data.putBoolean(Constants.DATA_REFRESH_NOTES, refresh);
 		message.sendToTarget();
 	}
 	/**

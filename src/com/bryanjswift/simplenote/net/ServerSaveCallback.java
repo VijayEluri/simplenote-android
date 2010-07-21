@@ -48,7 +48,7 @@ public class ServerSaveCallback extends HttpCallback {
 	public void on401(Response response) {
 		super.on401(response);
 		Log.d(LOGGING_TAG, "Unauthorized to save note on server");
-		// TODO: User unauthorized, get new token and try again
+		// TODO: User unauthorized, automatically attempt API login, if login fails post notification
 	}
 	/**
 	 * @see com.bryanjswift.simplenote.net.HttpCallback#on404(com.bryanjswift.simplenote.net.Api.Response)

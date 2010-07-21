@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat;
  * Hold constants for the SimpleNote application
  */
 public class Constants {
-	/** Name of stored preferences */
-	public static final String PREFS_NAME = "SimpleNotePrefs";
 	/** Logging tag prefix */
 	public static final String TAG = "SimpleNote:";
 	// Note Default Values
@@ -19,6 +17,8 @@ public class Constants {
 	// Message Codes
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
 	public static final int MESSAGE_UPDATE_FINISHED = 9732145;
+	// Message Keys
+	public static final String DATA_REFRESH_NOTES = "refreshNotes";
 	// Activity for result request Codes
 	public static final String REQUEST_KEY = "ActivityRequest";
 	public static final int REQUEST_LOGIN = 32568;

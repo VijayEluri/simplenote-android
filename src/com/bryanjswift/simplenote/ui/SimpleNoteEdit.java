@@ -137,7 +137,7 @@ public class SimpleNoteEdit extends Activity {
 				save(); // save returns ok
 				return true;
 			case R.id.menu_delete:
-				// TODO: delete the note assuming it has an id otherwise just cancel
+				delete(); // delete returns ok if there was a note to delete, cancelled otherwise
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -173,6 +173,25 @@ public class SimpleNoteEdit extends Activity {
 		mNoteSaved = true;
 		intent.putExtra(Note.class.getName(), note);
 		setResult(RESULT_OK, intent);
+		finish();
+	}
+	/**
+	 * Deletes the note if it exists in the db otherwise cancel
+	 */
+	private void delete() {
+		final Note dbNote = dao.retrieve(mNoteId);
+		final Intent intent = getIntent();
+		if (dbNote != null) {
+			Log.d(LOGGING_TAG, "Note exists, marking it as deleted and finishing successfully");
+			dao.delete(dbNote);
+			// Have to re-retrieve because deleting doesn't update the note passed to delete
+			intent.putExtra(Note.class.getName(), dao.retrieve(mNoteId));
+			setResult(RESULT_OK, intent);
+		} else {
+			Log.d(LOGGING_TAG, "Note doesn't exist, cancelling");
+			setResult(RESULT_CANCELED, intent);
+		}
+		mNoteSaved = true;
 		finish();
 	}
 }

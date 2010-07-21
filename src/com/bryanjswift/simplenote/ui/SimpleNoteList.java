@@ -295,7 +295,10 @@ public class SimpleNoteList extends ListActivity {
 				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 				final String email = credentials.get(Preferences.EMAIL);
 				final String auth = credentials.get(Preferences.TOKEN);
-				if (note.getKey().equals(Constants.DEFAULT_KEY)) {
+				if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
+					Log.d(LOGGING_TAG, "Deleting note on the server");
+					SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(this, note));
+				} else if (note.getKey().equals(Constants.DEFAULT_KEY)) {
 					Log.d(LOGGING_TAG, "Creating a new note on the server");
 					SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(this, note));
 				} else {

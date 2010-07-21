@@ -15,6 +15,7 @@ import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
+import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
@@ -57,7 +58,7 @@ public class DailyService extends WakefulIntentService {
 				@Override
 				public void onError(Response response) {
 					super.onError(response);
-					// TODO: Post notification that credentials are bad
+					Notifications.Credentials(DailyService.this);
 				}
 				
 			});

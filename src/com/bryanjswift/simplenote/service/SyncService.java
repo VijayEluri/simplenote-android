@@ -16,6 +16,8 @@ import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
+import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
 import com.bryanjswift.simplenote.ui.SimpleNoteList;
 import com.bryanjswift.simplenote.util.WakefulIntentService;
@@ -49,7 +51,10 @@ public class SyncService extends WakefulIntentService {
 			api.syncDown();
 			api.syncUp();
 		} else {
-			// TODO: post notification that we don't have credentials to perform sync
+			Notifications.Credentials(SyncService.this,
+					getString(R.string.status_credentials_missing_ticker),
+					getString(R.string.status_credentials_missing_title),
+					getString(R.string.status_credentials_missing_description));
 		}
 		scheduleBroadcast(this);
 	}

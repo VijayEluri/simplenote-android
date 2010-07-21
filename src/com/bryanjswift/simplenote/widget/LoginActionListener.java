@@ -55,7 +55,6 @@ public class LoginActionListener implements OnEditorActionListener {
 	 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
 	 */
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-		// TODO: Do I need to kill/dismiss this dialog onPause of the Activity?
 		final ProgressDialog dialog = ProgressDialog.show(context, loggingIn, authenticating);
 		Log.d(LOGGING_TAG, "Created progressDialog: " + dialog.toString());
 		Log.i(LOGGING_TAG, "Starting login thread");

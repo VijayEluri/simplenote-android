@@ -199,8 +199,8 @@ public class SimpleNoteList extends ListActivity {
 			case R.id.menu_delete_note:
 				final Note note = dao.retrieve(adapter.getItemId(info.position));
 				if (dao.delete(note)) {
-					// TODO: This should probably send a deleted message and trigger a send
-					updateNotesFor(note);
+					// Have to re-retrieve because deleting doesn't update the note passed to delete
+					updateNotesFor(dao.retrieve(note.getId()), true);
 				}
 				return true;
 			case R.id.menu_edit:
@@ -244,7 +244,17 @@ public class SimpleNoteList extends ListActivity {
 		private void handleUpdateNote(Message msg) {
 			// update the UI with the new note
 			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
-			if (!note.isDeleted()) {
+			if (note.isDeleted()) {
+				final HashMap<String,String> credentials = Preferences.getLoginPreferences(SimpleNoteList.this);
+				final String email = credentials.get(Preferences.EMAIL);
+				final String auth = credentials.get(Preferences.TOKEN);
+				if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
+					Log.d(LOGGING_TAG, "Deleting note on the server");
+					SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(SimpleNoteList.this, note));
+				}
+			}
+			// Only refresh if told to.. should only be told to if it's an update from this Activity
+			if (msg.getData().getBoolean(SimpleNoteList.UPDATE)) {
 				refreshNotes();
 			}
 		}
@@ -290,7 +300,7 @@ public class SimpleNoteList extends ListActivity {
 			case RESULT_OK:
 				final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
 				// Note modified, refresh the list
-				updateNotesFor(note);
+				updateNotesFor(note, false);
 				// Send updated note to the server
 				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 				final String email = credentials.get(Preferences.EMAIL);
@@ -316,11 +326,13 @@ public class SimpleNoteList extends ListActivity {
 	 * Internal method to trigger a note refresh
 	 * @param note causing the refresh
 	 */
-	private void updateNotesFor(Note note) {
+	private void updateNotesFor(Note note, boolean refresh) {
 		// Note modified, refresh the list
-		Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
+		final Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
 		message.setData(new Bundle());
-		message.getData().putSerializable(Note.class.getName(), note);
+		final Bundle data = message.getData();
+		data.putSerializable(Note.class.getName(), note);
+		data.putBoolean(SimpleNoteList.UPDATE, refresh);
 		message.sendToTarget();
 	}
 	/**

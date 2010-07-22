@@ -24,10 +24,10 @@ public class Notifications {
 	 */
 	public static void Credentials(Context context, CharSequence ticker, CharSequence title, CharSequence description) {
 		final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		final Notification notification = new Notification(R.drawable.simplenote_status, title, System.currentTimeMillis());
+		final Notification notification = new Notification(
+				R.drawable.simplenote_status_3, title, System.currentTimeMillis());
 		final PendingIntent intent = PendingIntent.getActivity(context, 0, new Intent(context, LoginDialog.class), 0);
 		notification.setLatestEventInfo(context.getApplicationContext(), title, description, intent);
-		notification.iconLevel = 3;
 		notifier.notify(Constants.NOTIFICATION_CREDENTIALS, notification);
 	}
 	/**

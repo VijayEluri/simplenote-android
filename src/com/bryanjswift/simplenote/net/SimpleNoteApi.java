@@ -195,7 +195,7 @@ public class SimpleNoteApi extends Api {
 	 * Increments and logs the API count
 	 * @return count after incrementing
 	 */
-	private synchronized static int increment() {
+	private static int increment() {
 		int count = SimpleNoteApi.count.incrementAndGet();
 		Log.d(LOGGING_TAG, String.format("That makes %d API calls since reset", count));
 		return count;

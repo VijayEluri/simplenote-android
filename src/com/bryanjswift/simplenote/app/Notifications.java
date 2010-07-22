@@ -53,17 +53,17 @@ public class Notifications {
 	public synchronized static void Syncing(Context context) {
 		if (!notifyingSync) {
 			final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-			final Notification notification = new Notification();
-			notification.contentView = new RemoteViews(context.getPackageName(), R.layout.notification_syncing);
-			notification.contentIntent = PendingIntent.getActivity(context, Constants.REQUEST_SYNCING, new Intent(context, SimpleNoteList.class), PendingIntent.FLAG_UPDATE_CURRENT);
+			final Notification notification = new Notification(
+					R.drawable.simplenote_status, null, System.currentTimeMillis());
 			notification.flags |= Notification.FLAG_ONGOING_EVENT;
 			notification.flags |= Notification.FLAG_NO_CLEAR;
-			notification.icon = R.drawable.simplenote_status;
-			notification.iconLevel = 0;
+			notification.setLatestEventInfo(
+					context.getApplicationContext(),
+					context.getString(R.string.status_syncing_title),
+					context.getString(R.string.status_syncing_description),
+					PendingIntent.getActivity(context, Constants.REQUEST_SYNCING, new Intent(context, SimpleNoteList.class), PendingIntent.FLAG_UPDATE_CURRENT));
 			notifier.notify(Constants.NOTIFICATION_SYNCING, notification);
 			notifyingSync = true;
-			Thread t = new Thread(new NotificationRunnable(notifier, notification));
-			t.start();
 		}
 	}
 	/**
@@ -74,31 +74,5 @@ public class Notifications {
 		notifyingSync = false;
 		final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		notifier.cancel(Constants.NOTIFICATION_SYNCING);
-	}
-	/**
-	 * Class to handle the logic of updating the syncing notification icon
-	 * @author bryanjswift
-	 */
-	private static class NotificationRunnable implements Runnable {
-		private final NotificationManager manager;
-		private final Notification notification;
-		public NotificationRunnable(final NotificationManager manager, final Notification notification) {
-			this.manager = manager;
-			this.notification = notification;
-		}
-		public void run() {
-			while (notifyingSync) {
-				try {
-					Thread.sleep(250);
-				} catch (InterruptedException ie) {
-					Log.d(LOGGING_TAG, "Notification animation thread interrupted", ie);
-				}
-				final int newLevel = (notification.iconLevel + 1) % 4;
-				Log.d(LOGGING_TAG, "Updating iconLevel to " + newLevel);
-				notification.iconLevel = newLevel;
-			}
-			// No longer notifying so cancel
-			manager.cancel(Constants.NOTIFICATION_SYNCING);
-		}
 	}
 }

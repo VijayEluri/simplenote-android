@@ -25,6 +25,7 @@ import android.widget.ListView;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
 import com.bryanjswift.simplenote.net.ServerCreateCallback;
@@ -32,7 +33,6 @@ import com.bryanjswift.simplenote.net.ServerSaveCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 import com.bryanjswift.simplenote.thread.LoginWithCredentials;
-import com.bryanjswift.simplenote.thread.SendNotesThread;
 import com.bryanjswift.simplenote.thread.SyncNotesThread;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
@@ -234,6 +234,7 @@ public class SimpleNoteList extends ListActivity {
 			switch (msg.what) {
 				case Constants.MESSAGE_UPDATE_NOTE: handleUpdateNote(msg); break;
 				case Constants.MESSAGE_UPDATE_FINISHED: handleUpdateFinished(msg); break;
+				case Constants.MESSAGE_UPDATE_STARTED: handleUpdateStarted(msg); break;
 				default: break;
 			}
 		}
@@ -259,11 +260,18 @@ public class SimpleNoteList extends ListActivity {
 			}
 		}
 		/**
+		 * Handle the update started message
+		 * @param msg with any relevant information
+		 */
+		private void handleUpdateStarted(final Message msg) {
+			Notifications.Syncing(SimpleNoteList.this);
+		}
+		/**
 		 * Handle the update finished message
-		 * @param msg with Note information
+		 * @param msg with any relevant information
 		 */
 		private void handleUpdateFinished(final Message msg) {
-			// do anything that should be done when sync is finished
+			Notifications.CancelSyncing(SimpleNoteList.this);
 		}
 	};
 	/**
@@ -274,9 +282,7 @@ public class SimpleNoteList extends ListActivity {
 	private void syncNotes(String email, String auth) {
 		final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, updateNoteHandler);
 		final Thread sync = new SyncNotesThread(api);
-		final Thread send = new SendNotesThread(api);
 		sync.start();
-		send.start();
 	}
 	/**
 	 * Deal with the results of the REQUEST_LOGIN Activity start

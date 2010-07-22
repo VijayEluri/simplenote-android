@@ -48,8 +48,7 @@ public class SyncService extends WakefulIntentService {
 		final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 		if (credentials.containsKey(Preferences.EMAIL) && credentials.containsKey(Preferences.TOKEN)) {
 			final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, syncNotesHandler);
-			api.syncDown();
-			api.syncUp();
+			api.sync();
 		} else {
 			Notifications.Credentials(SyncService.this,
 					getString(R.string.status_credentials_missing_ticker),
@@ -74,7 +73,7 @@ public class SyncService extends WakefulIntentService {
 		}
 	}
 	/**
-	 * Message handler which should _____ when a message with a Note is received
+	 * Message handler which should handle the update started and update finished messages
 	 */
 	private Handler syncNotesHandler = new Handler() {
 		/**
@@ -83,6 +82,25 @@ public class SyncService extends WakefulIntentService {
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
+			switch (msg.what) {
+				case Constants.MESSAGE_UPDATE_FINISHED: handleUpdateFinished(msg); break;
+				case Constants.MESSAGE_UPDATE_STARTED: handleUpdateStarted(msg); break;
+				default: break;
+			}
+		}
+		/**
+		 * Handle the update started message
+		 * @param msg with any relevant information
+		 */
+		private void handleUpdateStarted(final Message msg) {
+			Notifications.Syncing(SyncService.this);
+		}
+		/**
+		 * Handle the update finished message
+		 * @param msg with any relevant information
+		 */
+		private void handleUpdateFinished(final Message msg) {
+			Notifications.CancelSyncing(SyncService.this);
 			sendBroadcast(new Intent(SimpleNoteList.UPDATE));
 		}
 	};

@@ -42,7 +42,7 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	 * Pull down notes from the SimpleNote server and if the server note is newer update the note
 	 * in the database
 	 */
-	public void syncDown() {
+	private void syncDown() {
 		// Fetch the notes from the server
 		Log.d(LOGGING_TAG, "::syncDown");
 		Note[] notes = SimpleNoteApi.index(token, email, HttpCallback.EMPTY);
@@ -68,12 +68,11 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 				// we have a note and it is up to date or more recent than the note on the server
 			}
 		}
-		Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
 	}
 	/**
 	 * Get unsynchronized notes from the database and push them up to the SimpleNote server
 	 */
-	public void syncUp() {
+	private void syncUp() {
 		// Fetch the notes from the database
 		Log.d(LOGGING_TAG, "::syncUp");
 		Note[] notes = dao.retrieveUnsynced();
@@ -84,5 +83,14 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 				SimpleNoteApi.update(dbNote, token, email, new ServerSaveCallback(context, dbNote));
 			}
 		}
+	}
+	/**
+	 * Send appropriate messages to the handler and call synchronization methods in order
+	 */
+	public void sync() {
+		Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
+		syncDown();
+		syncUp();
+		Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
 	}
 }

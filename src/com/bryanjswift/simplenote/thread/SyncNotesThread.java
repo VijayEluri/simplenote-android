@@ -18,6 +18,6 @@ public class SyncNotesThread extends Thread {
 	 */
 	@Override
 	public void run() {
-		api.syncDown();
+		api.sync();
 	}
 }

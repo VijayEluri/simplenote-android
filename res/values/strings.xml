@@ -35,6 +35,9 @@
   <string name="status_credentials_missing_ticker">SimpleNote account information missing</string>
   <string name="status_credentials_missing_title">SimpleNote Account</string>
   <string name="status_credentials_missing_description">Email and Password are not stored for your account</string>
+  <string name="status_syncing_ticker">SimpleNote Sync Started</string>
+  <string name="status_syncing_title">SimpleNote Syncing</string>
+  <string name="status_syncing_description">Syncing notes with SimpleNote servers</string>
   <!-- Error messages -->
   <string name="error_authentication">Sign in failed, please check your email and password.</string>
   <string name="error_authentication_stored">Sign in failed with saved email and password. Please make sure they are correct and try again.</string>

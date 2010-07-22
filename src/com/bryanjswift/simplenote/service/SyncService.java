@@ -87,23 +87,6 @@ public class SyncService extends WakefulIntentService {
 		}
 	};
 	/**
-	 * Broadcast receiver to start up background synchronization service when the
-	 * application is launched
-	 * @author bryanjswift
-	 */
-	public static class AutoStarter extends BroadcastReceiver {
-		private static final String LOGGING_TAG = Constants.TAG + "SyncService.AutoStarter";
-		/**
-		 * Start the SyncService
-		 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
-		 */
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d(LOGGING_TAG, "Starting the sync service to synchronize notes");
-			context.startService(new Intent(context, SyncService.class));
-		}
-	}
-	/**
 	 * Broadcast receiver to start up background synchronization service when an alarm
 	 * is received
 	 * @author bryanjswift

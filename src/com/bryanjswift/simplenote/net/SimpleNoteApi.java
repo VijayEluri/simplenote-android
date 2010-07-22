@@ -159,7 +159,7 @@ public class SimpleNoteApi extends Api {
 	 */
 	public static boolean delete(final Note n, final String auth, final String email, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Deleting not with key %s on simplenote server", n.getKey()));
-		final String data = String.format("?key=%s&auth=%s&email%s", n.getKey(), auth, email);
+		final String data = String.format("?key=%s&auth=%s&email=%s", n.getKey(), auth, email);
 		boolean success = false;
 		try {
 			handleResponse(callback, Get(Constants.API_DELETE_URL + data));

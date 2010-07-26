@@ -18,8 +18,6 @@ public class Constants {
 	public static final int MESSAGE_UPDATE_NOTE = 12398;
 	public static final int MESSAGE_UPDATE_STARTED = 8621034;
 	public static final int MESSAGE_UPDATE_FINISHED = 9732145;
-	// Message Keys
-	public static final String DATA_REFRESH_NOTES = "refreshNotes";
 	// Activity for result request Codes
 	public static final String REQUEST_KEY = "ActivityRequest";
 	public static final int REQUEST_LOGIN = 32568;
@@ -28,6 +26,8 @@ public class Constants {
 	// Notifications
 	public static final int NOTIFICATION_CREDENTIALS = 98074121;
 	public static final int NOTIFICATION_SYNCING = 137988;
+	// Broadcast Strings
+	public static final String BROADCAST_UPDATE_NOTES = Constants.class.getPackage().getName() + ".UPDATE_NOTES";
 	// API Base URL
 	public static final String API_BASE_URL   = "https://simple-note.appspot.com/api";
 	public static final String API_LOGIN_URL  = API_BASE_URL + "/login";					// POST

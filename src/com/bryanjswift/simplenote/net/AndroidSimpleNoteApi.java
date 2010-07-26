@@ -61,7 +61,6 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 				message = Message.obtain(handler, Constants.MESSAGE_UPDATE_NOTE);
 				final Bundle data = new Bundle();
 				data.putSerializable(Note.class.getName(), dbNote);
-				data.putBoolean(Constants.DATA_REFRESH_NOTES, true);
 				message.setData(data);
 				message.sendToTarget();
 			} else {

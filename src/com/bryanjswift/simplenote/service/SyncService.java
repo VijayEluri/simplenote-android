@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
-import android.os.Message;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -18,8 +17,8 @@ import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.Notifications;
+import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
-import com.bryanjswift.simplenote.ui.SimpleNoteList;
 import com.bryanjswift.simplenote.util.WakefulIntentService;
 
 public class SyncService extends WakefulIntentService {
@@ -75,35 +74,7 @@ public class SyncService extends WakefulIntentService {
 	/**
 	 * Message handler which should handle the update started and update finished messages
 	 */
-	private Handler syncNotesHandler = new Handler() {
-		/**
-		 * @see android.os.Handler#handleMessage(android.os.Message)
-		 */
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-			switch (msg.what) {
-				case Constants.MESSAGE_UPDATE_FINISHED: handleUpdateFinished(msg); break;
-				case Constants.MESSAGE_UPDATE_STARTED: handleUpdateStarted(msg); break;
-				default: break;
-			}
-		}
-		/**
-		 * Handle the update started message
-		 * @param msg with any relevant information
-		 */
-		private void handleUpdateStarted(final Message msg) {
-			Notifications.Syncing(SyncService.this);
-		}
-		/**
-		 * Handle the update finished message
-		 * @param msg with any relevant information
-		 */
-		private void handleUpdateFinished(final Message msg) {
-			Notifications.CancelSyncing(SyncService.this);
-			sendBroadcast(new Intent(SimpleNoteList.UPDATE));
-		}
-	};
+	private Handler syncNotesHandler = new UpdateNoteHandler(this);
 	/**
 	 * Broadcast receiver to start up background synchronization service when an alarm
 	 * is received

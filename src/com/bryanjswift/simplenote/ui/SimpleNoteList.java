@@ -25,7 +25,7 @@ import android.widget.ListView;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
-import com.bryanjswift.simplenote.app.Notifications;
+import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
 import com.bryanjswift.simplenote.net.ServerCreateCallback;
@@ -43,16 +43,25 @@ import com.bryanjswift.simplenote.widget.NotesAdapter;
 public class SimpleNoteList extends ListActivity {
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
 	private static final String SCROLL_POSITION = "scrollY";
-	/** Intent Action to update notes via BroadcastReceiver */
-	public static final String UPDATE = SimpleNoteList.class.getName() + ".UPDATE_NOTES";
 	/** Interface for accessing the SimpleNote database on the device */
 	private final SimpleNoteDao dao;
+	/** Message handler which should update the UI when a message with a Note is received */
+	private final Handler updateNoteHandler;
+	/** BroadcastReceiver which will receive requests to update from background sync services */
+	private final BroadcastReceiver updateNoteReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.d(LOGGING_TAG, "Received broadcast to refresh notes in list");
+			refreshNotes();
+		}
+	};
 	/**
 	 * Create a dao to store using this as the context
 	 */
 	public SimpleNoteList() {
 		super();
 		this.dao = new SimpleNoteDao(this);
+		this.updateNoteHandler = new UpdateNoteHandler(this, true);
 	}
 	/**
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -88,13 +97,33 @@ public class SimpleNoteList extends ListActivity {
 		findViewById(android.R.id.list).scrollTo(0, scrollY);
 	}
 	/**
+	 * If SimpleNoteEdit saved state then retrieve it and go back to editing
+	 * @see android.app.ListActivity#onRestoreInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onRestoreInstanceState(Bundle state) {
+		super.onRestoreInstanceState(state);
+		if (state != null && state.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
+			Log.d(LOGGING_TAG, "Resuming edit note from a saved state");
+			FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
+		}
+	}
+	/**
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(updateNoteReceiver, new IntentFilter(SimpleNoteList.UPDATE));
+		registerReceiver(updateNoteReceiver, new IntentFilter(Constants.BROADCAST_UPDATE_NOTES));
 		refreshNotes();
+	}
+	/**
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt(SCROLL_POSITION, findViewById(android.R.id.list).getScrollY());
 	}
 	/**
 	 * @see android.app.Activity#onPause()
@@ -126,18 +155,6 @@ public class SimpleNoteList extends ListActivity {
 		FireIntent.EditNote(this, id, null);
 	}
 	/**
-	 * If SimpleNoteEdit saved state then retrieve it and go back to editing
-	 * @see android.app.ListActivity#onRestoreInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
-		if (state != null && state.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
-			Log.d(LOGGING_TAG, "Resuming edit note from a saved state");
-			FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
-		}
-	}
-	/**
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
@@ -167,14 +184,6 @@ public class SimpleNoteList extends ListActivity {
 		}
 	}
 	/**
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(SCROLL_POSITION, findViewById(android.R.id.list).getScrollY());
-	}
-	/**
 	 * Create a menu with delete and edit as options
 	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
 	 */
@@ -200,7 +209,7 @@ public class SimpleNoteList extends ListActivity {
 				final Note note = dao.retrieve(adapter.getItemId(info.position));
 				if (dao.delete(note)) {
 					// Have to re-retrieve because deleting doesn't update the note passed to delete
-					updateNotesFor(dao.retrieve(note.getId()), true);
+					updateNotesFor(dao.retrieve(note.getId()));
 				}
 				return true;
 			case R.id.menu_edit:
@@ -210,70 +219,6 @@ public class SimpleNoteList extends ListActivity {
 				return super.onContextItemSelected(item);
 		}
 	}
-	/**
-	 * BroadcastReceiver which will receive requests to update from background sync services
-	 */
-	public BroadcastReceiver updateNoteReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d(LOGGING_TAG, "Received broadcast to refresh notes in list");
-			refreshNotes();
-		}
-	};
-	/**
-	 * Message handler which should update the UI when a message with a Note is received
-	 */
-	private Handler updateNoteHandler = new Handler() {
-		/**
-		 * Messages are received from SyncNotesThread when a Note is updated or retrieved from the server
-		 * @see android.os.Handler#handleMessage(android.os.Message)
-		 */
-		@Override
-		public void handleMessage(final Message msg) {
-			super.handleMessage(msg);
-			switch (msg.what) {
-				case Constants.MESSAGE_UPDATE_NOTE: handleUpdateNote(msg); break;
-				case Constants.MESSAGE_UPDATE_FINISHED: handleUpdateFinished(msg); break;
-				case Constants.MESSAGE_UPDATE_STARTED: handleUpdateStarted(msg); break;
-				default: break;
-			}
-		}
-		/**
-		 * Handle the update note message
-		 * @param msg with Note information
-		 */
-		private void handleUpdateNote(Message msg) {
-			// update the UI with the new note
-			final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
-			if (note.isDeleted()) {
-				final HashMap<String,String> credentials = Preferences.getLoginPreferences(SimpleNoteList.this);
-				final String email = credentials.get(Preferences.EMAIL);
-				final String auth = credentials.get(Preferences.TOKEN);
-				if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
-					Log.d(LOGGING_TAG, "Deleting note on the server");
-					SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(SimpleNoteList.this, note));
-				}
-			}
-			// Only refresh if told to.. should only be told to if it's an update from this Activity
-			if (msg.getData().getBoolean(Constants.DATA_REFRESH_NOTES)) {
-				refreshNotes();
-			}
-		}
-		/**
-		 * Handle the update started message
-		 * @param msg with any relevant information
-		 */
-		private void handleUpdateStarted(final Message msg) {
-			Notifications.Syncing(SimpleNoteList.this);
-		}
-		/**
-		 * Handle the update finished message
-		 * @param msg with any relevant information
-		 */
-		private void handleUpdateFinished(final Message msg) {
-			Notifications.CancelSyncing(SimpleNoteList.this);
-		}
-	};
 	/**
 	 * Start up a note syncing thread
 	 * @param email account identifier for notes
@@ -305,8 +250,7 @@ public class SimpleNoteList extends ListActivity {
 		switch (resultCode) {
 			case RESULT_OK:
 				final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
-				// Note modified, refresh the list
-				updateNotesFor(note, false);
+				// Note modified, list refreshed by onResume
 				// Send updated note to the server
 				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 				final String email = credentials.get(Preferences.EMAIL);
@@ -332,13 +276,12 @@ public class SimpleNoteList extends ListActivity {
 	 * Internal method to trigger a note refresh
 	 * @param note causing the refresh
 	 */
-	private void updateNotesFor(Note note, boolean refresh) {
+	private void updateNotesFor(final Note note) {
 		// Note modified, refresh the list
 		final Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
 		message.setData(new Bundle());
 		final Bundle data = message.getData();
 		data.putSerializable(Note.class.getName(), note);
-		data.putBoolean(Constants.DATA_REFRESH_NOTES, refresh);
 		message.sendToTarget();
 	}
 	/**

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -104,19 +105,32 @@ public class SimpleNoteEdit extends Activity {
 		}
 	}
 	/**
-	 * @see android.app.Activity#onBackPressed()
+	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
 	 */
 	@Override
-	public void onBackPressed() {
-		//super.onBackPressed();
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		boolean handled = false;
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			handled = handleBackPressed();
+		}
+		if (!handled) {
+			handled = super.onKeyDown(keyCode, event);
+		}
+		return handled;
+	}
+	/**
+	 * The logic to handle the press of the back button
+	 * @return whether or not the event was handled
+	 */
+	private boolean handleBackPressed() {
 		Log.d(LOGGING_TAG, "Back button pressed");
+		boolean handled = false;
 		if (needsSave()) {
 			// save finishes the Activity with an OK result
 			save();
-		} else {
-			// supr.onBackPressed finishes the Activity with a CANCELLED result
-			super.onBackPressed();
+			handled = true;
 		}
+		return handled;
 	}
 	/**
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)

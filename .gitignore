@@ -3,6 +3,9 @@ gen
 .classpath
 .project
 .settings
+.idea
+*.eml
+*.iml
 *.tmproj
 *.soulver
 local.properties

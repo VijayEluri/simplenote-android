@@ -7,12 +7,9 @@
   <TextView
       android:id="@+id/note_title"
       style="@style/Shadowed.NoteTitle" />
-  <EditText
-      android:id="@+id/note_body"
-      android:layout_width="fill_parent"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:gravity="top"
-      android:scrollbars="vertical"
-      android:layout_marginTop="10dip" />
+  <ScrollView style="@style/NoteBodyScroll">
+    <EditText
+        android:id="@+id/note_body"
+        style="@style/NoteBody" />
+  </ScrollView>
 </LinearLayout>

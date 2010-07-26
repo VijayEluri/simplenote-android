@@ -53,6 +53,24 @@
     <item name="android:shadowColor">@color/note_title_shadow_color</item>
     <item name="android:shadowDx">1.0</item>
   </style>
+  <style name="NoteBodyScroll">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
+    <item name="android:background">@drawable/note_body</item>
+  </style>
+  <style name="NoteBody">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:gravity">top</item>
+    <item name="android:textSize">15.375sp</item>
+    <item name="android:paddingTop">20dip</item>
+    <item name="android:paddingRight">20dip</item>
+    <item name="android:paddingBottom">20dip</item>
+    <item name="android:paddingLeft">20dip</item>
+    <item name="android:background">@drawable/note_body_edit</item>
+    <item name="android:textColor">@color/note_body_color</item>
+  </style>
   <!-- Dialog Styles -->
   <style name="DialogLabel">
     <item name="android:layout_marginTop">10dip</item>

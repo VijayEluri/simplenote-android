@@ -4,6 +4,9 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+  <TextView
+      android:id="@+id/note_title"
+      style="@style/Shadowed.NoteTitle" />
   <EditText
       android:id="@+id/note_body"
       android:layout_width="fill_parent"

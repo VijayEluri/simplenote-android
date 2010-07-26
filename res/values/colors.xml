@@ -9,4 +9,6 @@
   <color name="blue_button_shadow_color">#63ffffff</color>
   <color name="black_button_color">#1c1c1c</color>
   <color name="black_button_shadow_color">#47ffffff</color>
+  <color name="note_title_color">#ff646464</color>
+  <color name="note_title_shadow_color">#ffffff</color>
 </resources>

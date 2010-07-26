@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.R;
@@ -58,12 +59,14 @@ public class SimpleNoteEdit extends Activity {
 		} else if (savedInstanceState != null && mOriginalBody == null) {
 			mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
 		}
+		final String title;
 		if (dbNote != null) {
-			setTitle(getString(R.string.app_name) + " - " + dbNote.getTitle());
+			title = dbNote.getTitle();
 			((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
 		} else {
-			setTitle(getString(R.string.app_name) + " - " + getString(R.string.new_note));
-		}
+			title = getString(R.string.new_note);
+		}	
+		((TextView) findViewById(R.id.note_title)).setText(title);
 	}
 	/**
 	 * @see android.app.Activity#onResume()

@@ -39,6 +39,20 @@
     <item name="android:textColor">@color/splashtext_color</item>
     <item name="android:shadowColor">@color/splashtext_shadow_color</item>
   </style>
+  <!-- Edit Note Styles -->
+  <style name="Shadowed.NoteTitle">
+    <item name="android:gravity">left</item>
+    <item name="android:layout_gravity">top</item>
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:ellipsize">marquee</item>
+    <item name="android:background">@drawable/note_header</item>
+    <item name="android:textSize">18.375sp</item>
+    <item name="android:textColor">@color/note_title_color</item>
+    <item name="android:shadowColor">@color/note_title_shadow_color</item>
+    <item name="android:shadowDx">1.0</item>
+  </style>
   <!-- Dialog Styles -->
   <style name="DialogLabel">
     <item name="android:layout_marginTop">10dip</item>

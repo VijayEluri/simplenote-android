@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
@@ -59,13 +59,13 @@ public class NotesAdapter extends BaseAdapter {
 	 * @see android.widget.Adapter#getView(int, android.view.View, android.view.ViewGroup)
 	 */
 	public View getView(int position, View convertView, ViewGroup parent) {
-		final LinearLayout row;
+		final RelativeLayout row;
 		final Note note = notes[position];
 		Log.d(LOGGING_TAG, String.format("Getting view for '%d' with title '%s'",note.getId(), note.getTitle()));
 		if (convertView == null) {
-			row = (LinearLayout) inflater.inflate(R.layout.notes_row, parent, false);
+			row = (RelativeLayout) inflater.inflate(R.layout.notes_row, parent, false);
 		} else {
-			row = (LinearLayout) convertView;
+			row = (RelativeLayout) convertView;
 		}
 		final String modified;
 		if (note.getModified() == null) {

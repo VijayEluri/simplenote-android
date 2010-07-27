@@ -6,7 +6,7 @@
     android:layout_height="fill_parent">
   <TextView
       android:id="@+id/note_title"
-      style="@style/Shadowed.NoteTitle" />
+      style="@style/Shadowed.Down.NoteTitle" />
   <ScrollView style="@style/NoteBodyScroll">
     <EditText
         android:id="@+id/note_body"

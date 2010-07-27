@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     style="@style/FullWidth">
-  <TextView
-      android:id="@+id/note_title"
-      style="@style/FullWidth" />
-  <TextView
-      android:id="@+id/note_date"
-      style="@style/FullWidth" />
-</LinearLayout>
+  <LinearLayout android:id="@+id/note_title_layout" style="@style/FullWidth">
+    <TextView
+        android:id="@+id/note_title"
+        style="@style/Shadowed.Down.NoteRowTitle" />
+    <TextView
+        android:id="@+id/note_date"
+        android:layout_toRightOf="@id/note_title"
+        style="@style/Shadowed.Down.NoteRowDate" />
+  </LinearLayout>
+</RelativeLayout>

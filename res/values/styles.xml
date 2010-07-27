@@ -65,6 +65,7 @@
     <item name="android:layout_height">fill_parent</item>
     <item name="android:layout_weight">1</item>
     <item name="android:gravity">top</item>
+    <item name="android:inputType">text|textAutoCorrect|textAutoComplete|textCapSentences</item>
     <item name="android:textSize">15.375sp</item>
     <item name="android:padding">20dip</item>
     <item name="android:background">@drawable/note_body_edit</item>

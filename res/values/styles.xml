@@ -72,6 +72,9 @@
     <item name="android:textColor">@color/note_body_color</item>
   </style>
   <!-- Note List -->
+  <style name="FullWidth.NoteList">
+    <item name="android:dividerHeight">0dip</item>
+  </style>
   <style name="Shadowed.Down.NoteRowTitle">
     <item name="android:layout_width">150dip</item>
     <item name="android:layout_height">wrap_content</item>

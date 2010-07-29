@@ -1,5 +1,7 @@
 package com.bryanjswift.simplenote.ui;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
@@ -28,6 +30,7 @@ public class SimpleNoteEdit extends Activity {
 	// Final variables
 	private final SimpleNoteDao dao;
 	// Mutable instance variables
+	private DateFormat displayDateFormat;
 	private long mNoteId = 0L;
 	private String mOriginalBody = "";
 	private boolean mActivityStateSaved = false;
@@ -45,6 +48,9 @@ public class SimpleNoteEdit extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
+		if (displayDateFormat == null) {
+			this.displayDateFormat = new SimpleDateFormat(this.getString(R.string.display_date_format));
+		}
 		setContentView(R.layout.edit_note);
 		if (savedInstanceState == null) {
 			Bundle extras = getIntent().getExtras();
@@ -65,8 +71,15 @@ public class SimpleNoteEdit extends Activity {
 			((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
 		} else {
 			title = getString(R.string.new_note);
-		}	
+		}
+		final String modified;
+		if (dbNote.getModified() == null) {
+			modified = dbNote.getDateModified();
+		} else {
+			modified = displayDateFormat.format(dbNote.getModified());
+		}
 		((TextView) findViewById(R.id.note_title)).setText(title);
+		((TextView) findViewById(R.id.note_date)).setText(modified);
 	}
 	/**
 	 * @see android.app.Activity#onResume()

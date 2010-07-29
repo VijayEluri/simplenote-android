@@ -45,6 +45,15 @@ public class Notifications {
 				context.getString(R.string.status_credentials_invalid_title),
 				context.getString(R.string.status_credentials_invalid_description));
 	}
+
+    /**
+     * Cancel the Notification about invalid credentials
+     * @param context under which the Notification is cancelled
+     */
+    public static void CancelCredentials(Context context) {
+        final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notifier.cancel(Constants.NOTIFICATION_CREDENTIALS);
+    }
 	/**
 	 * Post credentials Notification with given messages
 	 * @param context under which the Notification is created

@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
+import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
@@ -48,7 +49,29 @@ public class ServerSaveCallback extends HttpCallback {
 	public void on401(final Response response) {
 		super.on401(response);
 		Log.d(LOGGING_TAG, "Unauthorized to save note on server");
-		// TODO: User unauthorized, automatically attempt API login, if login fails post notification
+        final HashMap<String,String> credentials = Preferences.getLoginPreferences(context);
+        final String email = credentials.get(Preferences.EMAIL);
+        final String password = credentials.get(Preferences.PASSWORD);
+        SimpleNoteApi.login(email, password, new HttpCallback() {
+            /**
+             * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
+             * @param response
+             */
+            @Override
+            public void on200(Response response) {
+                super.on200(response);
+                Preferences.setAuthToken(context, response.body);
+                // ideally we could retry here...
+            }
+            /**
+             * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)
+             */
+            @Override
+            public void onError(Response response) {
+                super.onError(response);
+                Notifications.Credentials(context);
+            }
+        });
 	}
 	/**
 	 * @see com.bryanjswift.simplenote.net.HttpCallback#on404(com.bryanjswift.simplenote.net.Api.Response)
@@ -72,7 +95,7 @@ public class ServerSaveCallback extends HttpCallback {
 		Log.d(LOGGING_TAG, String.format("A %d result was returned", response.status));
 	}
 	/**
-	 * @see com.bryanjswift.simplenote.net.HttpCallback#onException(com.bryanjswift.simplenote.net.Api.Response)
+	 * @see com.bryanjswift.simplenote.net.HttpCallback#onException(String, String, Throwable) 
 	 */
 	@Override
 	public void onException(final String url, final String data, final Throwable t) {

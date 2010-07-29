@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
+import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.service.SyncService;
 
 public class Preferences extends PreferenceActivity {
@@ -26,6 +27,7 @@ public class Preferences extends PreferenceActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
+        Notifications.CancelCredentials(this);
 	}
 	/**
 	 * Schedule a broadcast with the new preferences
@@ -98,7 +100,7 @@ public class Preferences extends PreferenceActivity {
 	}
 	/**
 	 * Get a set of String values from the Preferences, key won't exist if the default value is returned
-	 * @param context from which to retrieve preferences
+	 * @param prefs the preferences instance from which we are retrieving information
 	 * @param keys of the preference values to retrieve
 	 * @return a HashMap with keys as the keys and the corresponding values
 	 */

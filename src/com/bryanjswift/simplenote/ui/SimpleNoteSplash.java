@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -54,9 +55,10 @@ public class SimpleNoteSplash extends Activity {
 	 * Attach focus event listeners to the EditTexts in the layout
 	 */
 	private void setupSplashFields() {
+        final Button loginButton = (Button) findViewById(R.id.splash_login);
 		final EditText email = (EditText) findViewById(R.id.splash_email);
 		final EditText password = (EditText) findViewById(R.id.splash_password);
-		password.setOnEditorActionListener(new LoginActionListener(this, email, password, new HttpCallback() {
+        final LoginActionListener loginAction = new LoginActionListener(this, email, password, new HttpCallback() {
 			/**
 			 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
 			 */
@@ -65,7 +67,9 @@ public class SimpleNoteSplash extends Activity {
 				FireIntent.SimpleNoteList(SimpleNoteSplash.this);
 				SimpleNoteSplash.this.finish();
 			}
-		}));
+		});
+		password.setOnEditorActionListener(loginAction);
+        loginButton.setOnClickListener(loginAction);
 		// FIXME: This doesn't work from styles.xml
 		password.setTypeface(Typeface.SANS_SERIF);
 	}

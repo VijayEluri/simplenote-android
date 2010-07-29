@@ -9,10 +9,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.*;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -30,7 +28,6 @@ public class SimpleNoteEdit extends Activity {
 	// Final variables
 	private final SimpleNoteDao dao;
 	// Mutable instance variables
-	private DateFormat displayDateFormat;
 	private long mNoteId = 0L;
 	private String mOriginalBody = "";
 	private boolean mActivityStateSaved = false;
@@ -48,9 +45,6 @@ public class SimpleNoteEdit extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
-		if (displayDateFormat == null) {
-			this.displayDateFormat = new SimpleDateFormat(this.getString(R.string.display_date_format));
-		}
 		setContentView(R.layout.edit_note);
 		if (savedInstanceState == null) {
 			Bundle extras = getIntent().getExtras();
@@ -72,14 +66,16 @@ public class SimpleNoteEdit extends Activity {
 		} else {
 			title = getString(R.string.new_note);
 		}
-		final String modified;
-		if (dbNote.getModified() == null) {
-			modified = dbNote.getDateModified();
-		} else {
-			modified = displayDateFormat.format(dbNote.getModified());
-		}
 		((TextView) findViewById(R.id.note_title)).setText(title);
-		((TextView) findViewById(R.id.note_date)).setText(modified);
+        findViewById(R.id.note_delete).setOnClickListener(new View.OnClickListener() {
+            /**
+             * Perform deletion of the note
+             * @param view
+             */
+            public void onClick(View view) {
+                delete();
+            }
+        });
 	}
 	/**
 	 * @see android.app.Activity#onResume()

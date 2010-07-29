@@ -43,17 +43,17 @@
     <item name="android:shadowColor">@color/splashtext_shadow_color</item>
   </style>
   <!-- Edit Note Styles -->
-  <style name="Shadowed.Down.NoteTitle">
-    <item name="android:gravity">left</item>
-    <item name="android:layout_gravity">top</item>
-    <item name="android:layout_width">fill_parent</item>
+  <style name="NoteTrash">
+    <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:ellipsize">marquee</item>
-    <item name="android:background">@drawable/note_header</item>
-    <item name="android:textSize">18.375sp</item>
-    <item name="android:textColor">@color/note_title_color</item>
-    <item name="android:shadowColor">@color/note_title_shadow_color</item>
+    <item name="android:src">@drawable/trash</item>
+    <item name="android:gravity">right|center_vertical</item>
+    <item name="android:layout_gravity">top</item>
+    <item name="android:paddingTop">10dip</item>
+    <item name="android:paddingRight">20dip</item>
+    <item name="android:paddingBottom">10dip</item>
+    <item name="android:paddingLeft">5dip</item>
+    <item name="android:background">@drawable/bg_note_date_default</item>
   </style>
   <style name="NoteBodyScroll">
     <item name="android:layout_width">fill_parent</item>

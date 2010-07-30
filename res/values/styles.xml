@@ -8,6 +8,15 @@
     <item name="android:windowBackground">@drawable/background</item>
     <item name="android:windowNoTitle">true</item>
   </style>
+  <!-- Basic Styles -->
+  <style name="FullWidth">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
+  <style name="FillParent">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
+  </style>
   <style name="Shadowed">
     <item name="android:shadowDx">1.1</item>
     <item name="android:shadowDy">1.1</item>
@@ -15,6 +24,22 @@
   </style>
   <style name="Shadowed.Down">
     <item name="android:shadowDx">1.0</item>
+  </style>
+  <!-- Basic Buttons -->
+  <style name="Shadowed.Button">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center</item>
+  </style>
+  <style name="Shadowed.Button.Blue">
+    <item name="android:background">@drawable/blue_button</item>
+    <item name="android:textColor">@color/blue_button_color</item>
+    <item name="android:shadowColor">@color/blue_button_shadow_color</item>
+  </style>
+  <style name="Shadowed.Button.Black">
+    <item name="android:background">@drawable/black_button</item>
+    <item name="android:textColor">@color/black_button_color</item>
+    <item name="android:shadowColor">@color/black_button_shadow_color</item>
   </style>
   <!-- Splash Styles -->
   <style name="Shadowed.SplashHeader">
@@ -42,34 +67,28 @@
     <item name="android:textColor">@color/splashtext_color</item>
     <item name="android:shadowColor">@color/splashtext_shadow_color</item>
   </style>
-  <!-- Edit Note Styles -->
-  <style name="NoteTrash">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:src">@drawable/trash</item>
-    <item name="android:gravity">right|center_vertical</item>
-    <item name="android:layout_gravity">top</item>
-    <item name="android:paddingTop">10dip</item>
-    <item name="android:paddingRight">20dip</item>
-    <item name="android:paddingBottom">10dip</item>
-    <item name="android:paddingLeft">5dip</item>
-    <item name="android:background">@drawable/bg_note_date_default</item>
+  <!-- Splash Button Styles -->
+  <style name="Shadowed.Button.Splash">
+    <item name="android:layout_marginTop">18dip</item>
+    <item name="android:layout_marginRight">35dip</item>
+    <item name="android:layout_marginBottom">0dip</item>
+    <item name="android:layout_marginLeft">35dip</item>
+    <item name="android:layout_height">60sp</item>
+    <item name="android:textSize">15sp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:typeface">sans</item>
   </style>
-  <style name="NoteBodyScroll">
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">fill_parent</item>
-    <item name="android:background">@drawable/note_body</item>
+  <style name="Shadowed.Button.Splash.Blue">
+    <item name="android:background">@drawable/blue_button</item>
+    <item name="android:textColor">@color/blue_button_color</item>
+    <item name="android:shadowColor">@color/blue_button_shadow_color</item>
   </style>
-  <style name="NoteBody">
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">fill_parent</item>
-    <item name="android:layout_weight">1</item>
-    <item name="android:gravity">top</item>
-    <item name="android:inputType">text|textAutoCorrect|textCapSentences|textMultiLine</item>
-    <item name="android:textSize">15.375sp</item>
-    <item name="android:padding">20dip</item>
-    <item name="android:background">@drawable/note_body_edit</item>
-    <item name="android:textColor">@color/note_body_color</item>
+  <style name="Shadowed.Button.Splash.Black">
+    <item name="android:layout_marginTop">6dip</item>
+    <item name="android:layout_marginBottom">5dip</item>
+    <item name="android:background">@drawable/black_button</item>
+    <item name="android:textColor">@color/black_button_color</item>
+    <item name="android:shadowColor">@color/black_button_shadow_color</item>
   </style>
   <!-- Note List -->
   <style name="FullWidth.NoteList">
@@ -121,6 +140,35 @@
     <item name="android:textStyle">bold</item>
     <item name="android:textColor">@color/no_notes_text</item>
     <item name="android:shadowColor">@color/no_notes_shadow</item>
+  </style>
+  <!-- Edit Note Styles -->
+  <style name="NoteTrash">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:src">@drawable/trash</item>
+    <item name="android:gravity">right|center_vertical</item>
+    <item name="android:layout_gravity">top</item>
+    <item name="android:paddingTop">10dip</item>
+    <item name="android:paddingRight">20dip</item>
+    <item name="android:paddingBottom">10dip</item>
+    <item name="android:paddingLeft">5dip</item>
+    <item name="android:background">@drawable/bg_note_date_default</item>
+  </style>
+  <style name="NoteBodyScroll">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
+    <item name="android:background">@drawable/note_body</item>
+  </style>
+  <style name="NoteBody">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
+    <item name="android:layout_weight">1</item>
+    <item name="android:gravity">top</item>
+    <item name="android:inputType">text|textAutoCorrect|textCapSentences|textMultiLine</item>
+    <item name="android:textSize">15.375sp</item>
+    <item name="android:padding">20dip</item>
+    <item name="android:background">@drawable/note_body_edit</item>
+    <item name="android:textColor">@color/note_body_color</item>
   </style>
   <!-- Dialog Styles -->
   <style name="DialogLabel">
@@ -174,52 +222,5 @@
   <style name="Input.Splash.Email">
     <item name="android:imeOptions">actionNext</item>
     <item name="android:inputType">textEmailAddress</item>
-  </style>
-  <!-- Button Styles -->
-  <style name="Shadowed.Button">
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_gravity">center</item>
-  </style>
-  <style name="Shadowed.Button.Blue">
-    <item name="android:background">@drawable/blue_button</item>
-    <item name="android:textColor">@color/blue_button_color</item>
-    <item name="android:shadowColor">@color/blue_button_shadow_color</item>
-  </style>
-  <style name="Shadowed.Button.Black">
-    <item name="android:background">@drawable/black_button</item>
-    <item name="android:textColor">@color/black_button_color</item>
-    <item name="android:shadowColor">@color/black_button_shadow_color</item>
-  </style>
-  <style name="Shadowed.Button.Splash">
-    <item name="android:layout_marginTop">18dip</item>
-    <item name="android:layout_marginRight">35dip</item>
-    <item name="android:layout_marginBottom">0dip</item>
-    <item name="android:layout_marginLeft">35dip</item>
-    <item name="android:layout_height">60sp</item>
-    <item name="android:textSize">15sp</item>
-    <item name="android:textStyle">bold</item>
-    <item name="android:typeface">sans</item>
-  </style>
-  <style name="Shadowed.Button.Splash.Blue">
-    <item name="android:background">@drawable/blue_button</item>
-    <item name="android:textColor">@color/blue_button_color</item>
-    <item name="android:shadowColor">@color/blue_button_shadow_color</item>
-  </style>
-  <style name="Shadowed.Button.Splash.Black">
-    <item name="android:layout_marginTop">6dip</item>
-    <item name="android:layout_marginBottom">5dip</item>
-    <item name="android:background">@drawable/black_button</item>
-    <item name="android:textColor">@color/black_button_color</item>
-    <item name="android:shadowColor">@color/black_button_shadow_color</item>
-  </style>
-  <!-- List styles -->
-  <style name="FullWidth">
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-  </style>
-  <style name="FillParent">
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:layout_height">fill_parent</item>
   </style>
 </resources>

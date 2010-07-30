@@ -19,6 +19,7 @@ import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
+import com.bryanjswift.simplenote.widget.NotesAdapter;
 
 /**
  * Handle the note editing
@@ -68,7 +69,7 @@ public class SimpleNoteEdit extends Activity {
 		} else {
 			title = getString(R.string.new_note);
 		}
-		((TextView) findViewById(R.id.note_title)).setText(title);
+		((TextView) findViewById(R.id.note_title)).setText(NotesAdapter.ellipsizeTitle(this, title));
         findViewById(R.id.note_delete).setOnClickListener(new View.OnClickListener() {
             /**
              * Perform deletion of the note

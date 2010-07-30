@@ -23,6 +23,7 @@ import com.bryanjswift.simplenote.model.Note;
 public class NotesAdapter extends BaseAdapter {
 	private static final String LOGGING_TAG = Constants.TAG + "NotesAdapter";
 	// Immutable Adapter state
+    private final Context context;
 	private final LayoutInflater inflater;
 	private final DateFormat displayDateFormat;
 	// Mutable Adapter state
@@ -33,6 +34,7 @@ public class NotesAdapter extends BaseAdapter {
 	 * @param notes to use as data
 	 */
 	public NotesAdapter(Context context, Note[] notes) {
+        this.context = context;
 		this.inflater = LayoutInflater.from(context);
 		this.notes = notes;
 		this.displayDateFormat = new SimpleDateFormat(context.getString(R.string.display_date_format));
@@ -73,7 +75,7 @@ public class NotesAdapter extends BaseAdapter {
 		} else {
 			modified = displayDateFormat.format(note.getModified());
 		}
-		((TextView) row.findViewById(R.id.note_title)).setText(note.getTitle());
+		((TextView) row.findViewById(R.id.note_title)).setText(ellipsizeTitle(context, note.getTitle()));
 		((TextView) row.findViewById(R.id.note_date)).setText(modified);
 		return row;
 	}
@@ -89,4 +91,19 @@ public class NotesAdapter extends BaseAdapter {
 	public final void setNotes(Note[] notes) {
 		this.notes = notes;
 	}
+
+    /**
+     * Trim the title of a note using resources from the given context
+     * @param context from which to retrieve resources
+     * @param t - title (or string) to truncate/ellipsize
+     * @return truncated title if it is longer than the defined max characters
+     */
+    public static final String ellipsizeTitle(final Context context, String t) {
+        String title = t;
+        int maxChars = context.getResources().getInteger(R.integer.titleMaxChars);
+        if (title.length() > maxChars) {
+            title = title.substring(0, maxChars - 1) + "\u2026";
+        }
+        return title;
+    }
 }

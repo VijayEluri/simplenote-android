@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name">SimpleNote</string>
-  <string name="no_notes">No Notes Yet</string>
+  <string name="no_notes">You have no notes.</string>
   <string name="title">Title</string>
   <string name="body">Body</string>
   <string name="confirm">Confirm</string>
   <string name="new_note">New Note</string>
+  <string name="note_add">Add New Note</string>
   <string name="edit_note">Edit Note</string>
   <string name="authenticate">Sign In</string>
   <string name="email">Email</string>

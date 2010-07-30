@@ -2,13 +2,12 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
-  <ListView
-      android:id="@+id/android:list"
-      android:cacheColorHint="@color/transparent"
-      style="@style/FullWidth.NoteList" />
-  <TextView
-      android:id="@+id/android:empty"
-      android:text="@string/no_notes"
-      style="@style/FullWidth" />
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+  <ListView android:id="@id/android:list" android:cacheColorHint="@color/transparent" style="@style/FullWidth.NoteList" />
+  <LinearLayout android:id="@id/android:empty" style="@style/FillParent" android:orientation="vertical">
+    <ImageView style="@style/NoNotesImage" />
+    <TextView android:text="@string/no_notes" style="@style/Shadowed.NoNotesText" />
+    <Button android:id="@+id/note_add" android:text="@string/note_add" style="@style/Shadowed.Button.Splash.Blue"/>
+  </LinearLayout>
 </LinearLayout>

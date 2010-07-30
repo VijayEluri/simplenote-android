@@ -15,4 +15,6 @@
   <color name="note_title_shadow_color">#ffffffff</color>
   <color name="note_body_color">#ff8d8b8b</color>
   <color name="note_cache_color_hint">#ff5a5a5a</color>
+  <color name="no_notes_text">#ffd1d1d1</color>
+  <color name="no_notes_shadow">#38000000</color>
 </resources>

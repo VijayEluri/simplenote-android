@@ -7,17 +7,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.ContextMenu;
+import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -77,6 +74,7 @@ public class SimpleNoteList extends ListActivity {
 			scrollY = savedState.getInt(SCROLL_POSITION, 0);
 		}
 		Log.d(LOGGING_TAG, "Firing up the note list");
+		getWindow().setFormat(PixelFormat.RGBA_8888);
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Note[] notes = dao.retrieveAll();
@@ -89,10 +87,16 @@ public class SimpleNoteList extends ListActivity {
 		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
 		if (credentials.containsKey(Preferences.TOKEN)) {
 			// sync notes in a background thread
-			syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
+			syncNotes();
 		} else {
 			(new LoginWithCredentials(this, credentials)).start();
 		}
+        // bind click listener to new note button
+        findViewById(R.id.note_add).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                FireIntent.EditNote(SimpleNoteList.this, Constants.DEFAULT_ID, "");
+            }
+        });
 		// restore the scroll position
 		findViewById(android.R.id.list).scrollTo(0, scrollY);
 	}
@@ -141,7 +145,7 @@ public class SimpleNoteList extends ListActivity {
 		super.onActivityResult(requestCode, resultCode, data);
 		Log.d(LOGGING_TAG, String.format("onActivityResult firing with resultCode: %d", resultCode));
 		switch (requestCode) {
-			case Constants.REQUEST_LOGIN: handleSigninResult(resultCode, data); break;
+			case Constants.REQUEST_LOGIN: handleSigninResult(resultCode); break;
 			case Constants.REQUEST_EDIT: handleNoteEditResult(resultCode, data); break;
 		}
 	}
@@ -170,8 +174,7 @@ public class SimpleNoteList extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_refresh:
-				HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-				syncNotes(credentials.get(Preferences.EMAIL), credentials.get(Preferences.TOKEN));
+				syncNotes();
 				return true;
 			case R.id.menu_preferences:
 				FireIntent.Preferences(this);
@@ -194,7 +197,7 @@ public class SimpleNoteList extends ListActivity {
 		inflater.inflate(R.menu.menu_list_item, menu);
 		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 		final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-		final Note note = (Note) adapter.getItem(info.position);
+		final Note note = adapter.getItem(info.position);
 		menu.setHeaderTitle(note.getTitle());
 	}
 	/**
@@ -221,10 +224,8 @@ public class SimpleNoteList extends ListActivity {
 	}
 	/**
 	 * Start up a note syncing thread
-	 * @param email account identifier for notes
-	 * @param auth token used for access after login API call
-	 */
-	private void syncNotes(String email, String auth) {
+     */
+	private void syncNotes() {
 		final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, updateNoteHandler);
 		final Thread sync = new SyncNotesThread(api);
 		sync.start();
@@ -232,13 +233,11 @@ public class SimpleNoteList extends ListActivity {
 	/**
 	 * Deal with the results of the REQUEST_LOGIN Activity start
 	 * @param resultCode how the LoginDialog Activity finished
-	 * @param data the intent that started the LoginDialog Activity
-	 */
-	private void handleSigninResult(final int resultCode, final Intent data) {
+     */
+	private void handleSigninResult(final int resultCode) {
 		// Assume this only gets called when LoginDialog completed successfully
 		if (resultCode == RESULT_OK) {
-			final Bundle extras = data.getExtras();
-			syncNotes(extras.getString(Preferences.EMAIL), extras.getString(Preferences.TOKEN));
+			syncNotes();
 		}
 	}
 	/**

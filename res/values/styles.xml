@@ -103,6 +103,25 @@
     <item name="android:textColor">@color/blue_button_color</item>
     <item name="android:shadowColor">@color/blue_button_shadow_color</item>
   </style>
+  <!-- No Notes -->
+  <style name="NoNotesImage">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_marginTop">80.5dip</item>
+    <item name="android:layout_marginLeft">20dip</item>
+    <item name="android:src">@drawable/bg_no_notes</item>
+  </style>
+  <style name="Shadowed.NoNotesText">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">center</item>
+    <item name="android:layout_marginTop">0.5dip</item>
+    <item name="android:textSize">22sp</item>
+    <item name="android:textStyle">bold</item>
+    <item name="android:textColor">@color/no_notes_text</item>
+    <item name="android:shadowColor">@color/no_notes_shadow</item>
+  </style>
   <!-- Dialog Styles -->
   <style name="DialogLabel">
     <item name="android:layout_marginTop">10dip</item>
@@ -198,5 +217,9 @@
   <style name="FullWidth">
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
+  </style>
+  <style name="FillParent">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">fill_parent</item>
   </style>
 </resources>

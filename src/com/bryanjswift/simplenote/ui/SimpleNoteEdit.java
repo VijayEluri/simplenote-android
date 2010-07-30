@@ -6,6 +6,7 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
@@ -45,6 +46,7 @@ public class SimpleNoteEdit extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
+		getWindow().setFormat(PixelFormat.RGBA_8888);
 		setContentView(R.layout.edit_note);
 		if (savedInstanceState == null) {
 			Bundle extras = getIntent().getExtras();

@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.ui;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.app.Activity;
@@ -10,9 +8,14 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.*;
-import android.widget.Button;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
@@ -70,13 +73,33 @@ public class SimpleNoteEdit extends Activity {
 			title = getString(R.string.new_note);
 		}
 		((TextView) findViewById(R.id.note_title)).setText(NotesAdapter.ellipsizeTitle(this, title));
-        findViewById(R.id.note_delete).setOnClickListener(new View.OnClickListener() {
+        ImageButton trash = (ImageButton) findViewById(R.id.note_delete);
+        trash.setOnClickListener(new View.OnClickListener() {
             /**
              * Perform deletion of the note
-             * @param view
+             * @param view being clicked
              */
             public void onClick(View view) {
+                Log.d(LOGGING_TAG, "OnClick firing for trash icon");
                 delete();
+            }
+        });
+        trash.setOnTouchListener(new View.OnTouchListener() {
+            /**
+             * Handle special events when touching the trash button
+             * @param view being touched
+             * @param motionEvent information about touch event
+             * @return whether or not the event was handled (it wasn't)
+             */
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(LOGGING_TAG, "OnTouch firing for trash icon");
+                View titleRow = findViewById(R.id.note_title_row);
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    titleRow.setPressed(false);
+                } else {
+                    titleRow.setPressed(true);
+                }
+                return false;
             }
         });
 	}

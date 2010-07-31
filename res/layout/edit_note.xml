@@ -4,10 +4,10 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
-  <LinearLayout android:id="@+id/note_title_row" style="@style/FullWidth">
+  <LinearLayout android:id="@+id/note_title_row" style="@style/FullWidth.NoteEditTitle">
     <TextView
         android:id="@+id/note_title"
-        style="@style/Shadowed.Down.NoteRowTitle" />
+        style="@style/Shadowed.Down.NoteRowTitle.Edit" />
     <ImageButton
         android:id="@+id/note_delete"
         android:layout_toRightOf="@id/note_title"

@@ -143,9 +143,17 @@
     <item name="android:shadowColor">@color/no_notes_shadow</item>
   </style>
   <!-- Edit Note Styles -->
+  <style name="FullWidth.NoteEditTitle">
+    <item name="android:padding">0px</item>
+    <item name="android:background">@drawable/bg_note_trash</item>
+  </style>
+  <style name="Shadowed.Down.NoteRowTitle.Edit">
+    <item name="android:layout_height">fill_parent</item>
+    <item name="android:background">@drawable/bg_note_title_edit</item>
+  </style>
   <style name="NoteTrash">
     <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_height">fill_parent</item>
     <item name="android:src">@drawable/trash</item>
     <item name="android:gravity">right|center_vertical</item>
     <item name="android:layout_gravity">top</item>
@@ -153,7 +161,7 @@
     <item name="android:paddingRight">18dip</item>
     <item name="android:paddingBottom">10dip</item>
     <item name="android:paddingLeft">5dip</item>
-    <item name="android:background">@drawable/bg_note_date_default</item>
+    <item name="android:background">@drawable/note_body_edit</item>
   </style>
   <style name="NoteBodyScroll">
     <item name="android:layout_width">fill_parent</item>

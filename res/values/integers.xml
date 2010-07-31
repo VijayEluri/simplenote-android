@@ -4,5 +4,5 @@
   <integer name="every2hour">2</integer>
   <integer name="every4hour">4</integer>
   <integer name="every8hour">8</integer>
-  <integer name="titleMaxChars">25</integer>
+  <integer name="titleMaxChars">30</integer>
 </resources>

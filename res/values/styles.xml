@@ -150,7 +150,7 @@
     <item name="android:gravity">right|center_vertical</item>
     <item name="android:layout_gravity">top</item>
     <item name="android:paddingTop">10dip</item>
-    <item name="android:paddingRight">20dip</item>
+    <item name="android:paddingRight">18dip</item>
     <item name="android:paddingBottom">10dip</item>
     <item name="android:paddingLeft">5dip</item>
     <item name="android:background">@drawable/bg_note_date_default</item>

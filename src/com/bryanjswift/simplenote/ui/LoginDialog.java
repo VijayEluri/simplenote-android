@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.ui;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,13 +32,13 @@ public class LoginDialog extends Activity {
 		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 		// Get credentials
-		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+		Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
 		// Get fields
 		final EditText email = (EditText) findViewById(R.id.email);
 		final EditText password = (EditText) findViewById(R.id.password);
 		// Set values to what is stored in preferences
-		email.setText(credentials.get(Preferences.EMAIL));
-		password.setText(credentials.get(Preferences.PASSWORD));
+		email.setText(credentials.email);
+		password.setText(credentials.password);
 		// When user presses an action button when in the password field authenticate the user
 		password.setOnEditorActionListener(new LoginActionListener(this, email, password, new HttpCallback() {
 			/**

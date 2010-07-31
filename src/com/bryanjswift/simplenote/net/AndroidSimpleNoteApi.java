@@ -33,9 +33,9 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	public AndroidSimpleNoteApi(final Context context, final Handler handler) {
 		this.context = context;
 		this.dao = new SimpleNoteDao(context);
-		final HashMap<String,String> credentials = Preferences.getLoginPreferences(context);
-		this.email = credentials.get(Preferences.EMAIL);
-		this.token = credentials.get(Preferences.TOKEN);
+		final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
+		this.email = credentials.email;
+		this.token = credentials.auth;
 		this.handler = handler;
 	}
 	/**

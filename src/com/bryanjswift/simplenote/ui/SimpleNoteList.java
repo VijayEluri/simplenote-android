@@ -84,8 +84,8 @@ public class SimpleNoteList extends ListActivity {
 		// Make sure onCreateContextMenu is called for long press of notes
 		registerForContextMenu(getListView());
 		// check the token exists first and if not authenticate with existing username/password
-		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-		if (credentials.containsKey(Preferences.TOKEN)) {
+		Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		if (!credentials.auth.equals("")) {
 			// sync notes in a background thread
 			syncNotes();
 		} else {
@@ -251,9 +251,9 @@ public class SimpleNoteList extends ListActivity {
 				final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
 				// Note modified, list refreshed by onResume
 				// Send updated note to the server
-				final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-				final String email = credentials.get(Preferences.EMAIL);
-				final String auth = credentials.get(Preferences.TOKEN);
+				final Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+				final String email = credentials.email;
+				final String auth = credentials.auth;
 				if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
 					Log.d(LOGGING_TAG, "Deleting note on the server");
 					SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(this, note));

@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.widget;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.util.Log;
@@ -74,8 +72,7 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
         Log.i(LOGGING_TAG, "Starting login thread");
         final String emailValue = email.getText().toString();
         final String passwordValue = password.getText().toString();
-        final HashMap<String,String> credentials =
-                Preferences.setLoginPreferences(context, emailValue, passwordValue);
+        final Preferences.Credentials credentials = Preferences.setLoginPreferences(context, emailValue, passwordValue);
         // Login with credentials here
         (new LoginWithCredentials(context, credentials, new HttpCallback() {
             /**

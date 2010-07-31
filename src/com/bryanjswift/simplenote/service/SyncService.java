@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.service;
 
-import java.util.HashMap;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -44,8 +42,8 @@ public class SyncService extends WakefulIntentService {
 	@Override
 	protected void handleWakefulIntent(Intent intent) {
 		Log.d(LOGGING_TAG, "Handling synchronization in a wakeful manner");
-		final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-		if (credentials.containsKey(Preferences.EMAIL) && credentials.containsKey(Preferences.TOKEN)) {
+		final Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		if (!credentials.email.equals("") && !credentials.auth.equals("")) {
 			final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, syncNotesHandler);
 			api.sync();
 		} else {
@@ -58,6 +56,7 @@ public class SyncService extends WakefulIntentService {
 	}
 	/**
 	 * Schedule an alarm depending on the value in the Preferences
+     * @param context for which the notification Intent is created
 	 */
 	public static void scheduleBroadcast(Context context) {
 		Log.d(LOGGING_TAG, "Attempting to schedule a broadcast");

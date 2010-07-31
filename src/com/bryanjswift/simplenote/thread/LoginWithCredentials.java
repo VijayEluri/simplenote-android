@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.thread;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -24,17 +22,17 @@ import com.bryanjswift.simplenote.ui.FireIntent;
 public class LoginWithCredentials extends Thread {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginWithCredentials";
 	private final Activity context;
-	private final HashMap<String,String> credentials;
+	private final Preferences.Credentials credentials;
 	private final HttpCallback callback;
 	/**
 	 * Create new specialized Thread with credentials information
 	 * @param context from which the thread was invoked
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
-	public LoginWithCredentials(Activity context, HashMap<String,String> credentials) {
+	public LoginWithCredentials(Activity context, Preferences.Credentials credentials) {
 		this(context, credentials, null);
 	}
-	public LoginWithCredentials(Activity context, HashMap<String,String> credentials, HttpCallback callback) {
+	public LoginWithCredentials(Activity context, Preferences.Credentials credentials, HttpCallback callback) {
 		this.context = context;
 		this.credentials = credentials;
 		this.callback = callback;
@@ -44,10 +42,10 @@ public class LoginWithCredentials extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		SimpleNoteApi.login(credentials.get(Preferences.EMAIL), credentials.get(Preferences.PASSWORD), new HttpCallback() {
+		SimpleNoteApi.login(credentials.email, credentials.password, new HttpCallback() {
 			/**
 			 * Authentication was successful, store the token in the preferences and start the list activity
-			 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(java.lang.String)
+			 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
 			 */
 			@Override
 			public void on200(final Response response) {
@@ -71,7 +69,7 @@ public class LoginWithCredentials extends Thread {
 			}
 			/**
 			 * Authentication failed, show login dialog
-			 * @see com.bryanjswift.simplenote.net.HttpCallback#on401(java.lang.String)
+			 * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)
 			 */
 			@Override
 			public void onError(final Response response) {

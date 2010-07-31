@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.net;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -24,6 +22,7 @@ public class ServerSaveCallback extends HttpCallback {
 	protected final Note note;
 	/**
 	 * Create a callback related to the note which was saved
+     * @param context for which the callback is created
 	 * @param note trying to be saved to the server
 	 */
 	public ServerSaveCallback(final Context context, final Note note) {
@@ -49,13 +48,12 @@ public class ServerSaveCallback extends HttpCallback {
 	public void on401(final Response response) {
 		super.on401(response);
 		Log.d(LOGGING_TAG, "Unauthorized to save note on server");
-        final HashMap<String,String> credentials = Preferences.getLoginPreferences(context);
-        final String email = credentials.get(Preferences.EMAIL);
-        final String password = credentials.get(Preferences.PASSWORD);
+        final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
+        final String email = credentials.email;
+        final String password = credentials.password;
         SimpleNoteApi.login(email, password, new HttpCallback() {
             /**
              * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
-             * @param response
              */
             @Override
             public void on200(Response response) {
@@ -81,9 +79,9 @@ public class ServerSaveCallback extends HttpCallback {
 		super.on404(response);
 		Log.d(LOGGING_TAG, "Note not found on server");
 		// Note doesn't exist, create it
-		final HashMap<String,String> credentials = Preferences.getLoginPreferences(context);
-		final String email = credentials.get(Preferences.EMAIL);
-		final String auth = credentials.get(Preferences.TOKEN);
+		final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
+		final String email = credentials.email;
+		final String auth = credentials.auth;
 		SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(context, note));
 	}
 	/**

@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.app;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -51,9 +49,9 @@ public class UpdateNoteHandler extends Handler {
 		// update the UI with the new note
 		final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
 		if (note.isDeleted()) {
-			final HashMap<String,String> credentials = Preferences.getLoginPreferences(context);
-			final String email = credentials.get(Preferences.EMAIL);
-			final String auth = credentials.get(Preferences.TOKEN);
+			final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
+			final String email = credentials.email;
+			final String auth = credentials.auth;
 			if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
 				Log.d(LOGGING_TAG, "Deleting note on the server");
 				SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(context, note));

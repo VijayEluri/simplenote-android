@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.service;
 
-import java.util.HashMap;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -33,9 +31,9 @@ public class DailyService extends WakefulIntentService {
 	@Override
 	protected void handleWakefulIntent(Intent intent) {
 		Log.d(LOGGING_TAG, "Handling DailyService business");
-		HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
-		if (credentials.containsKey(Preferences.EMAIL) && credentials.containsKey(Preferences.PASSWORD)) {
-			SimpleNoteApi.login(credentials.get(Preferences.EMAIL), credentials.get(Preferences.PASSWORD), new HttpCallback() {
+		Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		if (!credentials.email.equals("") && !credentials.password.equals("")) {
+			SimpleNoteApi.login(credentials.email, credentials.password, new HttpCallback() {
 				/**
 				 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
 				 */
@@ -68,6 +66,7 @@ public class DailyService extends WakefulIntentService {
 	}
 	/**
 	 * Schedule an alarm for DailyService
+     * @param context for which the broadcast intent is created
 	 */
 	public static void scheduleBroadcast(Context context) {
 		Log.d(LOGGING_TAG, "Scheduling DailyService.Starter broadcast");

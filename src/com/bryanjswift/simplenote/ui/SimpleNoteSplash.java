@@ -36,11 +36,10 @@ public class SimpleNoteSplash extends Activity {
 		SyncService.scheduleBroadcast(this); // schedule alarms when application launches
 		DailyService.scheduleBroadcast(this);
 		setContentView(R.layout.splash);
-		final HashMap<String,String> credentials = Preferences.getLoginPreferences(this);
+		final Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
 		final Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");
 		((TextView) findViewById(R.id.splashLabel)).setTypeface(helveticaBold);
-		if (credentials.containsKey(Preferences.EMAIL) &&
-				(credentials.containsKey(Preferences.TOKEN) || credentials.containsKey(Preferences.PASSWORD))) {
+		if (!credentials.email.equals("") && (!credentials.password.equals("") || !credentials.auth.equals(""))) {
 			// valid token stored
 			Log.d(LOGGING_TAG, "Auth information stored, going to list");
 			FireIntent.SimpleNoteList(this);

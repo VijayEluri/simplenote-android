@@ -104,7 +104,8 @@
     <item name="android:lines">1</item>
     <item name="android:maxLength">@integer/titleMaxChars</item>
     <item name="android:background">@drawable/bg_note_title</item>
-    <item name="android:textSize">18.375sp</item>
+    <item name="android:textSize">16sp</item>
+    <item name="android:textStyle">bold</item>
     <item name="android:textColor">@color/note_title_color</item>
     <item name="android:shadowColor">@color/note_title_shadow_color</item>
   </style>
@@ -118,7 +119,7 @@
     <item name="android:paddingBottom">10dip</item>
     <item name="android:paddingLeft">5dip</item>
     <item name="android:background">@drawable/bg_note_date</item>
-    <item name="android:textSize">18.375sp</item>
+    <item name="android:textSize">15sp</item>
     <item name="android:textColor">@color/blue_button_color</item>
     <item name="android:shadowColor">@color/blue_button_shadow_color</item>
   </style>

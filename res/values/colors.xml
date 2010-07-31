@@ -11,7 +11,7 @@
   <color name="blue_button_shadow_color">#63ffffff</color>
   <color name="black_button_color">#ff1c1c1c</color>
   <color name="black_button_shadow_color">#47ffffff</color>
-  <color name="note_title_color">#ff646464</color>
+  <color name="note_title_color">#cc646464</color>
   <color name="note_title_shadow_color">#ffffffff</color>
   <color name="note_body_color">#ff8d8b8b</color>
   <color name="note_cache_color_hint">#ff5a5a5a</color>

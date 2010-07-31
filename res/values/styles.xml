@@ -93,6 +93,12 @@
   <!-- Note List -->
   <style name="FullWidth.NoteList">
     <item name="android:dividerHeight">0dip</item>
+    <item name="android:divider">@color/white</item>
+  </style>
+  <style name="FullWidth.NoteRow">
+    <item name="android:padding">0px</item>
+    <item name="android:layout_marginTop">0px</item>
+    <item name="android:layout_marginBottom">0px</item>
   </style>
   <style name="Shadowed.Down.NoteRowTitle">
     <item name="android:layout_width">150dip</item>

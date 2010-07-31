@@ -2,8 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    style="@style/FullWidth">
-  <LinearLayout android:id="@+id/note_title_layout" style="@style/FullWidth">
+    style="@style/FullWidth.NoteRow">
+  <LinearLayout android:id="@+id/note_title_layout" style="@style/FullWidth.NoteRow">
     <TextView
         android:id="@+id/note_title"
         style="@style/Shadowed.Down.NoteRowTitle" />

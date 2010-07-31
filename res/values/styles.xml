@@ -175,7 +175,8 @@
     <item name="android:gravity">top</item>
     <item name="android:inputType">text|textAutoCorrect|textCapSentences|textMultiLine</item>
     <item name="android:textSize">15.375sp</item>
-    <item name="android:padding">20dip</item>
+    <item name="android:padding">10dip</item>
+    <item name="android:paddingTop">20dip</item>
     <item name="android:background">@drawable/note_body_edit</item>
     <item name="android:textColor">@color/note_body_color</item>
   </style>

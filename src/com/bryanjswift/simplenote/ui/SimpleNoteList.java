@@ -1,21 +1,27 @@
 package com.bryanjswift.simplenote.ui;
 
-import java.util.HashMap;
-
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
+import android.util.AttributeSet;
 import android.util.Log;
-import android.view.*;
+import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -78,6 +84,13 @@ public class SimpleNoteList extends ListActivity {
 		// Set content view based on Notes currently in the database
 		setContentView(R.layout.notes_list);
 		Note[] notes = dao.retrieveAll();
+        ListView list = getListView();
+        TypedArray a = obtainStyledAttributes(null, R.styleable.NoteListFooter);
+        ImageView footer = new ImageView(this);
+        footer.setImageDrawable(a.getDrawable(R.styleable.NoteListFooter_android_src));
+        footer.setBackgroundDrawable(a.getDrawable(R.styleable.NoteListFooter_android_background));
+        list.addFooterView(footer, null, false);
+        a.recycle();
 		// Now create a note adapter and set it to display
 		ListAdapter notesAdapter = new NotesAdapter(this, notes);
 		setListAdapter(notesAdapter);

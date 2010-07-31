@@ -95,6 +95,10 @@
     <item name="android:dividerHeight">0dip</item>
     <item name="android:divider">@color/white</item>
   </style>
+  <style name="NoteListFooter">
+    <item name="android:src">@drawable/note_list_footer</item>
+    <item name="android:background">@drawable/note_body_edit</item>
+  </style>
   <style name="FullWidth.NoteRow">
     <item name="android:padding">0px</item>
     <item name="android:layout_marginTop">0px</item>

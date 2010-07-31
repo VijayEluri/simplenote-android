@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+  <declare-styleable name="NoteListFooter">
+    <attr name="android:src" />
+    <attr name="android:background" />
+  </declare-styleable>
+</resources>

@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -108,7 +109,18 @@ public class SimpleNoteEdit extends Activity {
             }
         });
 	}
-	/**
+
+    /**
+     * @see android.app.Activity#onPostResume()
+     */
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        if (mNoteId == Constants.DEFAULT_ID) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        }
+    }
+    /**
 	 * @see android.app.Activity#onResume()
 	 */
 	@Override

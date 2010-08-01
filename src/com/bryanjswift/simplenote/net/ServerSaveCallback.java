@@ -48,10 +48,8 @@ public class ServerSaveCallback extends HttpCallback {
 	public void on401(final Response response) {
 		super.on401(response);
 		Log.d(LOGGING_TAG, "Unauthorized to save note on server");
-        final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
-        final String email = credentials.email;
-        final String password = credentials.password;
-        SimpleNoteApi.login(email, password, new HttpCallback() {
+        final Api.Credentials credentials = Preferences.getLoginPreferences(context);
+        SimpleNoteApi.login(credentials, new HttpCallback() {
             /**
              * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
              */
@@ -79,10 +77,8 @@ public class ServerSaveCallback extends HttpCallback {
 		super.on404(response);
 		Log.d(LOGGING_TAG, "Note not found on server");
 		// Note doesn't exist, create it
-		final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
-		final String email = credentials.email;
-		final String auth = credentials.auth;
-		SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(context, note));
+		final Api.Credentials credentials = Preferences.getLoginPreferences(context);
+		SimpleNoteApi.create(note, credentials, new ServerCreateCallback(context, note));
 	}
 	/**
 	 * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)

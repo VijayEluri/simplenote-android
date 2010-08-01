@@ -47,7 +47,8 @@ public abstract class Api {
 			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192);
 			StringBuilder sb = new StringBuilder();
 			for (String line = in.readLine(); line != null; line = in.readLine()) {
-				sb.append(line + '\n');
+				sb.append(line);
+                sb.append('\n');
 			}
 			sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
 			// Store response information in Response object
@@ -56,10 +57,6 @@ public abstract class Api {
 			response.headers = conn.getHeaderFields();
 			// Clean up
 			conn.disconnect();
-			conn = null;
-			out  = null;
-			in   = null;
-			sb   = null;
 		} catch (FileNotFoundException fnfe) {
 			// I'm not sure why but when the login fails we get a FileNotFoundException
 			response.status = 401;
@@ -83,7 +80,8 @@ public abstract class Api {
 		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192);
 		StringBuilder sb = new StringBuilder();
 		for (String line = in.readLine(); line != null; line = in.readLine()) {
-			sb.append(line + '\n');
+			sb.append(line);
+            sb.append('\n');
 		}
 		sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
 		// Store response in a Response object
@@ -92,9 +90,6 @@ public abstract class Api {
 		response.headers = conn.getHeaderFields();
 		// Clean up
 		conn.disconnect();
-		conn = null;
-		in = null;
-		sb = null;
 		return response;
 	}
 	/**
@@ -132,4 +127,17 @@ public abstract class Api {
 			return base64Encode ? Base64.encodeBytes(str.getBytes()) : str;
 		}
 	}
+    /**
+     * Convenient holder for credential information
+     */
+    public static class Credentials {
+        public final String email;
+        public final String password;
+        public final String auth;
+        public Credentials(String email, String password, String auth) {
+            this.email = email;
+            this.password = password;
+            this.auth = auth;
+        }
+    }
 }

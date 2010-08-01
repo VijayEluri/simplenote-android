@@ -23,14 +23,13 @@ public class SimpleNoteApi extends Api {
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteApi";
 	/**
 	 * Method to invoke the SimpleNote login API
-	 * @param email address to login with
-	 * @param password to use for logging in
+	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
 	 * @return the token resulting from the API login call
 	 */
-	public static String login(final String email, final String password, final HttpCallback callback) {
+	public static String login(final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
-		String data = encode("email=" + email + "&password=" + password, true, true);
+		String data = encode("email=" + credentials.email + "&password=" + credentials.password, true, true);
 		String token = null;
 		try {
 			token = handleResponse(callback, Post(Constants.API_LOGIN_URL, data)).body;
@@ -43,14 +42,13 @@ public class SimpleNoteApi extends Api {
 	}
 	/**
 	 * Method to invoke the SimpleNote index API
-	 * @param auth token from login call
-	 * @param email identifying account to retrieve notes for
+	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
 	 * @return a Note[] with the bare bones of each note on the server
 	 */
-	public static Note[] index(final String auth, final String email, final HttpCallback callback) {
-		Log.d(LOGGING_TAG, String.format("Retrieving note index from simplenote server for %s", email));
-		final String data = String.format("?auth=%s&email=%s", auth, email);
+	public static Note[] index(final Credentials credentials, final HttpCallback callback) {
+		Log.d(LOGGING_TAG, String.format("Retrieving note index from simplenote server for %s", credentials.email));
+		final String data = String.format("?auth=%s&email=%s", credentials.auth, credentials.email);
 		Note[] notes = new Note[0];
 		try {
 			Response response = handleResponse(callback, Get(Constants.API_NOTES_URL + data));
@@ -75,14 +73,13 @@ public class SimpleNoteApi extends Api {
 	/**
 	 * Pull a full note from the server
 	 * @param n - bare bones information about the note to retrieve
-	 * @param auth token from login call
-	 * @param email identifying account to retrieve notes for
+	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
 	 * @return a Note with all data available on the simplenote servers
 	 */
-	public static Note retrieve(final Note n, final String auth, final String email, final HttpCallback callback) {
+	public static Note retrieve(final Note n, final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Retrieving note with key %s from simplenote server", n.getKey()));
-		final String data = String.format("?key=%s&auth=%s&email=%s", n.getKey(), auth, email);
+		final String data = String.format("?key=%s&auth=%s&email=%s", n.getKey(), credentials.auth, credentials.email);
 		Note note = n;
 		try {
 			Response response = handleResponse(callback, Get(Constants.API_NOTE_URL + data));
@@ -104,15 +101,14 @@ public class SimpleNoteApi extends Api {
 	/**
 	 * Update a note on the server
 	 * @param n - note information to update on the server
-	 * @param auth token from login call
-	 * @param email identifying account to retrieve notes for
+	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
 	 * @return whether or not the note was successfully updated
 	 */
-	public static boolean update(final Note n, final String auth, final String email, final HttpCallback callback) {
+	public static boolean update(final Note n, final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Updating note with key '%s' on simplenote server", n.getKey()));
 		final String modifiedDate = encode(n.getDateModified(), false, true);
-		final String urlData = String.format("?key=%s&auth=%s&email=%s&modify=%s", n.getKey(), auth, email, modifiedDate);
+		final String urlData = String.format("?key=%s&auth=%s&email=%s&modify=%s", n.getKey(), credentials.auth, credentials.email, modifiedDate);
 		final String data = encode(n.getTitleAndBody(), true, false);
 		boolean success = false;
 		try {
@@ -128,15 +124,14 @@ public class SimpleNoteApi extends Api {
 	/**
 	 * Create a note on the server
 	 * @param n - note information to add on the server
-	 * @param auth token from login call
-	 * @param email identifying account to retrieve notes for
+	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
 	 * @return whether or not the note was successfully updated
 	 */
-	public static boolean create(final Note n, final String auth, final String email, final HttpCallback callback) {
+	public static boolean create(final Note n, final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Creating note with id %d on simplenote server", n.getId()));
 		final String modifiedDate = encode(n.getDateModified(), false, true);
-		final String urlData = String.format("?auth=%s&email=%s&modify=%s", auth, email, modifiedDate);
+		final String urlData = String.format("?auth=%s&email=%s&modify=%s", credentials.auth, credentials.email, modifiedDate);
 		final String data = encode(n.getTitleAndBody(), true, false);
 		boolean success = false;
 		try {
@@ -152,14 +147,13 @@ public class SimpleNoteApi extends Api {
 	/**
 	 * Mark a note as deleted from server
 	 * @param n - note information to remove from the server
-	 * @param auth token from login call
-	 * @param email identifying account to retrieve notes for
+	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
 	 * @return whether or not the note was successfully removed
 	 */
-	public static boolean delete(final Note n, final String auth, final String email, final HttpCallback callback) {
+	public static boolean delete(final Note n, final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, String.format("Deleting not with key %s on simplenote server", n.getKey()));
-		final String data = String.format("?key=%s&auth=%s&email=%s", n.getKey(), auth, email);
+		final String data = String.format("?key=%s&auth=%s&email=%s", n.getKey(), credentials.auth, credentials.email);
 		boolean success = false;
 		try {
 			handleResponse(callback, Get(Constants.API_DELETE_URL + data));

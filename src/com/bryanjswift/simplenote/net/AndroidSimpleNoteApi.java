@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.net;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,9 +20,8 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	// Private immutable fields
 	private final Context context;
 	private final SimpleNoteDao dao;
-	private final String email;
+	private final Credentials credentials;
 	private final Handler handler;
-	private final String token;
 	/**
 	 * Setup needed fields from the context
 	 * @param context under which the API calls will be made
@@ -33,9 +30,7 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	public AndroidSimpleNoteApi(final Context context, final Handler handler) {
 		this.context = context;
 		this.dao = new SimpleNoteDao(context);
-		final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
-		this.email = credentials.email;
-		this.token = credentials.auth;
+		this.credentials = Preferences.getLoginPreferences(context);
 		this.handler = handler;
 	}
 	/**
@@ -45,14 +40,14 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 	private void syncDown() {
 		// Fetch the notes from the server
 		Log.d(LOGGING_TAG, "::syncDown");
-		Note[] notes = SimpleNoteApi.index(token, email, HttpCallback.EMPTY);
+		Note[] notes = SimpleNoteApi.index(credentials, HttpCallback.EMPTY);
 		Message message = null;
 		for (Note serverNote : notes) {
 			Note dbNote = dao.retrieveByKey(serverNote.getKey());
 			if (dbNote == null || (serverNote.getDateModified().compareTo(dbNote.getDateModified()) > 0)) {
 				// if we don't have the note or the note on the server is newer
 				// then retrieve from the server and save it
-				serverNote = SimpleNoteApi.retrieve(serverNote, token, email, HttpCallback.EMPTY);
+				serverNote = SimpleNoteApi.retrieve(serverNote, credentials, HttpCallback.EMPTY);
 				if (dbNote != null) { // if it's already in the db make sure the id is set
 					serverNote = serverNote.setId(dbNote.getId());
 				}
@@ -77,9 +72,9 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 		Note[] notes = dao.retrieveUnsynced();
 		for (Note dbNote : notes) {
 			if (dbNote.getKey().equals(Constants.DEFAULT_KEY)) {
-				SimpleNoteApi.create(dbNote, token, email, new ServerCreateCallback(context, dbNote));
+				SimpleNoteApi.create(dbNote, credentials, new ServerCreateCallback(context, dbNote));
 			} else {
-				SimpleNoteApi.update(dbNote, token, email, new ServerSaveCallback(context, dbNote));
+				SimpleNoteApi.update(dbNote, credentials, new ServerSaveCallback(context, dbNote));
 			}
 		}
 	}

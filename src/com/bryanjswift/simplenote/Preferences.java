@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -10,6 +8,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
 
 import com.bryanjswift.simplenote.app.Notifications;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.service.SyncService;
 
 public class Preferences extends PreferenceActivity {
@@ -43,9 +42,9 @@ public class Preferences extends PreferenceActivity {
 	 * @param context from which to retrieve preferences
 	 * @return a HashMap with preference keys and values
 	 */
-	public static Credentials getLoginPreferences(Context context) {
+	public static Api.Credentials getLoginPreferences(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return new Credentials(prefs.getString(EMAIL, ""), prefs.getString(PASSWORD, ""), prefs.getString(TOKEN, ""));
+        return new Api.Credentials(prefs.getString(EMAIL, ""), prefs.getString(PASSWORD, ""), prefs.getString(TOKEN, ""));
 	}
 	/**
 	 * Save login data into preferences
@@ -55,11 +54,11 @@ public class Preferences extends PreferenceActivity {
 	 * @param auth to save
 	 * @return a HashMap with preference keys and values
 	 */
-	public static Credentials setLoginPreferences(Context context, String email, String password, String auth) {
+	public static Api.Credentials setLoginPreferences(Context context, String email, String password, String auth) {
 		Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putString(EMAIL, email).putString(PASSWORD, password).putString(TOKEN, auth);
 		editor.commit();
-		return new Credentials(email, password, auth);
+		return new Api.Credentials(email, password, auth);
 	}
 	/**
 	 * Save login data into preferences, shortcut for setLoginPreferences(context, email, password, null);
@@ -68,7 +67,7 @@ public class Preferences extends PreferenceActivity {
 	 * @param password to save
 	 * @return a HashMap with preference keys and values
 	 */
-	public static Credentials setLoginPreferences(Context context, String email, String password) {
+	public static Api.Credentials setLoginPreferences(Context context, String email, String password) {
 		return setLoginPreferences(context, email, password, null);
 	}
 	/**
@@ -93,17 +92,4 @@ public class Preferences extends PreferenceActivity {
 		editor.putString(PASSWORD, password);
 		return editor.commit();
 	}
-    /**
-     * Convenient holder for credential information
-     */
-    public static class Credentials {
-        public final String email;
-        public final String password;
-        public final String auth;
-        public Credentials(String email, String password, String auth) {
-            this.email = email;
-            this.password = password;
-            this.auth = auth;
-        }
-    }
 }

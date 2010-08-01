@@ -1,7 +1,5 @@
 package com.bryanjswift.simplenote.ui;
 
-import java.util.HashMap;
-
 import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
@@ -14,6 +12,7 @@ import android.widget.TextView;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.service.DailyService;
@@ -36,7 +35,7 @@ public class SimpleNoteSplash extends Activity {
 		SyncService.scheduleBroadcast(this); // schedule alarms when application launches
 		DailyService.scheduleBroadcast(this);
 		setContentView(R.layout.splash);
-		final Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		final Api.Credentials credentials = Preferences.getLoginPreferences(this);
 		final Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");
 		((TextView) findViewById(R.id.splashLabel)).setTypeface(helveticaBold);
 		if (!credentials.email.equals("") && (!credentials.password.equals("") || !credentials.auth.equals(""))) {

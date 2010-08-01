@@ -14,6 +14,7 @@ import android.util.Log;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.app.Notifications;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
@@ -31,9 +32,9 @@ public class DailyService extends WakefulIntentService {
 	@Override
 	protected void handleWakefulIntent(Intent intent) {
 		Log.d(LOGGING_TAG, "Handling DailyService business");
-		Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		Api.Credentials credentials = Preferences.getLoginPreferences(this);
 		if (!credentials.email.equals("") && !credentials.password.equals("")) {
-			SimpleNoteApi.login(credentials.email, credentials.password, new HttpCallback() {
+			SimpleNoteApi.login(credentials, new HttpCallback() {
 				/**
 				 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
 				 */

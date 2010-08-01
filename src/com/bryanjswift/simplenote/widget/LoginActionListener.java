@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
@@ -72,7 +73,7 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
         Log.i(LOGGING_TAG, "Starting login thread");
         final String emailValue = email.getText().toString();
         final String passwordValue = password.getText().toString();
-        final Preferences.Credentials credentials = Preferences.setLoginPreferences(context, emailValue, passwordValue);
+        final Api.Credentials credentials = Preferences.setLoginPreferences(context, emailValue, passwordValue);
         // Login with credentials here
         (new LoginWithCredentials(context, credentials, new HttpCallback() {
             /**

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
@@ -22,17 +23,17 @@ import com.bryanjswift.simplenote.ui.FireIntent;
 public class LoginWithCredentials extends Thread {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginWithCredentials";
 	private final Activity context;
-	private final Preferences.Credentials credentials;
+	private final Api.Credentials credentials;
 	private final HttpCallback callback;
 	/**
 	 * Create new specialized Thread with credentials information
 	 * @param context from which the thread was invoked
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
-	public LoginWithCredentials(Activity context, Preferences.Credentials credentials) {
+	public LoginWithCredentials(Activity context, Api.Credentials credentials) {
 		this(context, credentials, null);
 	}
-	public LoginWithCredentials(Activity context, Preferences.Credentials credentials, HttpCallback callback) {
+	public LoginWithCredentials(Activity context, Api.Credentials credentials, HttpCallback callback) {
 		this.context = context;
 		this.credentials = credentials;
 		this.callback = callback;
@@ -42,7 +43,7 @@ public class LoginWithCredentials extends Thread {
 	 * @see java.lang.Thread#run()
 	 */
 	public void run() {
-		SimpleNoteApi.login(credentials.email, credentials.password, new HttpCallback() {
+		SimpleNoteApi.login(credentials, new HttpCallback() {
 			/**
 			 * Authentication was successful, store the token in the preferences and start the list activity
 			 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)

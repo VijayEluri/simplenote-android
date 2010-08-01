@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.widget.LoginActionListener;
@@ -32,7 +33,7 @@ public class LoginDialog extends Activity {
 		getWindow().setLayout(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_BLUR_BEHIND, WindowManager.LayoutParams.FLAG_BLUR_BEHIND);
 		// Get credentials
-		Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		Api.Credentials credentials = Preferences.getLoginPreferences(this);
 		// Get fields
 		final EditText email = (EditText) findViewById(R.id.email);
 		final EditText password = (EditText) findViewById(R.id.password);

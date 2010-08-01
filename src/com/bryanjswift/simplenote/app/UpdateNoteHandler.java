@@ -9,6 +9,7 @@ import android.util.Log;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.model.Note;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.ServerSaveCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
 
@@ -49,12 +50,10 @@ public class UpdateNoteHandler extends Handler {
 		// update the UI with the new note
 		final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
 		if (note.isDeleted()) {
-			final Preferences.Credentials credentials = Preferences.getLoginPreferences(context);
-			final String email = credentials.email;
-			final String auth = credentials.auth;
+			final Api.Credentials credentials = Preferences.getLoginPreferences(context);
 			if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
 				Log.d(LOGGING_TAG, "Deleting note on the server");
-				SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(context, note));
+				SimpleNoteApi.delete(note, credentials, new ServerSaveCallback(context, note));
 			}
 		}
 		// Only refresh if told to.. should only be told to if it's an update from this Activity

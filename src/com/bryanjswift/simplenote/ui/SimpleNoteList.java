@@ -14,12 +14,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
@@ -29,12 +27,11 @@ import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
-import com.bryanjswift.simplenote.net.ServerCreateCallback;
-import com.bryanjswift.simplenote.net.ServerSaveCallback;
-import com.bryanjswift.simplenote.net.SimpleNoteApi;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 import com.bryanjswift.simplenote.thread.LoginWithCredentials;
 import com.bryanjswift.simplenote.thread.SyncNotesThread;
+import com.bryanjswift.simplenote.thread.UpdateNoteTask;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
 /**
@@ -98,7 +95,7 @@ public class SimpleNoteList extends ListActivity {
 		// Make sure onCreateContextMenu is called for long press of notes
 		registerForContextMenu(getListView());
 		// check the token exists first and if not authenticate with existing username/password
-		Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		Api.Credentials credentials = Preferences.getLoginPreferences(this);
 		if (!credentials.auth.equals("")) {
 			// sync notes in a background thread
 			syncNotes();
@@ -262,26 +259,8 @@ public class SimpleNoteList extends ListActivity {
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
 		switch (resultCode) {
 			case RESULT_OK:
-                (new Thread(new Runnable() {
-                    public void run() {
-                        final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
-                        // Note modified, list refreshed by onResume
-                        // Send updated note to the server
-                        final Preferences.Credentials credentials = Preferences.getLoginPreferences(SimpleNoteList.this);
-                        final String email = credentials.email;
-                        final String auth = credentials.auth;
-                        if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
-                            Log.d(LOGGING_TAG, "Deleting note on the server");
-                            SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(SimpleNoteList.this, note));
-                        } else if (note.getKey().equals(Constants.DEFAULT_KEY)) {
-                            Log.d(LOGGING_TAG, "Creating a new note on the server");
-                            SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(SimpleNoteList.this, note));
-                        } else {
-                            Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", note.getKey()));
-                            SimpleNoteApi.update(note, auth, email, new ServerSaveCallback(SimpleNoteList.this, note));
-                        }
-                    }
-                })).start();
+                (new UpdateNoteTask(this))
+                        .execute((Note) data.getExtras().getSerializable(Note.class.getName()));
 				break;
 			case RESULT_CANCELED:
 				// not modified

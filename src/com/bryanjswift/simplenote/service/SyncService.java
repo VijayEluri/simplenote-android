@@ -17,6 +17,7 @@ import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.util.WakefulIntentService;
 
 public class SyncService extends WakefulIntentService {
@@ -42,7 +43,7 @@ public class SyncService extends WakefulIntentService {
 	@Override
 	protected void handleWakefulIntent(Intent intent) {
 		Log.d(LOGGING_TAG, "Handling synchronization in a wakeful manner");
-		final Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
+		final Api.Credentials credentials = Preferences.getLoginPreferences(this);
 		if (!credentials.email.equals("") && !credentials.auth.equals("")) {
 			final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, syncNotesHandler);
 			api.sync();

@@ -27,7 +27,7 @@ public class TextAsLabelFocusChangeListener implements OnFocusChangeListener {
 	 * When focus is gained, if the value is the default string make it empty
 	 * When focus is lost, if the value is empty make it the default
 	 * @param field - the whose focus is changing
-	 * @param whether or not the field now has focus
+	 * @param hasFocus or not the field now has focus
 	 */
 	public void onFocusChange(View field, boolean hasFocus) {
 		if (field == null || !field.equals(this.field)) { return; }

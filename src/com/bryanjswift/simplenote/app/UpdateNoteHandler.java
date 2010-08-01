@@ -29,7 +29,7 @@ public class UpdateNoteHandler extends Handler {
 		this(context, false);
 	}
 	/**
-	 * Messages are received from SyncNotesThread when a Note is updated or retrieved from the server
+	 * Messages are received from SyncNotesTask when a Note is updated or retrieved from the server
 	 * @see android.os.Handler#handleMessage(android.os.Message)
 	 */
 	@Override

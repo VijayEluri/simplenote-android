@@ -26,11 +26,10 @@ import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.net.AndroidSimpleNoteApi;
+import com.bryanjswift.simplenote.thread.SyncNotesTask;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 import com.bryanjswift.simplenote.thread.LoginWithCredentials;
-import com.bryanjswift.simplenote.thread.SyncNotesThread;
 import com.bryanjswift.simplenote.thread.UpdateNoteTask;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
@@ -237,9 +236,7 @@ public class SimpleNoteList extends ListActivity {
 	 * Start up a note syncing thread
      */
 	private void syncNotes() {
-		final AndroidSimpleNoteApi api = new AndroidSimpleNoteApi(this, updateNoteHandler);
-		final Thread sync = new SyncNotesThread(api);
-		sync.start();
+		(new SyncNotesTask(this, updateNoteHandler)).execute();
 	}
 	/**
 	 * Deal with the results of the REQUEST_LOGIN Activity start

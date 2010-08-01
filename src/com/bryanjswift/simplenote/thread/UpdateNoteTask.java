@@ -18,10 +18,20 @@ import com.bryanjswift.simplenote.net.SimpleNoteApi;
  */
 public class UpdateNoteTask extends AsyncTask<Note, Void, Void> {
     private static final String LOGGING_TAG = Constants.TAG + UpdateNoteTask.class.getSimpleName();
+    /** Context for the update */
     private final Context context;
+    /**
+     * Default constructor with a context
+     * @param context from which to get preferences
+     */
     public UpdateNoteTask(Context context) {
         this.context = context;
     }
+    /**
+     * Send the note to SimpleNote servers using the correct SimpleNoteApi call
+     * @param notes to be updated (only the first note is handled)
+     * @return null
+     */
     @Override
     protected Void doInBackground(Note... notes) {
         final Note note = notes[0];

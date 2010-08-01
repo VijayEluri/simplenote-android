@@ -1,6 +1,7 @@
-package com.bryanjswift.simplenote.net;
+package com.bryanjswift.simplenote.thread;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,31 +10,50 @@ import android.util.Log;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.model.Note;
+import com.bryanjswift.simplenote.net.Api;
+import com.bryanjswift.simplenote.net.HttpCallback;
+import com.bryanjswift.simplenote.net.ServerCreateCallback;
+import com.bryanjswift.simplenote.net.ServerSaveCallback;
+import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 
 /**
  * Adds Android specific handling of API methods
  * @author bryanjswift
  */
-public class AndroidSimpleNoteApi extends SimpleNoteApi {
-	private static final String LOGGING_TAG = Constants.TAG + "AndroidSimpleNoteApi";
+public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
+	private static final String LOGGING_TAG = Constants.TAG + "SyncNotesTask";
 	// Private immutable fields
 	private final Context context;
 	private final SimpleNoteDao dao;
-	private final Credentials credentials;
+	private final Api.Credentials credentials;
 	private final Handler handler;
 	/**
 	 * Setup needed fields from the context
 	 * @param context under which the API calls will be made
 	 * @param handler to handle note updates
 	 */
-	public AndroidSimpleNoteApi(final Context context, final Handler handler) {
+	public SyncNotesTask(final Context context, final Handler handler) {
 		this.context = context;
 		this.dao = new SimpleNoteDao(context);
 		this.credentials = Preferences.getLoginPreferences(context);
 		this.handler = handler;
 	}
-	/**
+
+    /**
+     * Send appropriate messages to the handler and call synchronization methods in order
+     * @param voids empty parameters, we do nothing with them
+     * @return null
+     */
+    @Override
+    protected Void doInBackground(Void... voids) {
+        Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
+        syncDown();
+        syncUp();
+        Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
+        return null;
+    }
+    /**
 	 * Pull down notes from the SimpleNote server and if the server note is newer update the note
 	 * in the database
 	 */
@@ -41,7 +61,7 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 		// Fetch the notes from the server
 		Log.d(LOGGING_TAG, "::syncDown");
 		Note[] notes = SimpleNoteApi.index(credentials, HttpCallback.EMPTY);
-		Message message = null;
+		Message message;
 		for (Note serverNote : notes) {
 			Note dbNote = dao.retrieveByKey(serverNote.getKey());
 			if (dbNote == null || (serverNote.getDateModified().compareTo(dbNote.getDateModified()) > 0)) {
@@ -77,14 +97,5 @@ public class AndroidSimpleNoteApi extends SimpleNoteApi {
 				SimpleNoteApi.update(dbNote, credentials, new ServerSaveCallback(context, dbNote));
 			}
 		}
-	}
-	/**
-	 * Send appropriate messages to the handler and call synchronization methods in order
-	 */
-	public void sync() {
-		Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
-		syncDown();
-		syncUp();
-		Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
 	}
 }

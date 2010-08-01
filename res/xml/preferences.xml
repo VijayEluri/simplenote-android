@@ -13,7 +13,7 @@
       android:entryValues="@array/background_values"
       android:dependency="background_enabled" />
   </PreferenceCategory>
-  <PreferenceScreen android:title="@string/pref_account_category">
+  <PreferenceCategory android:title="@string/pref_account_category">
     <EditTextPreference android:title="@string/pref_account_email"
       android:dialogTitle="@string/pref_account_email"
       android:key="email" />
@@ -26,5 +26,5 @@
       android:dialogTitle="Clear your credentials?"
       android:positiveButtonText="Clear 'em"
       android:negativeButtonText="Keep 'em" />
-  </PreferenceScreen>
+  </PreferenceCategory>
 </PreferenceScreen>

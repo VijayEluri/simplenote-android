@@ -58,7 +58,7 @@ public class UpdateNoteHandler extends Handler {
 			}
 		}
 		// Only refresh if told to.. should only be told to if it's an update from this Activity
-		if (refreshEach) {
+		if (refreshEach && !note.isDeleted()) {
 			context.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_NOTES));
 		}
 	}

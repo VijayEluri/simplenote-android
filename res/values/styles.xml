@@ -56,7 +56,7 @@
     <item name="android:layout_width">100.6666666dip</item>
     <item name="android:layout_height">100.6666666dip</item>
     <item name="android:layout_gravity">center</item>
-    <item name="android:layout_marginTop">25dip</item>
+    <item name="android:layout_marginTop">29dip</item>
   </style>
   <style name="Shadowed.SplashText">
     <item name="android:layout_marginTop">30dip</item>

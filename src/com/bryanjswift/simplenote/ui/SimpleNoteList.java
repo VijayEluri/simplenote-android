@@ -5,24 +5,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
@@ -57,6 +56,10 @@ public class SimpleNoteList extends ListActivity {
 			refreshNotes();
 		}
 	};
+    private static DisplayMetrics display = new DisplayMetrics();
+    private static int paddingHeight = -1;
+    private static int shadowHeight = -1;
+    private static int rowHeight = -1;
 	/**
 	 * Create a dao to store using this as the context
 	 */
@@ -72,6 +75,13 @@ public class SimpleNoteList extends ListActivity {
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
 		int scrollY = 0;
+        if (paddingHeight == -1 && shadowHeight == -1) {
+            getWindowManager().getDefaultDisplay().getMetrics(display);
+            paddingHeight = Math.round(getResources().getInteger(R.integer.noteListPadding) * display.density);
+            // 5.33333333333 is the assumed height of the scrolling shadow at 160 dpi
+            shadowHeight = Math.round(5.333333333333333333333333333f * display.density);
+            rowHeight = Math.round(getResources().getInteger(R.integer.noteItemHeight) * display.density);
+        }
 		if (savedState != null && savedState.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
 			Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
 			FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
@@ -80,20 +90,11 @@ public class SimpleNoteList extends ListActivity {
 		}
 		Log.d(LOGGING_TAG, "Firing up the note list");
 		getWindow().setFormat(PixelFormat.RGBA_8888);
-        // Set content view based on Notes currently in the database
+		// Now get notes and create a note adapter and set it to display
         Note[] notes = dao.retrieveAll();
+		setListAdapter(new NotesAdapter(this, notes));
+        // Set content view based on Notes currently in the database
         setContentView(R.layout.notes_list);
-        // Try to add footer to ListView
-        ListView list = getListView();
-        TypedArray a = obtainStyledAttributes(null, R.styleable.NoteListFooter);
-        ImageView footer = new ImageView(this);
-        footer.setImageDrawable(a.getDrawable(R.styleable.NoteListFooter_android_src));
-        footer.setBackgroundDrawable(a.getDrawable(R.styleable.NoteListFooter_android_background));
-        list.addFooterView(footer);
-        a.recycle();
-		// Now create a note adapter and set it to display
-		ListAdapter notesAdapter = new NotesAdapter(this, notes);
-		setListAdapter(notesAdapter);
 		// Make sure onCreateContextMenu is called for long press of notes
 		registerForContextMenu(getListView());
 		// check the token exists first and if not authenticate with existing username/password
@@ -111,7 +112,7 @@ public class SimpleNoteList extends ListActivity {
             }
         });
 		// restore the scroll position
-		list.scrollTo(0, scrollY);
+		getListView().scrollTo(0, scrollY);
 	}
 	/**
 	 * If SimpleNoteEdit saved state then retrieve it and go back to editing
@@ -300,12 +301,38 @@ public class SimpleNoteList extends ListActivity {
 	 * Pull notes from database and update the NotesAdapter
 	 */
 	private void refreshNotes() {
+        Log.d(LOGGING_TAG, "Refreshing notes from DB");
+        final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
+        adapter.setNotes(dao.retrieveAll());
 		runOnUiThread(new Runnable() {
 			public void run() {
-				final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-				adapter.setNotes(dao.retrieveAll());
 				adapter.notifyDataSetChanged();
+                updateShadow();
 			}
 		});
 	}
+
+    /**
+     * Add padding to show drop shadow below list when scrolling is disabled
+     */
+    private void updateShadow() {
+        if (isScrollable()) {
+            // scrollable so hide shadow
+            getListView().setPadding(0, 0, 0, 0);
+        } else {
+            // not scrollable so show the shadow
+            getListView().setPadding(0, 0, 0, paddingHeight);
+        }
+    }
+
+    /**
+     * Check the display height against the list height
+     * @return whether the list height is greater than or equal to the display height
+     */
+    private boolean isScrollable() {
+        int displayHeight = display.heightPixels - paddingHeight - shadowHeight;
+        int listHeight = getListAdapter().getCount() * rowHeight;
+        Log.d(LOGGING_TAG, String.format("DisplayHeight: %d :: ListHeight: %d", displayHeight, listHeight));
+        return listHeight >= displayHeight;
+    }
 }

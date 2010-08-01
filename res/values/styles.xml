@@ -92,8 +92,10 @@
   </style>
   <!-- Note List -->
   <style name="FullWidth.NoteList">
+    <item name="android:padding">0px</item>
     <item name="android:dividerHeight">0dip</item>
     <item name="android:divider">@color/white</item>
+    <item name="android:background">@drawable/note_list_footer</item>
   </style>
   <style name="NoteListFooter">
     <item name="android:src">@drawable/note_list_footer</item>

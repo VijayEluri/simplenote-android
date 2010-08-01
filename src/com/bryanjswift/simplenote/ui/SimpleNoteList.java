@@ -262,22 +262,26 @@ public class SimpleNoteList extends ListActivity {
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
 		switch (resultCode) {
 			case RESULT_OK:
-				final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
-				// Note modified, list refreshed by onResume
-				// Send updated note to the server
-				final Preferences.Credentials credentials = Preferences.getLoginPreferences(this);
-				final String email = credentials.email;
-				final String auth = credentials.auth;
-				if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
-					Log.d(LOGGING_TAG, "Deleting note on the server");
-					SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(this, note));
-				} else if (note.getKey().equals(Constants.DEFAULT_KEY)) {
-					Log.d(LOGGING_TAG, "Creating a new note on the server");
-					SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(this, note));
-				} else {
-					Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", note.getKey()));
-					SimpleNoteApi.update(note, auth, email, new ServerSaveCallback(this, note));
-				}
+                (new Thread(new Runnable() {
+                    public void run() {
+                        final Note note = (Note) data.getExtras().getSerializable(Note.class.getName());
+                        // Note modified, list refreshed by onResume
+                        // Send updated note to the server
+                        final Preferences.Credentials credentials = Preferences.getLoginPreferences(SimpleNoteList.this);
+                        final String email = credentials.email;
+                        final String auth = credentials.auth;
+                        if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
+                            Log.d(LOGGING_TAG, "Deleting note on the server");
+                            SimpleNoteApi.delete(note, auth, email, new ServerSaveCallback(SimpleNoteList.this, note));
+                        } else if (note.getKey().equals(Constants.DEFAULT_KEY)) {
+                            Log.d(LOGGING_TAG, "Creating a new note on the server");
+                            SimpleNoteApi.create(note, auth, email, new ServerCreateCallback(SimpleNoteList.this, note));
+                        } else {
+                            Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", note.getKey()));
+                            SimpleNoteApi.update(note, auth, email, new ServerSaveCallback(SimpleNoteList.this, note));
+                        }
+                    }
+                })).start();
 				break;
 			case RESULT_CANCELED:
 				// not modified

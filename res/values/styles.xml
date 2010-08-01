@@ -59,7 +59,7 @@
     <item name="android:layout_marginTop">29dip</item>
   </style>
   <style name="Shadowed.SplashText">
-    <item name="android:layout_marginTop">30dip</item>
+    <item name="android:layout_marginTop">20dip</item>
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">center</item>
@@ -73,7 +73,6 @@
     <item name="android:layout_marginRight">35dip</item>
     <item name="android:layout_marginBottom">0dip</item>
     <item name="android:layout_marginLeft">35dip</item>
-    <item name="android:layout_height">60sp</item>
     <item name="android:textSize">15sp</item>
     <item name="android:textStyle">bold</item>
     <item name="android:typeface">sans</item>
@@ -224,19 +223,22 @@
     <item name="android:inputType">textEmailAddress</item>
   </style>
   <style name="Input.Splash">
-    <item name="android:layout_marginTop">13dip</item>
+    <item name="android:layout_marginTop">12dip</item>
     <item name="android:layout_marginRight">35dip</item>
     <item name="android:layout_marginBottom">0dip</item>
     <item name="android:layout_marginLeft">35dip</item>
+    <item name="android:paddingTop">0px</item>
+    <item name="android:paddingRight">8dip</item>
+    <item name="android:paddingBottom">0px</item>
+    <item name="android:paddingLeft">8dip</item>
     <item name="android:background">@drawable/edit_text</item>
-    <item name="android:textSize">20sp</item>
+    <item name="android:textSize">18sp</item>
     <item name="android:layout_height">45sp</item>
   </style>
   <style name="Input.Splash.Password">
     <item name="android:autoText">false</item>
     <item name="android:capitalize">none</item>
     <item name="android:imeOptions">actionGo</item>
-    <item name="android:imeActionLabel">@string/signin</item>
     <item name="android:inputType">textPassword</item>
     <!-- FIXME: This isn't forcing a sans-serif so it is set in code in SimpleNoteSplash.java -->
     <item name="android:typeface">sans</item>

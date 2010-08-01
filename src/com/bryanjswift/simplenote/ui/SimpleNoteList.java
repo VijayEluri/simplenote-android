@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
@@ -79,15 +80,16 @@ public class SimpleNoteList extends ListActivity {
 		}
 		Log.d(LOGGING_TAG, "Firing up the note list");
 		getWindow().setFormat(PixelFormat.RGBA_8888);
-		// Set content view based on Notes currently in the database
-		setContentView(R.layout.notes_list);
-		Note[] notes = dao.retrieveAll();
+        // Set content view based on Notes currently in the database
+        Note[] notes = dao.retrieveAll();
+        setContentView(R.layout.notes_list);
+        // Try to add footer to ListView
         ListView list = getListView();
         TypedArray a = obtainStyledAttributes(null, R.styleable.NoteListFooter);
         ImageView footer = new ImageView(this);
         footer.setImageDrawable(a.getDrawable(R.styleable.NoteListFooter_android_src));
         footer.setBackgroundDrawable(a.getDrawable(R.styleable.NoteListFooter_android_background));
-        list.addFooterView(footer, null, false);
+        list.addFooterView(footer);
         a.recycle();
 		// Now create a note adapter and set it to display
 		ListAdapter notesAdapter = new NotesAdapter(this, notes);

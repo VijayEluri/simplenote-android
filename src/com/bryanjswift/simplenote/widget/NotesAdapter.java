@@ -80,12 +80,6 @@ public class NotesAdapter extends BaseAdapter {
 		return row;
 	}
 	/**
-	 * @return the notes
-	 */
-	public final Note[] getNotes() {
-		return notes;
-	}
-	/**
 	 * @param notes the notes to set
 	 */
 	public final void setNotes(Note[] notes) {
@@ -98,7 +92,7 @@ public class NotesAdapter extends BaseAdapter {
      * @param t - title (or string) to truncate/ellipsize
      * @return truncated title if it is longer than the defined max characters
      */
-    public static final String ellipsizeTitle(final Context context, String t) {
+    public static String ellipsizeTitle(final Context context, String t) {
         String title = t;
         int maxChars = context.getResources().getInteger(R.integer.titleMaxChars);
         if (title.length() > maxChars) {

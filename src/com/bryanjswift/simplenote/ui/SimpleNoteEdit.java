@@ -94,10 +94,15 @@ public class SimpleNoteEdit extends Activity {
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 Log.d(LOGGING_TAG, "OnTouch firing for trash icon");
                 View titleRow = findViewById(R.id.note_title_row);
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    titleRow.setPressed(false);
-                } else {
-                    titleRow.setPressed(true);
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_OUTSIDE:
+                    case MotionEvent.ACTION_CANCEL:
+                        titleRow.setPressed(false);
+                        break;
+                    case MotionEvent.ACTION_DOWN:
+                        titleRow.setPressed(true);
+                        break;
                 }
                 return false;
             }

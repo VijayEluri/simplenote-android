@@ -5,14 +5,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -111,7 +109,7 @@ public class SimpleNoteList extends ListActivity {
             }
         });
 		// restore the scroll position
-		findViewById(android.R.id.list).scrollTo(0, scrollY);
+		list.scrollTo(0, scrollY);
 	}
 	/**
 	 * If SimpleNoteEdit saved state then retrieve it and go back to editing

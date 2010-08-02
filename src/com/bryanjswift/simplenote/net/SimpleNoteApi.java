@@ -5,13 +5,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.model.Note;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 /**
  * A sensible interface to the SimpleNote server API
@@ -27,18 +26,18 @@ public class SimpleNoteApi extends Api {
 	 * @param callback method collection that handles the response
 	 * @return the token resulting from the API login call
 	 */
-	public static String login(final Credentials credentials, final HttpCallback callback) {
+	public static Response login(final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
 		String data = encode("email=" + credentials.email + "&password=" + credentials.password, true, true);
-		String token = null;
+		Response response = null;
 		try {
-			token = handleResponse(callback, Post(Constants.API_LOGIN_URL, data)).body;
+			response = handleResponse(callback, Post(Constants.API_LOGIN_URL, data));
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_LOGIN_URL, data, ioe);
 		} finally {
 			increment();
 		}
-		return token;
+		return response;
 	}
 	/**
 	 * Method to invoke the SimpleNote index API

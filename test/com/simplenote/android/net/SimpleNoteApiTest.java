@@ -1,5 +1,6 @@
 package com.simplenote.android.net;
 
+import com.bryanjswift.simplenote.net.Api;
 import junit.framework.TestCase;
 
 import com.bryanjswift.simplenote.Constants;
@@ -13,9 +14,9 @@ import com.bryanjswift.simplenote.net.SimpleNoteApi;
  * @author bryanjswift
  */
 public class SimpleNoteApiTest extends TestCase {
-	public static final String emailAddress = "simplenote@solidstategroup.com";
-	public static final String password = "simplenote1234";
 	public static final String LOGGING_TAG = Constants.TAG + "SimpleNoteApiTest";
+    public final Api.Credentials credentials = new Api.Credentials("simplenote@bryanjswift.com", "simplenote1234", "");
+    public final Api.Credentials badCredentials = new Api.Credentials("simplenote@bryanjswift.com", "bad password", "");
 
 	String noteBody;
 
@@ -53,7 +54,7 @@ public class SimpleNoteApiTest extends TestCase {
 	 * Test we are able to log in successfully
 	 */
 	public void testSuccessfulLogin() {
-		SimpleNoteApi.login(emailAddress, password, new FailingCallback() {
+		SimpleNoteApi.login(credentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				assertTrue(response.body.length() > 0);
@@ -64,7 +65,7 @@ public class SimpleNoteApiTest extends TestCase {
 	 * Test failed login gets a 401 response
 	 */
 	public void testFailingLogin() {
-		SimpleNoteApi.login(emailAddress, "password", new FailingCallback() {
+		SimpleNoteApi.login(badCredentials, new FailingCallback() {
 			@Override
 			public void on401(Response response) {
 				// if we are here we should pass
@@ -75,20 +76,21 @@ public class SimpleNoteApiTest extends TestCase {
 	 * Test able to retrieve notes after successful login
 	 */
 	public void testIndexAndNoteRetrieval() {
-		String validToken = SimpleNoteApi.login(emailAddress, password, new FailingCallback() {
+		String token = SimpleNoteApi.login(credentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				assertTrue(response.body.length() > 0);
 			}
-		});
-		Note[] notes = SimpleNoteApi.index(validToken, emailAddress, new FailingCallback() {
+		}).body;
+        Api.Credentials authedCredentials = new Api.Credentials(credentials.email, credentials.password, token);
+		Note[] notes = SimpleNoteApi.index(authedCredentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				assertTrue(response.body.length() > 0);
 			}
 		});
 		assertTrue(notes.length > 0);
-		Note note = SimpleNoteApi.retrieve(notes[0], validToken, emailAddress, new FailingCallback() {
+		Note note = SimpleNoteApi.retrieve(notes[0], authedCredentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				// If we are here we passed
@@ -101,20 +103,21 @@ public class SimpleNoteApiTest extends TestCase {
 	 * Test we are able to update notes
 	 */
 	public void testNoteUpdate() {
-		String validToken = SimpleNoteApi.login(emailAddress, password, new FailingCallback() {
+		String token = SimpleNoteApi.login(credentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				assertTrue(response.body.length() > 0);
 			}
-		});
-		Note[] notes = SimpleNoteApi.index(validToken, emailAddress, new FailingCallback() {
+		}).body;
+        Api.Credentials authedCredentials = new Api.Credentials(credentials.email, credentials.password, token);
+		Note[] notes = SimpleNoteApi.index(authedCredentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				assertTrue(response.body.length() > 0);
 			}
 		});
 		assertTrue(notes.length > 0);
-		final Note serverNote = SimpleNoteApi.retrieve(notes[0], validToken, emailAddress, new FailingCallback() {
+		final Note serverNote = SimpleNoteApi.retrieve(notes[0], authedCredentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				// If we are here we passed
@@ -123,13 +126,13 @@ public class SimpleNoteApiTest extends TestCase {
 		});
 		assertEquals(serverNote.getTitleAndBody(), noteBody);
 		final Note newNote = serverNote.setBody(serverNote.getBody() + "\n Test appended");
-		SimpleNoteApi.update(newNote, validToken, emailAddress, new FailingCallback() {
+		SimpleNoteApi.update(newNote, authedCredentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				// passed
 			}
 		});
-		SimpleNoteApi.update(serverNote, validToken, emailAddress, new FailingCallback() {
+		SimpleNoteApi.update(serverNote, authedCredentials, new FailingCallback() {
 			@Override
 			public void on200(Response response) {
 				// passed

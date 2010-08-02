@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.bryanjswift.simplenote.util.Base64;
+import org.apache.http.HttpStatus;
 
 public abstract class Api {
 	/**
@@ -59,7 +60,7 @@ public abstract class Api {
 			conn.disconnect();
 		} catch (FileNotFoundException fnfe) {
 			// I'm not sure why but when the login fails we get a FileNotFoundException
-			response.status = 401;
+			response.status = HttpStatus.SC_UNAUTHORIZED;
 		}
 		return response;
 	}

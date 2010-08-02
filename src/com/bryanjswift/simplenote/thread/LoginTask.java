@@ -13,6 +13,7 @@ import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.ui.FireIntent;
+import org.apache.http.HttpStatus;
 
 /**
  * Uses the SimpleNoteApi to login with existing credentials which must be provided
@@ -88,7 +89,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
             });
         } else {
             response = new Response();
-            response.status = 408;
+            response.status = HttpStatus.SC_REQUEST_TIMEOUT;
             // Maybe should be a status 200 with an retry registered for when the network becomes available
         }
         return response;

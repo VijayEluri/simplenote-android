@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.model.Note;
+import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -51,7 +52,7 @@ public class SimpleNoteApi extends Api {
 		Note[] notes = new Note[0];
 		try {
 			Response response = handleResponse(callback, Get(Constants.API_NOTES_URL + data));
-			if (response.status == 200) {
+			if (response.status == HttpStatus.SC_OK) {
 				JSONArray jsonNotes = new JSONArray(response.body);
 				int length = jsonNotes.length();
 				notes = new Note[length];
@@ -82,7 +83,7 @@ public class SimpleNoteApi extends Api {
 		Note note = n;
 		try {
 			Response response = handleResponse(callback, Get(Constants.API_NOTE_URL + data));
-			if (response.status == 200) {
+			if (response.status == HttpStatus.SC_OK) {
 				// May need to get header information from the Response object in order to be sure modify date is in sync with server
 				Map<String, List<String>> headers = response.headers;
 				note = n.setTitleAndBody(response.body)
@@ -112,7 +113,7 @@ public class SimpleNoteApi extends Api {
 		boolean success = false;
 		try {
 			Response response = handleResponse(callback, Post(Constants.API_NOTE_URL + urlData, data));
-			success = response.status == 200 && response.body.equals(n.getKey());
+			success = response.status == HttpStatus.SC_OK && response.body.equals(n.getKey());
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);
 		} finally {
@@ -135,7 +136,7 @@ public class SimpleNoteApi extends Api {
 		boolean success = false;
 		try {
 			Response response = handleResponse(callback, Post(Constants.API_NOTE_URL + urlData, data));
-			success = response.status == 200 && response.body.length() > 0;
+			success = response.status == HttpStatus.SC_OK && response.body.length() > 0;
 		} catch (IOException ioe) {
 			callback.onException(Constants.API_NOTE_URL, data, ioe);
 		} finally {
@@ -171,14 +172,14 @@ public class SimpleNoteApi extends Api {
 	 */
 	public static Response handleResponse(final HttpCallback callback, final Response response) {
 		switch (response.status) {
-			case 200: callback.on200(response); break;
-			case 400: callback.on400(response); break;
-			case 401: callback.on401(response); break;
-			case 403: callback.on403(response); break;
-			case 404: callback.on404(response); break;
-			case 500: callback.on500(response); break;
+			case HttpStatus.SC_OK: callback.on200(response); break;
+			case HttpStatus.SC_BAD_REQUEST: callback.on400(response); break;
+			case HttpStatus.SC_UNAUTHORIZED: callback.on401(response); break;
+			case HttpStatus.SC_FORBIDDEN: callback.on403(response); break;
+			case HttpStatus.SC_NOT_FOUND: callback.on404(response); break;
+			case HttpStatus.SC_INTERNAL_SERVER_ERROR: callback.on500(response); break;
 		}
-		if (response.status != 200) {
+		if (response.status != HttpStatus.SC_OK) {
 			callback.onError(response);
 		}
 		callback.onComplete(response);

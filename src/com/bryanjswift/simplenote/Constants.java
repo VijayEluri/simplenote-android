@@ -27,7 +27,8 @@ public class Constants {
 	public static final int NOTIFICATION_CREDENTIALS = 98074121;
 	public static final int NOTIFICATION_SYNCING = 137988;
 	// Broadcast Strings
-	public static final String BROADCAST_UPDATE_NOTES = Constants.class.getPackage().getName() + ".UPDATE_NOTES";
+	public static final String BROADCAST_REFRESH_NOTES = Constants.class.getPackage().getName() + ".REFRESH_NOTES";
+    public static final String BROADCAST_SYNC_NOTES = Constants.class.getPackage().getName() + ".SYNC_NOTES";
 	// API Base URL
 	public static final String API_BASE_URL   = "https://simple-note.appspot.com/api";
 	public static final String API_LOGIN_URL  = API_BASE_URL + "/login";					// POST

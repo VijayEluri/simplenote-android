@@ -53,7 +53,6 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
 		this.credentials = credentials;
 		this.callback = callback;
 	}
-
     /**
      * Send a login request to the SimpleNote API
      * @param voids empty parameter list
@@ -97,7 +96,6 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
 			}
 		});
 	}
-
     /**
      * Runs on UI thread, handle execution of the passed in callback
      * Uses private defaultCallback if none provided in constructor

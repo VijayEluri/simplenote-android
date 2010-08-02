@@ -45,13 +45,20 @@ public class SimpleNoteList extends ListActivity {
 	/** Message handler which should update the UI when a message with a Note is received */
 	private final Handler updateNoteHandler;
 	/** BroadcastReceiver which will receive requests to update from background sync services */
-	private final BroadcastReceiver updateNoteReceiver = new BroadcastReceiver() {
+	private final BroadcastReceiver refreshNoteReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d(LOGGING_TAG, "Received broadcast to refresh notes in list");
 			refreshNotes();
 		}
 	};
+    private final BroadcastReceiver syncNoteReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d(LOGGING_TAG, "Received broadcast to sync notes");
+            syncNotes();
+        }
+    };
     private static DisplayMetrics display = new DisplayMetrics();
     private static int paddingHeight = -1;
     private static int shadowHeight = -1;
@@ -128,7 +135,8 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		registerReceiver(updateNoteReceiver, new IntentFilter(Constants.BROADCAST_UPDATE_NOTES));
+		registerReceiver(refreshNoteReceiver, new IntentFilter(Constants.BROADCAST_REFRESH_NOTES));
+        registerReceiver(syncNoteReceiver, new IntentFilter(Constants.BROADCAST_SYNC_NOTES));
 		refreshNotes();
 	}
 	/**
@@ -145,7 +153,8 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		unregisterReceiver(updateNoteReceiver);
+		unregisterReceiver(refreshNoteReceiver);
+        unregisterReceiver(syncNoteReceiver);
 	}
 	/**
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)

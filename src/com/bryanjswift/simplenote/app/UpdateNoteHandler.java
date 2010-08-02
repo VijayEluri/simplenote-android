@@ -7,11 +7,7 @@ import android.os.Message;
 import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
-import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.net.Api;
-import com.bryanjswift.simplenote.net.ServerSaveCallback;
-import com.bryanjswift.simplenote.net.SimpleNoteApi;
 
 /**
  * Message handler which should update the UI when a message with a Note is received
@@ -49,16 +45,15 @@ public class UpdateNoteHandler extends Handler {
 	private void handleUpdateNote(Message msg) {
 		// update the UI with the new note
 		final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
+        // If the note was deleted then send broadcast to sync notes
 		if (note.isDeleted()) {
-			final Api.Credentials credentials = Preferences.getLoginPreferences(context);
-			if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
-				Log.d(LOGGING_TAG, "Deleting note on the server");
-				SimpleNoteApi.delete(note, credentials, new ServerSaveCallback(context, note));
-			}
+            Log.d(LOGGING_TAG, "Send broadcast to sync notes");
+            context.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_NOTES));
 		}
 		// Only refresh if told to.. should only be told to if it's an update from this Activity
 		if (refreshEach && !note.isDeleted()) {
-			context.sendBroadcast(new Intent(Constants.BROADCAST_UPDATE_NOTES));
+            Log.d(LOGGING_TAG, "Send broadcast to refresh notes");
+			context.sendBroadcast(new Intent(Constants.BROADCAST_REFRESH_NOTES));
 		}
 	}
 	/**

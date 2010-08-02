@@ -1,16 +1,12 @@
 package com.bryanjswift.simplenote.thread;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.Context;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
-import com.bryanjswift.simplenote.R;
+import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
@@ -23,7 +19,7 @@ import com.bryanjswift.simplenote.ui.FireIntent;
  */
 public class LoginTask extends AsyncTask<Void, Void, Response> {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginTask";
-	private final Activity context;
+	private final Context context;
 
     private final Api.Credentials credentials;
 	private final HttpCallback callback;
@@ -36,8 +32,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
             FireIntent.SimpleNoteList(context);
         }
         public void onError(final Response response) {
-            Toast.makeText(context, R.string.error_authentication_stored, Toast.LENGTH_LONG).show();
-            FireIntent.SigninDialog(context);
+            Notifications.Credentials(context);
         }
     };
 	/**
@@ -45,10 +40,10 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
 	 * @param context from which the thread was invoked
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
-	public LoginTask(Activity context, Api.Credentials credentials) {
+	public LoginTask(Context context, Api.Credentials credentials) {
 		this(context, credentials, null);
 	}
-	public LoginTask(Activity context, Api.Credentials credentials, HttpCallback callback) {
+	public LoginTask(Context context, Api.Credentials credentials, HttpCallback callback) {
 		this.context = context;
 		this.credentials = credentials;
 		this.callback = callback;
@@ -67,15 +62,8 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
 			 */
 			@Override
 			public void on200(final Response response) {
-				SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-				Editor editor = prefs.edit();
-				// API successfully returned, store token
-				editor.putString(Preferences.TOKEN, response.body);
-				if (editor.commit()) {
-					Log.i(LOGGING_TAG, "Successfully saved new authentication token");
-				} else {
-					Log.i(LOGGING_TAG, "Failed to save new authentication token, uh oh.");
-				}
+                Log.i(LOGGING_TAG, "Setting new authentication token");
+                Preferences.setAuthToken(context, response.body);
 			}
 			/**
 			 * Authentication failed, show login dialog

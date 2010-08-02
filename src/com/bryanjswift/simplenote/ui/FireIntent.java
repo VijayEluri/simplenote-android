@@ -37,14 +37,6 @@ public class FireIntent {
 		context.startActivityForResult(intent, Constants.REQUEST_EDIT);
 	}
 	/**
-	 * Start the LoginDialog Activity expecting a result
-	 * @param context Activity for which the intent is firing
-	 */
-	public static void SigninDialog(final Activity context) {
-		Intent i = new Intent(context, LoginDialog.class);
-		context.startActivityForResult(i, Constants.REQUEST_LOGIN);
-	}
-	/**
 	 * Start the Preferences Activity
 	 * @param context Activity for which the intent is firing
 	 */

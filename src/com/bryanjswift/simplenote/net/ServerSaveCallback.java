@@ -9,6 +9,7 @@ import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
+import com.bryanjswift.simplenote.thread.LoginTask;
 
 /**
  * Specialized HttpCallback to handle respsonses when trying to save notes to the server
@@ -49,14 +50,13 @@ public class ServerSaveCallback extends HttpCallback {
 		super.on401(response);
 		Log.d(LOGGING_TAG, "Unauthorized to save note on server");
         final Api.Credentials credentials = Preferences.getLoginPreferences(context);
-        SimpleNoteApi.login(credentials, new HttpCallback() {
+        (new LoginTask(context, credentials, new HttpCallback() {
             /**
              * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
              */
             @Override
             public void on200(Response response) {
                 super.on200(response);
-                Preferences.setAuthToken(context, response.body);
                 // ideally we could retry here...
             }
             /**
@@ -67,7 +67,7 @@ public class ServerSaveCallback extends HttpCallback {
                 super.onError(response);
                 Notifications.Credentials(context);
             }
-        });
+        })).execute();
 	}
 	/**
 	 * @see com.bryanjswift.simplenote.net.HttpCallback#on404(com.bryanjswift.simplenote.net.Api.Response)

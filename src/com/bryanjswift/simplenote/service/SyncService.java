@@ -16,8 +16,9 @@ import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.app.UpdateNoteHandler;
-import com.bryanjswift.simplenote.thread.SyncNotesTask;
+import com.bryanjswift.simplenote.manager.Connectivity;
 import com.bryanjswift.simplenote.net.Api;
+import com.bryanjswift.simplenote.thread.SyncNotesTask;
 import com.bryanjswift.simplenote.util.WakefulIntentService;
 
 public class SyncService extends WakefulIntentService {
@@ -42,16 +43,20 @@ public class SyncService extends WakefulIntentService {
 	 */
 	@Override
 	protected void handleWakefulIntent(Intent intent) {
-		Log.d(LOGGING_TAG, "Handling synchronization in a wakeful manner");
-		final Api.Credentials credentials = Preferences.getLoginPreferences(this);
-		if (!credentials.email.equals("") && !credentials.auth.equals("")) {
-			(new SyncNotesTask(this, syncNotesHandler)).execute();
-		} else {
-			Notifications.Credentials(SyncService.this,
-					getString(R.string.status_credentials_missing_ticker),
-					getString(R.string.status_credentials_missing_title),
-					getString(R.string.status_credentials_missing_description));
-		}
+        if (Connectivity.isBackgroundDataEnabled(this)) {
+            Log.d(LOGGING_TAG, "Handling synchronization in a wakeful manner");
+            final Api.Credentials credentials = Preferences.getLoginPreferences(this);
+            if (!credentials.email.equals("") && !credentials.auth.equals("")) {
+                (new SyncNotesTask(this, syncNotesHandler)).execute();
+            } else {
+                Notifications.Credentials(SyncService.this,
+                        getString(R.string.status_credentials_missing_ticker),
+                        getString(R.string.status_credentials_missing_title),
+                        getString(R.string.status_credentials_missing_description));
+            }
+        } else {
+            Log.d(LOGGING_TAG, "Background data off, skipping this sync");
+        }
 		scheduleBroadcast(this);
 	}
 	/**

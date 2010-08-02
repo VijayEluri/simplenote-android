@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
+import com.bryanjswift.simplenote.manager.Connectivity;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.HttpCallback;
@@ -47,10 +48,12 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
      */
     @Override
     protected Void doInBackground(Void... voids) {
-        Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
-        syncDown();
-        syncUp();
-        Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
+        if (Connectivity.hasInternet(context)) {
+            Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
+            syncDown();
+            syncUp();
+            Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
+        }
         return null;
     }
     /**

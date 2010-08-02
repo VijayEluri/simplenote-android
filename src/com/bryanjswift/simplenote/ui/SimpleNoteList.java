@@ -26,10 +26,10 @@ import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.model.Note;
+import com.bryanjswift.simplenote.thread.LoginTask;
 import com.bryanjswift.simplenote.thread.SyncNotesTask;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
-import com.bryanjswift.simplenote.thread.LoginWithCredentials;
 import com.bryanjswift.simplenote.thread.UpdateNoteTask;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
@@ -99,7 +99,7 @@ public class SimpleNoteList extends ListActivity {
 			// sync notes in a background thread
 			syncNotes();
 		} else {
-			(new LoginWithCredentials(this, credentials)).start();
+			(new LoginTask(this, credentials)).execute();
 		}
         // bind click listener to new note button
         findViewById(R.id.note_add).setOnClickListener(new View.OnClickListener() {

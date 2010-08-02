@@ -17,7 +17,7 @@ import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
-import com.bryanjswift.simplenote.thread.LoginWithCredentials;
+import com.bryanjswift.simplenote.thread.LoginTask;
 
 public class LoginActionListener implements OnEditorActionListener, View.OnClickListener {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginActionListener";
@@ -75,7 +75,7 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
         final String passwordValue = password.getText().toString();
         final Api.Credentials credentials = Preferences.setLoginPreferences(context, emailValue, passwordValue);
         // Login with credentials here
-        (new LoginWithCredentials(context, credentials, new HttpCallback() {
+        (new LoginTask(context, credentials, new HttpCallback() {
             /**
              * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
              */
@@ -115,6 +115,6 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
                     callback.onException(url, data, t);
                 }
             }
-        })).start();
+        })).execute();
     }
 }

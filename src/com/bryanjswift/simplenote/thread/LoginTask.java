@@ -3,6 +3,7 @@ package com.bryanjswift.simplenote.thread;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -20,29 +21,33 @@ import com.bryanjswift.simplenote.ui.FireIntent;
  * Uses the SimpleNoteApi to login with existing credentials which must be provided
  * @author bryanjswift
  */
-public class LoginWithCredentials extends Thread {
-	private static final String LOGGING_TAG = Constants.TAG + "LoginWithCredentials";
+public class LoginTask extends AsyncTask<Void, Void, Response> {
+	private static final String LOGGING_TAG = Constants.TAG + "LoginTask";
 	private final Activity context;
-	private final Api.Credentials credentials;
+
+    private final Api.Credentials credentials;
 	private final HttpCallback callback;
 	/**
 	 * Create new specialized Thread with credentials information
 	 * @param context from which the thread was invoked
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
-	public LoginWithCredentials(Activity context, Api.Credentials credentials) {
+	public LoginTask(Activity context, Api.Credentials credentials) {
 		this(context, credentials, null);
 	}
-	public LoginWithCredentials(Activity context, Api.Credentials credentials, HttpCallback callback) {
+	public LoginTask(Activity context, Api.Credentials credentials, HttpCallback callback) {
 		this.context = context;
 		this.credentials = credentials;
 		this.callback = callback;
 	}
-	/**
-	 * Send a login request to the SimpleNote API
-	 * @see java.lang.Thread#run()
-	 */
-	public void run() {
+
+    /**
+     * Send a login request to the SimpleNote API
+     * @param voids empty parameter list
+     * @return null
+     */
+    @Override
+    protected Response doInBackground(Void... voids) {
 		SimpleNoteApi.login(credentials, new HttpCallback() {
 			/**
 			 * Authentication was successful, store the token in the preferences and start the list activity
@@ -105,5 +110,15 @@ public class LoginWithCredentials extends Thread {
 				}
 			}
 		});
+        return null;
 	}
+
+    /**
+     *
+     * @param response
+     */
+    @Override
+    protected void onPostExecute(final Response response) {
+        super.onPostExecute(response);
+    }
 }

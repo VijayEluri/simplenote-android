@@ -7,6 +7,7 @@ import android.util.Log;
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.app.Notifications;
+import com.bryanjswift.simplenote.manager.Connectivity;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
@@ -55,34 +56,42 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
      */
     @Override
     protected Response doInBackground(Void... voids) {
-		return SimpleNoteApi.login(credentials, new HttpCallback() {
-			/**
-			 * Authentication was successful, store the token in the preferences and start the list activity
-			 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
-			 */
-			@Override
-			public void on200(final Response response) {
-                Log.i(LOGGING_TAG, "Setting new authentication token");
-                Preferences.setAuthToken(context, response.body);
-			}
-			/**
-			 * Authentication failed, show login dialog
-			 * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)
-			 */
-			@Override
-			public void onError(final Response response) {
-				Log.d(LOGGING_TAG, String.format("Authentication failed with status code %d", response.status));
-			}
-			/**
-			 * @see com.bryanjswift.simplenote.net.HttpCallback#onException(java.lang.String, java.lang.String, java.lang.Throwable)
-			 */
-			@Override
-			public void onException(final String url, final String data, final Throwable t) {
-				if (callback != null) {
-					callback.onException(url, data, t);
-				}
-			}
-		});
+        final Response response;
+        if (Connectivity.hasInternet(context)) {
+            response = SimpleNoteApi.login(credentials, new HttpCallback() {
+                /**
+                 * Authentication was successful, store the token in the preferences and start the list activity
+                 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
+                 */
+                @Override
+                public void on200(final Response response) {
+                    Log.i(LOGGING_TAG, "Setting new authentication token");
+                    Preferences.setAuthToken(context, response.body);
+                }
+                /**
+                 * Authentication failed, show login dialog
+                 * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)
+                 */
+                @Override
+                public void onError(final Response response) {
+                    Log.d(LOGGING_TAG, String.format("Authentication failed with status code %d", response.status));
+                }
+                /**
+                 * @see com.bryanjswift.simplenote.net.HttpCallback#onException(java.lang.String, java.lang.String, java.lang.Throwable)
+                 */
+                @Override
+                public void onException(final String url, final String data, final Throwable t) {
+                    if (callback != null) {
+                        callback.onException(url, data, t);
+                    }
+                }
+            });
+        } else {
+            response = new Response();
+            response.status = 408;
+            // Maybe should be a status 200 with an retry registered for when the network becomes available
+        }
+        return response;
 	}
     /**
      * Runs on UI thread, handle execution of the passed in callback

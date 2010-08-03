@@ -93,10 +93,15 @@ public class SimpleNoteEdit extends Activity {
              * @return whether or not the event was handled (it wasn't)
              */
             public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(LOGGING_TAG, "OnTouch firing for trash icon");
                 View titleRow = findViewById(R.id.note_title_row);
                 switch (motionEvent.getAction()) {
                     case MotionEvent.ACTION_UP:
+                        if (isInsideView(view, motionEvent)) {
+                            Log.d(LOGGING_TAG, "ACTION_UP MotionEvent inside view - letting onClick handle deleting note");
+                        } else {
+                            titleRow.setPressed(false);
+                        }
+                        break;
                     case MotionEvent.ACTION_OUTSIDE:
                     case MotionEvent.ACTION_CANCEL:
                         titleRow.setPressed(false);
@@ -106,6 +111,17 @@ public class SimpleNoteEdit extends Activity {
                         break;
                 }
                 return false;
+            }
+
+            /**
+             * Check the evt occurred within the bounds of view
+             * @param view to check motion event coordinates against
+             * @param evt to test against view bounds
+             * @return true if (view.getTop() > evt.getY() < view.getBottom()) && (view.getLeft() > evt.getX() < view.getRight())
+             */
+            private boolean isInsideView(View view, MotionEvent evt) {
+                return evt.getRawY() > view.getTop() && evt.getRawY() < view.getBottom()
+                        && evt.getRawX() > view.getLeft() && evt.getRawX() < view.getRight();
             }
         });
 	}

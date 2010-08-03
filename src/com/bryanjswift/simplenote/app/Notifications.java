@@ -59,9 +59,6 @@ public class Notifications {
 	 * @param context under which the Notification is created
 	 */
 	public synchronized static void Syncing(Context context) {
-		if (android.os.Build.VERSION.SDK_INT < 7) {
-			// Use a UI blocking dialog because it's a less powerful device
-		}
 		if (!notifyingSync) {
 			final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 			final Notification notification = new Notification(

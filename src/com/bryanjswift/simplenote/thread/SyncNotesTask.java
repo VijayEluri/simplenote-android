@@ -48,6 +48,7 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
      */
     @Override
     protected Void doInBackground(Void... voids) {
+        Log.i(LOGGING_TAG, "Sync notes firing");
         if (Connectivity.hasInternet(context)) {
             Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
             syncDown();

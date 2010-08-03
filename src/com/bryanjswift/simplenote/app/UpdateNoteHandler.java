@@ -17,6 +17,7 @@ public class UpdateNoteHandler extends Handler {
 	private static final String LOGGING_TAG = Constants.TAG + "UpdateNoteHandler";
 	private final Context context;
 	private final boolean refreshEach;
+    private boolean isSyncing = false;
 	public UpdateNoteHandler(final Context context, final boolean refreshEach) {
 		this.context = context;
 		this.refreshEach = refreshEach;
@@ -46,7 +47,7 @@ public class UpdateNoteHandler extends Handler {
 		// update the UI with the new note
 		final Note note = (Note) msg.getData().getSerializable(Note.class.getName());
         // If the note was deleted then send broadcast to sync notes
-		if (note.isDeleted()) {
+		if (note.isDeleted() && !isSyncing) {
             Log.d(LOGGING_TAG, "Send broadcast to sync notes");
             context.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_NOTES));
 		}
@@ -61,6 +62,7 @@ public class UpdateNoteHandler extends Handler {
 	 * @param msg with any relevant information
 	 */
 	private void handleUpdateStarted(final Message msg) {
+        isSyncing = true;
 		Notifications.Syncing(context);
 	}
 	/**
@@ -68,6 +70,7 @@ public class UpdateNoteHandler extends Handler {
 	 * @param msg with any relevant information
 	 */
 	private void handleUpdateFinished(final Message msg) {
+        isSyncing = false;
 		Notifications.CancelSyncing(context);
 	}
 }

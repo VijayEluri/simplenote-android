@@ -5,8 +5,11 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -15,6 +18,7 @@ import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.manager.Connectivity;
+import com.bryanjswift.simplenote.manager.ConnectivityReceiver;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
@@ -67,6 +71,18 @@ public class DailyService extends WakefulIntentService {
             }
 		} else {
             // should register for network connected event to run a DailyService.Starter Intent
+            final BroadcastReceiver loginOnConnected = new ConnectivityReceiver(DailyService.this) {
+                /**
+                 * Send a broadcast to try the login again
+                 * @param info on the network that is now connected
+                 */
+                public void handleConnected(final NetworkInfo info) {
+                    sendBroadcast(new Intent(DailyService.this, DailyService.Starter.class));
+                    unregisterReceiver(this);
+                }
+            };
+            registerReceiver(loginOnConnected, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
         }
 		Log.d(LOGGING_TAG, "Resetting SimpleNoteApi.count");
 		SimpleNoteApi.count.set(0);

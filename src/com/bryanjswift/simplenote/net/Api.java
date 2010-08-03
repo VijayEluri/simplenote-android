@@ -140,5 +140,11 @@ public abstract class Api {
             this.password = password;
             this.auth = auth;
         }
+        public boolean hasAuth() {
+            return !(email == null || email.equals("")) && !(auth == null || auth.equals(""));
+        }
+        public boolean hasCreds() {
+            return !(email == null || email.equals("")) && !(password == null || password.equals(""));
+        }
     }
 }

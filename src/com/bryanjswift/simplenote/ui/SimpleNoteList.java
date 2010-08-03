@@ -1,24 +1,18 @@
 package com.bryanjswift.simplenote.ui;
 
-import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bryanjswift.simplenote.Constants;
@@ -26,10 +20,10 @@ import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.thread.LoginTask;
-import com.bryanjswift.simplenote.thread.SyncNotesTask;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
+import com.bryanjswift.simplenote.thread.LoginTask;
+import com.bryanjswift.simplenote.thread.SyncNotesTask;
 import com.bryanjswift.simplenote.thread.UpdateNoteTask;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
@@ -37,11 +31,9 @@ import com.bryanjswift.simplenote.widget.NotesAdapter;
  * 'Main' Activity to List notes
  * @author bryanjswift
  */
-public class SimpleNoteList extends ListActivity {
+public class SimpleNoteList extends NoteListActivity {
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
 	private static final String SCROLL_POSITION = "scrollY";
-	/** Interface for accessing the SimpleNote database on the device */
-	private final SimpleNoteDao dao;
 	/** Message handler which should update the UI when a message with a Note is received */
 	private final Handler updateNoteHandler;
 	/** BroadcastReceiver which will receive requests to update from background sync services */
@@ -59,16 +51,11 @@ public class SimpleNoteList extends ListActivity {
             syncNotes();
         }
     };
-    private static DisplayMetrics display = new DisplayMetrics();
-    private static int paddingHeight = -1;
-    private static int shadowHeight = -1;
-    private static int rowHeight = -1;
 	/**
 	 * Create a dao to store using this as the context
 	 */
 	public SimpleNoteList() {
 		super();
-		this.dao = new SimpleNoteDao(this);
 		this.updateNoteHandler = new UpdateNoteHandler(this, true);
 	}
 	/**
@@ -93,7 +80,6 @@ public class SimpleNoteList extends ListActivity {
 			scrollY = savedState.getInt(SCROLL_POSITION, 0);
 		}
 		Log.d(LOGGING_TAG, "Firing up the note list");
-		getWindow().setFormat(PixelFormat.RGBA_8888);
 		// Now get notes and create a note adapter and set it to display
         Note[] notes = dao.retrieveAll();
 		setListAdapter(new NotesAdapter(this, notes));
@@ -171,15 +157,6 @@ public class SimpleNoteList extends ListActivity {
 		}
 	}
 	/**
-	 * Edit notes when clicked
-	 * @see android.app.ListActivity#onListItemClick(android.widget.ListView, android.view.View, int, long)
-	 */
-	@Override
-	protected void onListItemClick(final ListView l, final View v, final int position, final long id) {
-		super.onListItemClick(l, v, position, id);
-		FireIntent.EditNote(this, id, null);
-	}
-	/**
 	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
 	 */
 	@Override
@@ -208,45 +185,9 @@ public class SimpleNoteList extends ListActivity {
 		}
 	}
 	/**
-	 * Create a menu with delete and edit as options
-	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View, android.view.ContextMenu.ContextMenuInfo)
-	 */
-	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_list_item, menu);
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-		final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-		final Note note = adapter.getItem(info.position);
-		menu.setHeaderTitle(note.getTitle());
-	}
-	/**
-	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
-	 */
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {
-		final AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-		final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
-		switch (item.getItemId()) {
-			case R.id.menu_delete_note:
-				final Note note = dao.retrieve(adapter.getItemId(info.position));
-				if (dao.delete(note)) {
-					// Have to re-retrieve because deleting doesn't update the note passed to delete
-					updateNotesFor(dao.retrieve(note.getId()));
-				}
-				return true;
-			case R.id.menu_edit:
-				FireIntent.EditNote(this, adapter.getItemId(info.position), null);
-				return true;
-			default:
-				return super.onContextItemSelected(item);
-		}
-	}
-	/**
 	 * Start up a note syncing thread
      */
-	private void syncNotes() {
+	protected void syncNotes() {
 		(new SyncNotesTask(this, updateNoteHandler)).execute();
 	}
 	/**
@@ -280,7 +221,7 @@ public class SimpleNoteList extends ListActivity {
 	 * Internal method to trigger a note refresh
 	 * @param note causing the refresh
 	 */
-	private void updateNotesFor(final Note note) {
+	protected void updateNotesFor(final Note note) {
 		// Note modified, refresh the list
 		final Message message = Message.obtain(updateNoteHandler, Constants.MESSAGE_UPDATE_NOTE);
 		message.setData(new Bundle());
@@ -302,29 +243,4 @@ public class SimpleNoteList extends ListActivity {
 			}
 		});
 	}
-
-    /**
-     * Add padding to show drop shadow below list when scrolling is disabled
-     */
-    private void updateShadow() {
-        if (isScrollable()) {
-            // scrollable so hide shadow
-            getListView().setPadding(0, 0, 0, 0);
-        } else {
-            // not scrollable so show the shadow
-            getListView().setPadding(0, 0, 0, paddingHeight);
-        }
-    }
-
-    /**
-     * Check the display height against the list height
-     * @return whether the list height is greater than or equal to the display height
-     */
-    private boolean isScrollable() {
-        int displayHeight = display.heightPixels - paddingHeight - shadowHeight;
-        int listHeight = getListAdapter().getCount() * rowHeight;
-        Log.d(LOGGING_TAG, String.format("DisplayHeight: %d :: ListHeight: %d", displayHeight, listHeight));
-        return listHeight >= displayHeight;
-    }
-
 }

@@ -66,4 +66,7 @@
   <string name="every2hour">Every 2 Hours</string>
   <string name="every4hour">Every 4 Hours</string>
   <string name="every8hour">Every 8 Hours</string>
+  <!-- Search -->
+  <string name="search_hint">Search notes</string>
+  <string name="no_results">No notes were found for your search of \'%s\'</string>
 </resources>

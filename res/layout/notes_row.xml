@@ -6,11 +6,12 @@
   <LinearLayout android:id="@+id/note_title_layout" style="@style/FullWidth.NoteRow">
     <TextView
         android:id="@+id/note_title"
+        android:layout_alignParentTop="true"
         style="@style/Shadowed.Down.NoteRowTitle" />
     <TextView
         android:id="@+id/note_date"
         android:layout_toRightOf="@id/note_title"
-        android:layout_alignTop="@id/note_title"
+        android:layout_alignParentTop="true"
         style="@style/Shadowed.Down.NoteRowDate" />
   </LinearLayout>
 </RelativeLayout>

@@ -51,7 +51,7 @@ public class UpdateNoteHandler extends Handler {
             context.sendBroadcast(new Intent(Constants.BROADCAST_SYNC_NOTES));
 		}
 		// Only refresh if told to.. should only be told to if it's an update from this Activity
-		if (refreshEach && !note.isDeleted()) {
+		if (refreshEach) {
             Log.d(LOGGING_TAG, "Send broadcast to refresh notes");
 			context.sendBroadcast(new Intent(Constants.BROADCAST_REFRESH_NOTES));
 		}

@@ -44,6 +44,7 @@ public class SearchNoteList extends NoteListActivity {
             Note[] results = search(query);
             setListAdapter(new NotesAdapter(this, results));
             updateShadow();
+            setTitle(String.format(getString(R.string.results_title), query));
         }
     }
 
@@ -75,7 +76,7 @@ public class SearchNoteList extends NoteListActivity {
     /**
      * Pull notes from database and update the NotesAdapter
      */
-    private void refreshNotes() {
+    protected void refreshNotes() {
         Log.d(LOGGING_TAG, "Re-running search");
         final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
         adapter.setNotes(search(mQuery));

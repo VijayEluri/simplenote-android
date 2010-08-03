@@ -1,29 +1,19 @@
 package com.bryanjswift.simplenote.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
 import com.bryanjswift.simplenote.R;
-import com.bryanjswift.simplenote.app.UpdateNoteHandler;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 import com.bryanjswift.simplenote.thread.LoginTask;
-import com.bryanjswift.simplenote.thread.SyncNotesTask;
 import com.bryanjswift.simplenote.thread.UpdateNoteTask;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
@@ -33,30 +23,11 @@ import com.bryanjswift.simplenote.widget.NotesAdapter;
  */
 public class SimpleNoteList extends NoteListActivity {
 	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
-	private static final String SCROLL_POSITION = "scrollY";
-	/** Message handler which should update the UI when a message with a Note is received */
-	private final Handler updateNoteHandler;
-	/** BroadcastReceiver which will receive requests to update from background sync services */
-	private final BroadcastReceiver refreshNoteReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			Log.d(LOGGING_TAG, "Received broadcast to refresh notes in list");
-			refreshNotes();
-		}
-	};
-    private final BroadcastReceiver syncNoteReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.d(LOGGING_TAG, "Received broadcast to sync notes");
-            syncNotes();
-        }
-    };
 	/**
 	 * Create a dao to store using this as the context
 	 */
 	public SimpleNoteList() {
 		super();
-		this.updateNoteHandler = new UpdateNoteHandler(this, true);
 	}
 	/**
 	 * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -66,13 +37,6 @@ public class SimpleNoteList extends NoteListActivity {
 		super.onCreate(savedState);
         FireIntent.finishIfUnauthorized(this);
 		int scrollY = 0;
-        if (paddingHeight == -1 && shadowHeight == -1) {
-            getWindowManager().getDefaultDisplay().getMetrics(display);
-            paddingHeight = Math.round(getResources().getInteger(R.integer.noteListPadding) * display.density);
-            // 5.33333333333 is the assumed height of the scrolling shadow at 160 dpi
-            shadowHeight = Math.round(5.333333333333333333333333333f * display.density);
-            rowHeight = Math.round(getResources().getInteger(R.integer.noteItemHeight) * display.density);
-        }
 		if (savedState != null && savedState.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
 			Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
 			FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
@@ -105,46 +69,6 @@ public class SimpleNoteList extends NoteListActivity {
 		getListView().scrollTo(0, scrollY);
 	}
 	/**
-	 * If SimpleNoteEdit saved state then retrieve it and go back to editing
-	 * @see android.app.ListActivity#onRestoreInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onRestoreInstanceState(Bundle state) {
-		super.onRestoreInstanceState(state);
-		if (state != null && state.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
-			Log.d(LOGGING_TAG, "Resuming edit note from a saved state");
-			FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
-		}
-	}
-	/**
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-        FireIntent.finishIfUnauthorized(this);
-		registerReceiver(refreshNoteReceiver, new IntentFilter(Constants.BROADCAST_REFRESH_NOTES));
-        registerReceiver(syncNoteReceiver, new IntentFilter(Constants.BROADCAST_SYNC_NOTES));
-		refreshNotes();
-	}
-	/**
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putInt(SCROLL_POSITION, findViewById(android.R.id.list).getScrollY());
-	}
-	/**
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		unregisterReceiver(refreshNoteReceiver);
-        unregisterReceiver(syncNoteReceiver);
-	}
-	/**
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
@@ -155,40 +79,6 @@ public class SimpleNoteList extends NoteListActivity {
 			case Constants.REQUEST_LOGIN: handleSigninResult(resultCode); break;
 			case Constants.REQUEST_EDIT: handleNoteEditResult(resultCode, data); break;
 		}
-	}
-	/**
-	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		final MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_list, menu);
-		return true;
-	}
-	/**
-	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_refresh:
-				syncNotes();
-				return true;
-			case R.id.menu_preferences:
-				FireIntent.Preferences(this);
-				return true;
-			case R.id.menu_add:
-				FireIntent.EditNote(this, Constants.DEFAULT_ID, "");
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-	/**
-	 * Start up a note syncing thread
-     */
-	protected void syncNotes() {
-		(new SyncNotesTask(this, updateNoteHandler)).execute();
 	}
 	/**
 	 * Deal with the results of the REQUEST_LOGIN Activity start
@@ -232,7 +122,7 @@ public class SimpleNoteList extends NoteListActivity {
 	/**
 	 * Pull notes from database and update the NotesAdapter
 	 */
-	private void refreshNotes() {
+	protected void refreshNotes() {
         Log.d(LOGGING_TAG, "Refreshing notes from DB");
         final NotesAdapter adapter = ((NotesAdapter) getListAdapter());
         adapter.setNotes(dao.retrieveAll());

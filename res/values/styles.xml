@@ -6,6 +6,8 @@
   </style>
   <style name="Theme.SimpleNote" parent="@android:Theme">
     <item name="android:windowBackground">@drawable/background</item>
+  </style>
+  <style name="Theme.SimpleNote.NoTitle">
     <item name="android:windowNoTitle">true</item>
   </style>
   <!-- Basic Styles -->
@@ -87,6 +89,10 @@
     <item name="android:shadowColor">@color/black_button_shadow_color</item>
   </style>
   <!-- Note List -->
+  <style name="NoteListTitleBar">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+  </style>
   <style name="FullWidth.NoteList">
     <item name="android:padding">0px</item>
     <item name="android:dividerHeight">0dip</item>

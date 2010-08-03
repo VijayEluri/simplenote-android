@@ -19,8 +19,8 @@ public class ClearAccountPreference extends DialogPreference {
 	private final SimpleNoteDao dao;
 	/**
 	 * Create a ClearAccountPreference instance
-	 * @param context
-	 * @param attrs
+	 * @param context for the preference widget
+	 * @param attrs attributes for the preference widget
 	 */
 	public ClearAccountPreference(Context context, AttributeSet attrs) {
 		super(context, attrs);

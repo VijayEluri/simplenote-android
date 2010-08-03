@@ -57,7 +57,11 @@
   <string name="pref_account_email">Email</string>
   <string name="pref_account_password">Password</string>
   <string name="pref_account_clear_title">Clear Account</string>
-  <string name="pref_account_clear_description">Clear all account information and sign out of account</string>
+  <string name="pref_account_clear_description">Clear all account information (including notes) and sign out of account.</string>
+  <string name="pref_account_clear_dialog_title">Clear your credentials?</string>
+  <string name="pref_account_clear_dialog_yes">Clear \'em</string>
+  <string name="pref_account_clear_dialog_no">Keep \'em</string>
+  <!-- Preferences Options -->
   <string name="every1hour">Every Hour</string>
   <string name="every2hour">Every 2 Hours</string>
   <string name="every4hour">Every 4 Hours</string>

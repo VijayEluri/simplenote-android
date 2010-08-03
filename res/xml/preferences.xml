@@ -23,8 +23,8 @@
     <com.bryanjswift.simplenote.preference.ClearAccountPreference android:title="@string/pref_account_clear_title"
       android:key="clearAccount"
       android:summary="@string/pref_account_clear_description"
-      android:dialogTitle="Clear your credentials?"
-      android:positiveButtonText="Clear 'em"
-      android:negativeButtonText="Keep 'em" />
+      android:dialogTitle="@string/pref_account_clear_dialog_title"
+      android:positiveButtonText="@string/pref_account_clear_dialog_yes"
+      android:negativeButtonText="@string/pref_account_clear_dialog_no" />
   </PreferenceCategory>
 </PreferenceScreen>

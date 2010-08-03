@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
-  <ListView android:id="@id/android:list" android:cacheColorHint="@color/transparent" style="@style/FullWidth.NoteList" />
+  <ListView android:id="@id/android:list" style="@style/FullWidth.NoteList" />
   <LinearLayout android:id="@id/android:empty" style="@style/FillParent" android:orientation="vertical">
     <ImageView style="@style/NoNotesImage" />
     <TextView android:text="@string/no_notes" style="@style/Shadowed.NoNotesText" />

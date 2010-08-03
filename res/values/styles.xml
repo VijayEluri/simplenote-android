@@ -92,6 +92,7 @@
     <item name="android:dividerHeight">0dip</item>
     <item name="android:divider">@color/white</item>
     <item name="android:background">@drawable/note_list_footer</item>
+    <item name="android:cacheColorHint">@color/note_list_cache_color</item>
   </style>
   <style name="NoteListFooter">
     <item name="android:src">@drawable/note_list_footer</item>

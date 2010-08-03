@@ -51,7 +51,9 @@ public abstract class Api {
 				sb.append(line);
                 sb.append('\n');
 			}
-			sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
+            if (sb.length() > 0) {
+                sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
+            }
 			// Store response information in Response object
 			response.status = conn.getResponseCode();
 			response.body = sb.toString();
@@ -84,7 +86,9 @@ public abstract class Api {
 			sb.append(line);
             sb.append('\n');
 		}
-		sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
+        if (sb.length() > 0) {
+		    sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
+        }
 		// Store response in a Response object
 		response.status = conn.getResponseCode();
 		response.body = sb.toString();

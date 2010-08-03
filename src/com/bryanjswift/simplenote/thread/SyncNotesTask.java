@@ -99,7 +99,9 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
 		for (Note dbNote : notes) {
 			if (dbNote.getKey().equals(Constants.DEFAULT_KEY)) {
 				SimpleNoteApi.create(dbNote, credentials, new ServerCreateCallback(context, dbNote));
-			} else {
+			} else if (!dbNote.getKey().equals(Constants.DEFAULT_KEY) && dbNote.isDeleted()) {
+                SimpleNoteApi.delete(dbNote, credentials, new ServerSaveCallback(context, dbNote));
+            } else {
 				SimpleNoteApi.update(dbNote, credentials, new ServerSaveCallback(context, dbNote));
 			}
 		}

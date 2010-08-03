@@ -42,4 +42,5 @@ public class Constants {
     // Create Account URL
     public static final Uri URL_CREATE_ACCOUNT = (new Uri.Builder())
             .scheme("http").authority("simple-note.appspot.com").path("/createaccount.html").build();
+    public static final int NO_CONNECTION = 499;
 }

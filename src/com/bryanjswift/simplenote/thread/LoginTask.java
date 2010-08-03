@@ -13,7 +13,6 @@ import com.bryanjswift.simplenote.net.Api.Response;
 import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.ui.FireIntent;
-import org.apache.http.HttpStatus;
 
 /**
  * Uses the SimpleNoteApi to login with existing credentials which must be provided
@@ -59,6 +58,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
     protected Response doInBackground(Void... voids) {
         final Response response;
         if (Connectivity.hasInternet(context)) {
+            Log.i(LOGGING_TAG, "Connected, attempting login");
             response = SimpleNoteApi.login(credentials, new HttpCallback() {
                 /**
                  * Authentication was successful, store the token in the preferences and start the list activity
@@ -88,8 +88,9 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
                 }
             });
         } else {
+            Log.i(LOGGING_TAG, "No internet connection, returning timeout status code");
             response = new Response();
-            response.status = HttpStatus.SC_REQUEST_TIMEOUT;
+            response.status = Constants.NO_CONNECTION;
             // Maybe should be a status 200 with an retry registered for when the network becomes available
         }
         return response;

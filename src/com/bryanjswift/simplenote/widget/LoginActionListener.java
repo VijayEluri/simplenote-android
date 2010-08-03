@@ -88,11 +88,11 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
              */
             @Override
             public void onError(Response response) {
-                context.runOnUiThread(new Runnable() {
-                    public void run() {
-                        Toast.makeText(context, R.string.error_authentication, Toast.LENGTH_LONG).show();
-                    }
-                });
+                if (response.status == Constants.NO_CONNECTION) {
+                    Toast.makeText(context, R.string.error_no_connection, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(context, R.string.error_authentication, Toast.LENGTH_LONG).show();
+                }
                 Preferences.setPassword(context, null);
                 dialog.dismiss();
             }

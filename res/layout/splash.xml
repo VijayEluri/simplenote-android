@@ -11,10 +11,10 @@
         android:id="@+id/splashLogo"
         android:src="@drawable/simplenote"
         style="@style/SplashLogo" />
-    <TextView
+    <ImageView
         android:id="@+id/splashLabel"
-        android:text="@string/app_name"
-        style="@style/Shadowed.SplashHeader" />
+        android:src="@drawable/splash_header"
+        style="@style/SplashHeader" />
     <EditText
         android:id="@+id/splash_email"
         android:hint="@string/email"

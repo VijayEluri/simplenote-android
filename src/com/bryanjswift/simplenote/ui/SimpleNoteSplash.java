@@ -36,8 +36,6 @@ public class SimpleNoteSplash extends Activity {
 		DailyService.scheduleBroadcast(this);
 		setContentView(R.layout.splash);
 		final Api.Credentials credentials = Preferences.getLoginPreferences(this);
-		final Typeface helveticaBold = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeueBold.ttf");
-		((TextView) findViewById(R.id.splashLabel)).setTypeface(helveticaBold);
 		if (!credentials.email.equals("") && (!credentials.password.equals("") || !credentials.auth.equals(""))) {
 			// valid token stored
 			Log.d(LOGGING_TAG, "Auth information stored, going to list");

@@ -144,7 +144,7 @@
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:gravity">center</item>
-    <item name="android:layout_marginTop">80.5dip</item>
+    <item name="android:layout_marginTop">85dip</item>
     <item name="android:layout_marginLeft">20dip</item>
     <item name="android:src">@drawable/bg_no_notes</item>
   </style>
@@ -152,7 +152,7 @@
     <item name="android:layout_width">fill_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:gravity">center</item>
-    <item name="android:layout_marginTop">0.5dip</item>
+    <item name="android:layout_marginTop">5dip</item>
     <item name="android:textSize">22sp</item>
     <item name="android:textStyle">bold</item>
     <item name="android:textColor">@color/no_notes_text</item>

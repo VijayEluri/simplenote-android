@@ -3,6 +3,8 @@ package com.bryanjswift.simplenote;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
+import android.net.Uri;
+
 /**
  * Hold constants for the SimpleNote application
  */
@@ -37,4 +39,7 @@ public class Constants {
 	public static final String API_UPDATE_URL = API_BASE_URL + "/note";						// POST
 	public static final String API_DELETE_URL = API_BASE_URL + "/delete";					// GET
 	public static final String API_SEARCH_URL = API_BASE_URL + "/search";					// GET
+    // Create Account URL
+    public static final Uri URL_CREATE_ACCOUNT = (new Uri.Builder())
+            .scheme("http").authority("simple-note.appspot.com").path("/createaccount.html").build();
 }

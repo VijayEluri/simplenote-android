@@ -1,13 +1,14 @@
 package com.bryanjswift.simplenote.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
@@ -52,6 +53,7 @@ public class SimpleNoteSplash extends Activity {
 	 */
 	private void setupSplashFields() {
         final Button loginButton = (Button) findViewById(R.id.splash_login);
+        final Button signupButton = (Button) findViewById(R.id.splash_signup);
 		final EditText email = (EditText) findViewById(R.id.splash_email);
 		final EditText password = (EditText) findViewById(R.id.splash_password);
         final LoginActionListener loginAction = new LoginActionListener(this, email, password, new HttpCallback() {
@@ -66,6 +68,16 @@ public class SimpleNoteSplash extends Activity {
 		});
 		password.setOnEditorActionListener(loginAction);
         loginButton.setOnClickListener(loginAction);
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Open a way for the user to create an account
+             * @param view that was clicked
+             */
+            public void onClick(View view) {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Constants.URL_CREATE_ACCOUNT);
+                startActivity(intent);
+            }
+        });
 		// FIXME: This doesn't work from styles.xml
 		password.setTypeface(Typeface.SANS_SERIF);
 	}

@@ -77,6 +77,7 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onCreate(Bundle savedState) {
 		super.onCreate(savedState);
+        FireIntent.finishIfUnauthorized(this);
 		int scrollY = 0;
         if (paddingHeight == -1 && shadowHeight == -1) {
             getWindowManager().getDefaultDisplay().getMetrics(display);
@@ -101,8 +102,8 @@ public class SimpleNoteList extends ListActivity {
 		// Make sure onCreateContextMenu is called for long press of notes
 		registerForContextMenu(getListView());
 		// check the token exists first and if not authenticate with existing username/password
-		Api.Credentials credentials = Preferences.getLoginPreferences(this);
-		if (!credentials.auth.equals("")) {
+        final Api.Credentials credentials = Preferences.getLoginPreferences(this);
+		if (credentials.hasAuth()) {
 			// sync notes in a background thread
 			syncNotes();
 		} else {
@@ -135,6 +136,7 @@ public class SimpleNoteList extends ListActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+        FireIntent.finishIfUnauthorized(this);
 		registerReceiver(refreshNoteReceiver, new IntentFilter(Constants.BROADCAST_REFRESH_NOTES));
         registerReceiver(syncNoteReceiver, new IntentFilter(Constants.BROADCAST_SYNC_NOTES));
 		refreshNotes();
@@ -324,4 +326,5 @@ public class SimpleNoteList extends ListActivity {
         Log.d(LOGGING_TAG, String.format("DisplayHeight: %d :: ListHeight: %d", displayHeight, listHeight));
         return listHeight >= displayHeight;
     }
+
 }

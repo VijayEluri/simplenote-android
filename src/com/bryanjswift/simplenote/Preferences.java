@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import com.bryanjswift.simplenote.app.Notifications;
 import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.service.SyncService;
+import com.bryanjswift.simplenote.ui.FireIntent;
 
 public class Preferences extends PreferenceActivity {
 	// Constants for the values of preferences
@@ -18,7 +19,14 @@ public class Preferences extends PreferenceActivity {
 	public static final String TOKEN = "token"; // String
 	public static final String BACKGROUND_ENABLED = "background_enabled"; // boolean
 	public static final String BACKGROUND = "background"; // int
-	/**
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        FireIntent.finishIfUnauthorized(this);
+    }
+
+    /**
 	 * Set up the preferences view
 	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle)
 	 */

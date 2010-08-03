@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.Preferences;
+import com.bryanjswift.simplenote.net.Api;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 
 /**
@@ -33,6 +34,7 @@ public class FireIntent {
 		intent.putExtra(BaseColumns._ID, id);
 		if (originalBody != null) {
 			intent.putExtra(SimpleNoteDao.BODY, originalBody);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP).addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		}
 		context.startActivityForResult(intent, Constants.REQUEST_EDIT);
 	}
@@ -45,11 +47,21 @@ public class FireIntent {
 		context.startActivity(settings);
 	}
 	/**
-	 * Start the Splash Activity
+	 * Start the Splash Activity clearing the Activity stack
 	 * @param context Context for which the intent is firing
 	 */
 	public static void Splash(final Context context) {
-		final Intent splash = new Intent(context, SimpleNoteSplash.class);
+		final Intent splash = (new Intent(context, SimpleNoteSplash.class));
 		context.startActivity(splash);
 	}
+    /**
+     * Finish an activity if the credentials retrieved for Activity don't cut it
+     * @param activity to test and kill (if necessary)
+     */
+    public static void finishIfUnauthorized(Activity activity) {
+        final Api.Credentials credentials = Preferences.getLoginPreferences(activity);
+        if (!credentials.hasAuth() && !credentials.hasCreds()) {
+            activity.finish();
+        }
+    }
 }

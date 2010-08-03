@@ -53,6 +53,8 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
             syncDown();
             syncUp();
             Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
+        } else {
+            Log.i(LOGGING_TAG, "Not connected, Unable to perform synchronization");
         }
         return null;
     }

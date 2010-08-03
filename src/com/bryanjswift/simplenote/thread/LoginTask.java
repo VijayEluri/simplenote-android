@@ -20,30 +20,46 @@ import com.bryanjswift.simplenote.ui.FireIntent;
  */
 public class LoginTask extends AsyncTask<Void, Void, Response> {
 	private static final String LOGGING_TAG = Constants.TAG + "LoginTask";
+    // Immutable fields
 	private final Context context;
-
     private final Api.Credentials credentials;
 	private final HttpCallback callback;
     /**
      * Default HttpCallback used if none provided
      */
     private final HttpCallback defaultCallback = new HttpCallback() {
+        /**
+         * Go to the SimpleNoteList screen
+         * @param response contents of the response
+         */
         @Override
         public void on200(final Response response) {
             FireIntent.SimpleNoteList(context);
         }
+        /**
+         * Show notification about failed login
+         * @param response contents of the response
+         */
+        @Override
         public void onError(final Response response) {
             Notifications.Credentials(context);
         }
     };
 	/**
-	 * Create new specialized Thread with credentials information
-	 * @param context from which the thread was invoked
+	 * Create new specialized task with credentials information
+	 * @param context from which the task was invoked
 	 * @param credentials information to use when attempting to re-authenticate
 	 */
 	public LoginTask(Context context, Api.Credentials credentials) {
 		this(context, credentials, null);
 	}
+
+    /**
+     * Create new task to perform user authentication in background
+     * @param context from which the task was invoked
+     * @param credentials information to use when attempting to re-authenticate
+     * @param callback to run instead of the default
+     */
 	public LoginTask(Context context, Api.Credentials credentials, HttpCallback callback) {
 		this.context = context;
 		this.credentials = credentials;

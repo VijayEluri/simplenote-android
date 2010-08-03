@@ -34,35 +34,40 @@ public class DailyService extends WakefulIntentService {
 	protected void handleWakefulIntent(Intent intent) {
 		Log.d(LOGGING_TAG, "Handling DailyService business");
 		Api.Credentials credentials = Preferences.getLoginPreferences(this);
-		if (!credentials.email.equals("") && !credentials.password.equals("") && Connectivity.hasInternet(this)) {
-			SimpleNoteApi.login(credentials, new HttpCallback() {
-				/**
-				 * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
-				 */
-				@Override
-				public void on200(Response response) {
-					super.on200(response);
-					SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DailyService.this);
-					Editor editor = prefs.edit();
-					// API successfully returned, store token
-					editor.putString(Preferences.TOKEN, response.body);
-					if (editor.commit()) {
-						Log.i(LOGGING_TAG, "Successfully saved new authentication token");
-					} else {
-						Log.i(LOGGING_TAG, "Failed to save new authentication token, uh oh.");
-					}
-				}
-				/**
-				 * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)
-				 */
-				@Override
-				public void onError(Response response) {
-					super.onError(response);
-					Notifications.Credentials(DailyService.this);
-				}
-				
-			});
-		}
+		if (Connectivity.hasInternet(this)) {
+            if (!credentials.email.equals("") && !credentials.password.equals("")) {
+                // Can't do this in AsyncTask because if we do the service thread might be killed while
+                // still waiting on response
+                SimpleNoteApi.login(credentials, new HttpCallback() {
+                    /**
+                     * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
+                     */
+                    @Override
+                    public void on200(Response response) {
+                        super.on200(response);
+                        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(DailyService.this);
+                        Editor editor = prefs.edit();
+                        // API successfully returned, store token
+                        editor.putString(Preferences.TOKEN, response.body);
+                        if (editor.commit()) {
+                            Log.i(LOGGING_TAG, "Successfully saved new authentication token");
+                        } else {
+                            Log.i(LOGGING_TAG, "Failed to save new authentication token, uh oh.");
+                        }
+                    }
+                    /**
+                     * @see com.bryanjswift.simplenote.net.HttpCallback#onError(com.bryanjswift.simplenote.net.Api.Response)
+                     */
+                    @Override
+                    public void onError(Response response) {
+                        super.onError(response);
+                        Notifications.Credentials(DailyService.this);
+                    }
+                });
+            }
+		} else {
+            // should register for network connected event to run a DailyService.Starter Intent
+        }
 		Log.d(LOGGING_TAG, "Resetting SimpleNoteApi.count");
 		SimpleNoteApi.count.set(0);
 	}

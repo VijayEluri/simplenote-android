@@ -51,9 +51,12 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
         Log.i(LOGGING_TAG, "Sync notes firing");
         if (Connectivity.hasInternet(context)) {
             Message.obtain(handler, Constants.MESSAGE_UPDATE_STARTED).sendToTarget();
-            syncDown();
-            syncUp();
-            Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
+            try {
+                syncDown();
+                syncUp();
+            } finally {
+                Message.obtain(handler, Constants.MESSAGE_UPDATE_FINISHED).sendToTarget();
+            }
         } else {
             Log.i(LOGGING_TAG, "Not connected, Unable to perform synchronization");
         }

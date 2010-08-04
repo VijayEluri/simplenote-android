@@ -41,6 +41,7 @@
   <string name="status_syncing_title">SimpleNote Syncing</string>
   <string name="status_syncing_description">Syncing notes with SimpleNote servers</string>
   <!-- Error messages -->
+  <string name="error_empty">Email and Password are required, fill them out and try again.</string>
   <string name="error_authentication">Sign in failed, please check your email and password.</string>
   <string name="error_authentication_stored">Sign in failed with saved email and password. Please make sure they are correct and try again.</string>
   <string name="error_no_connection">Unable to connect to the internet. Please try again later.</string>

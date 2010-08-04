@@ -20,59 +20,85 @@ import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.thread.LoginTask;
 
 public class LoginActionListener implements OnEditorActionListener, View.OnClickListener {
-	private static final String LOGGING_TAG = Constants.TAG + "LoginActionListener";
-	private final Activity context;
-	private final EditText email;
-	private final EditText password;
-	private final String loggingIn;
-	private final String authenticating;
-	private final HttpCallback callback;
-	/**
+    private static final String LOGGING_TAG = Constants.TAG + "LoginActionListener";
+    private final Activity context;
+    private final EditText email;
+    private final EditText password;
+    private final String loggingIn;
+    private final String authenticating;
+    private final HttpCallback callback;
+    /**
      * Create an Listener to handle login actions
-	 * @param context for the login action
-	 * @param email text view containing email address information
-	 * @param password text view containing password information
-	 */
-	public LoginActionListener(Activity context, EditText email, EditText password) {
-		this(context, email, password, null);
-	}
-	/**
-	 * Create an Listener to handle login actions
-	 * @param context for the login action
-	 * @param email text view containing email address information
+     * @param context for the login action
+     * @param email text view containing email address information
      * @param password text view containing password information
-	 * @param callback to run after those supplied by the Login action
-	 */
-	public LoginActionListener(Activity context, EditText email, EditText password, HttpCallback callback) {
-		this.context = context;
-		this.email = email;
-		this.password = password;
-		this.authenticating = context.getString(R.string.status_authenticating);
-		this.loggingIn = context.getString(R.string.status_loggingin);
-		this.callback = callback;
-	}
-	/**
-	 * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
-	 */
-	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        login();
+     */
+    public LoginActionListener(Activity context, EditText email, EditText password) {
+        this(context, email, password, null);
+    }
+    /**
+     * Create an Listener to handle login actions
+     * @param context for the login action
+     * @param email text view containing email address information
+     * @param password text view containing password information
+     * @param callback to run after those supplied by the Login action
+     */
+    public LoginActionListener(Activity context, EditText email, EditText password, HttpCallback callback) {
+        this.context = context;
+        this.email = email;
+        this.password = password;
+        this.authenticating = context.getString(R.string.status_authenticating);
+        this.loggingIn = context.getString(R.string.status_loggingin);
+        this.callback = callback;
+    }
+    /**
+     * @see android.widget.TextView.OnEditorActionListener#onEditorAction(android.widget.TextView, int, android.view.KeyEvent)
+     */
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        validateAndLogin();
         return true;
-	}
+    }
     /**
      * @see android.view.View.OnClickListener#onClick(android.view.View)
      */
     public void onClick(View v) {
-        login();
+        validateAndLogin();
+    }
+    /**
+     * Attempt login only if information in fields is valid
+     */
+    public void validateAndLogin() {
+        if (isValid()) {
+            login();
+        }
+    }
+    /**
+     * Check if the login fields are filled out and valid
+     * @return true if email and password both have values
+     */
+    public boolean isValid() {
+        final String emailValue = email.getText().toString();
+        final String passwordValue = password.getText().toString();
+        boolean valid = true;
+        if (emailValue == null || emailValue.equals("") || passwordValue == null || passwordValue.equals("")) {
+            Toast.makeText(context, R.string.error_empty, Toast.LENGTH_LONG).show();
+            valid = false;
+        }
+        return valid;
     }
     /**
      * Handle the process of logging a user in when they perform an action that justifies it
      */
     public void login() {
-        final ProgressDialog dialog = ProgressDialog.show(context, loggingIn, authenticating);
-        Log.d(LOGGING_TAG, "Created progressDialog: " + dialog.toString());
-        Log.i(LOGGING_TAG, "Starting login thread");
+        Log.i(LOGGING_TAG, "Checking credentials and attempting login");
         final String emailValue = email.getText().toString();
         final String passwordValue = password.getText().toString();
+        if (emailValue == null || emailValue.equals("") || passwordValue == null || passwordValue.equals("")) {
+            Toast.makeText(context, R.string.error_empty, Toast.LENGTH_LONG).show();
+            return; // bail
+        }
+        final ProgressDialog dialog = ProgressDialog.show(context, loggingIn, authenticating);
+        Log.d(LOGGING_TAG, "Created progressDialog: " + dialog.toString());
         final Api.Credentials credentials = Preferences.setLoginPreferences(context, emailValue, passwordValue);
         // Login with credentials here
         (new LoginTask(context, credentials, new HttpCallback() {

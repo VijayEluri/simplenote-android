@@ -25,7 +25,7 @@ public class SimpleNoteApi extends Api {
 	 * Method to invoke the SimpleNote login API
 	 * @param credentials data used to access simplenote servers
 	 * @param callback method collection that handles the response
-	 * @return the token resulting from the API login call
+	 * @return the response from the API call
 	 */
 	public static Response login(final Credentials credentials, final HttpCallback callback) {
 		Log.d(LOGGING_TAG, "Attempting login authentication with API server.");
@@ -40,6 +40,26 @@ public class SimpleNoteApi extends Api {
 		}
 		return response;
 	}
+
+    /**
+     * Method to invoke the SimpleNOte create API
+     * @param credentials data used to create account
+     * @param callback method collection that handles the response
+     * @return the response from the API call
+     */
+    public static Response register(final Credentials credentials, final HttpCallback callback) {
+        Log.d(LOGGING_TAG, "Attempting to create new user");
+        String data = encode("api=1&email=" + credentials.email + "&password=" + credentials.password, true, true);
+        Response response = null;
+        try {
+            response = handleResponse(callback, Post(Constants.API_REGISTER_URL, data));
+        } catch (IOException ioe) {
+            callback.onException(Constants.API_REGISTER_URL, data, ioe);
+        } finally {
+            increment();
+        }
+        return response;
+    }
 	/**
 	 * Method to invoke the SimpleNote index API
 	 * @param credentials data used to access simplenote servers
@@ -115,7 +135,7 @@ public class SimpleNoteApi extends Api {
 			Response response = handleResponse(callback, Post(Constants.API_NOTE_URL + urlData, data));
 			success = response.status == HttpStatus.SC_OK && response.body.equals(n.getKey());
 		} catch (IOException ioe) {
-			callback.onException(Constants.API_NOTE_URL, data, ioe);
+			callback.onException(Constants.API_UPDATE_URL, data, ioe);
 		} finally {
 			increment();
 		}

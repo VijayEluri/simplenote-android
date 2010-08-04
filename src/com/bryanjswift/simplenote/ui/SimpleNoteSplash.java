@@ -38,7 +38,6 @@ public class SimpleNoteSplash extends Activity {
         DailyService.scheduleBroadcast(this);
         setContentView(R.layout.splash);
         final Api.Credentials credentials = Preferences.getLoginPreferences(this);
-        final Intent intent = getIntent();
         Notifications.CancelCredentials(this);
         if (!credentials.email.equals("") && (!credentials.password.equals("") || !credentials.auth.equals(""))) {
             // valid token stored
@@ -60,9 +59,6 @@ public class SimpleNoteSplash extends Activity {
         final Button signupButton = (Button) findViewById(R.id.splash_signup);
         final EditText email = (EditText) findViewById(R.id.splash_email);
         final EditText password = (EditText) findViewById(R.id.splash_password);
-        if (credentials.email != null && !credentials.email.equals("")) {
-            email.setText(credentials.email);
-        }
         final LoginActionListener loginAction = new LoginActionListener(this, email, password, new HttpCallback() {
             /**
              * @see com.bryanjswift.simplenote.net.HttpCallback#on200(com.bryanjswift.simplenote.net.Api.Response)
@@ -73,6 +69,7 @@ public class SimpleNoteSplash extends Activity {
                 SimpleNoteSplash.this.finish();
             }
         });
+        if (credentials.email != null && !credentials.email.equals("")) { email.setText(credentials.email); }
         password.setOnEditorActionListener(loginAction);
         loginButton.setOnClickListener(loginAction);
         signupButton.setOnClickListener(new View.OnClickListener() {

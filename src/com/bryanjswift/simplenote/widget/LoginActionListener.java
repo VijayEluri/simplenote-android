@@ -19,6 +19,10 @@ import com.bryanjswift.simplenote.net.HttpCallback;
 import com.bryanjswift.simplenote.net.SimpleNoteApi;
 import com.bryanjswift.simplenote.thread.LoginTask;
 
+/**
+ * OnEditorActionListener and OnClickListener to handle logging in from SimpleNoteSplash screen
+ * @author bryanjswift
+ */
 public class LoginActionListener implements OnEditorActionListener, View.OnClickListener {
     private static final String LOGGING_TAG = Constants.TAG + "LoginActionListener";
     private final Activity context;
@@ -67,7 +71,7 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
     /**
      * Attempt login only if information in fields is valid
      */
-    public void validateAndLogin() {
+    private void validateAndLogin() {
         if (isValid()) {
             login();
         }
@@ -76,7 +80,7 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
      * Check if the login fields are filled out and valid
      * @return true if email and password both have values
      */
-    public boolean isValid() {
+    private boolean isValid() {
         final String emailValue = email.getText().toString();
         final String passwordValue = password.getText().toString();
         boolean valid = true;
@@ -89,14 +93,10 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
     /**
      * Handle the process of logging a user in when they perform an action that justifies it
      */
-    public void login() {
+    private void login() {
         Log.i(LOGGING_TAG, "Checking credentials and attempting login");
         final String emailValue = email.getText().toString();
         final String passwordValue = password.getText().toString();
-        if (emailValue == null || emailValue.equals("") || passwordValue == null || passwordValue.equals("")) {
-            Toast.makeText(context, R.string.error_empty, Toast.LENGTH_LONG).show();
-            return; // bail
-        }
         final ProgressDialog dialog = ProgressDialog.show(context, loggingIn, authenticating);
         Log.d(LOGGING_TAG, "Created progressDialog: " + dialog.toString());
         final Api.Credentials credentials = Preferences.setLoginPreferences(context, emailValue, passwordValue);

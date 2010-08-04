@@ -39,9 +39,7 @@ public class SimpleNoteSplash extends Activity {
         setContentView(R.layout.splash);
         final Api.Credentials credentials = Preferences.getLoginPreferences(this);
         final Intent intent = getIntent();
-        if (intent.getIntExtra(Constants.NOTIFICATION_TYPE, 0) == Constants.NOTIFICATION_CREDENTIALS) {
-            Notifications.CancelCredentials(this);
-        }
+        Notifications.CancelCredentials(this);
         if (!credentials.email.equals("") && (!credentials.password.equals("") || !credentials.auth.equals(""))) {
             // valid token stored
             Log.d(LOGGING_TAG, "Auth information stored, going to list");

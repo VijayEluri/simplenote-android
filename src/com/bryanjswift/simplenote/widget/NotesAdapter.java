@@ -87,6 +87,12 @@ public class NotesAdapter extends BaseAdapter {
 	}
 
     /**
+     * @return Notes stored for this ListAdapter
+     */
+    public final Note[] getNotes() {
+        return this.notes;
+    }
+    /**
      * Trim the title of a note using resources from the given context
      * @param context from which to retrieve resources
      * @param t - title (or string) to truncate/ellipsize

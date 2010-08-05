@@ -110,9 +110,7 @@ public class SimpleNoteDao {
 	 * @param note to store
 	 * @return the Note if it was saved successfully, null otherwise
 	 */
-	synchronized public Note save(Note note) {
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		Note result = null;
+	public Note save(Note note) {
 		/* Setup values */
 		ContentValues values = new ContentValues();
 		values.put(KEY, note.getKey());
@@ -121,28 +119,7 @@ public class SimpleNoteDao {
 		values.put(DELETED, note.isDeleted());
 		values.put(SYNCED, note.isSynced());
 		/* Perform query */
-		try {
-			db.beginTransaction();
-			if (note.getId() < 0) { // If no id set then must be creating a new note
-				Log.i(LOGGING_TAG, "Inserting new note into DB");
-				long id = db.insert(DATABASE_TABLE, null, values);
-				if (id > -1) {
-					result = note.setId(id);
-				}
-			} else { // id exists, updating existing note
-				Log.i(LOGGING_TAG, String.format("Updating note with id: %d", note.getId()));
-				int rows = db.update(DATABASE_TABLE, values, BaseColumns._ID + "=" + note.getId(), null);
-				if (rows == 1) {
-					result = note;
-				}
-			}
-			if (note != null) {
-				db.setTransactionSuccessful();
-			}
-		} finally {
-			db.endTransaction();
-			db.close();
-		}
+        Note result = writeNote(values, note);
 		return result;
 	}
 	/**
@@ -150,7 +127,7 @@ public class SimpleNoteDao {
 	 * @param id of the Note to retrieved
 	 * @return the Note if it exists, null otherwise
 	 */
-	synchronized public Note retrieve(long id) {
+	public Note retrieve(long id) {
 		Log.i(LOGGING_TAG, String.format("Retrieving note with id '%d' from DB", id));
 		final SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Note result = null;
@@ -166,7 +143,7 @@ public class SimpleNoteDao {
 		} finally {
 			db.endTransaction();
 			db.close();
-			cursor.close();
+			if (cursor != null) { cursor.close(); }
 		}
 		return result;
 	}
@@ -175,7 +152,7 @@ public class SimpleNoteDao {
 	 * @param key of the Note to retrieved
 	 * @return the Note if it exists, null otherwise
 	 */
-	synchronized public Note retrieveByKey(String key) {
+	public Note retrieveByKey(String key) {
 		Log.i(LOGGING_TAG, String.format("Retrieving note with key '%s' from DB", key));
 		final SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Note result = null;
@@ -190,8 +167,8 @@ public class SimpleNoteDao {
 			db.setTransactionSuccessful();
 		} finally {
 			db.endTransaction();
-			cursor.close();
 			db.close();
+            if (cursor != null) { cursor.close(); }
 		}
 		return result;
 	}
@@ -199,7 +176,7 @@ public class SimpleNoteDao {
 	 * Retrieve a Note[] of all Notes in database ordered by modified date, descending
 	 * @return Note[] containing all undeleted notes
 	 */
-	synchronized public Note[] retrieveAll() {
+	public Note[] retrieveAll() {
 		Log.i(LOGGING_TAG, "Getting all notes from DB");
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = null;
@@ -220,7 +197,7 @@ public class SimpleNoteDao {
 	 * Retrieve all notes that need to be synchronized with SimpleNote's servers
 	 * @return Note[] of all unsynchronized notes
 	 */
-	synchronized public Note[] retrieveUnsynced() {
+	public Note[] retrieveUnsynced() {
 		Log.i(LOGGING_TAG, "Getting all unsynchronized notes from DB");
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor cursor = null;
@@ -244,24 +221,14 @@ public class SimpleNoteDao {
 	 * @param note to mark for deletion
 	 * @return whether or not the Note was successfully updated
 	 */
-	synchronized public boolean delete(Note note) {
+	public boolean delete(Note note) {
 		Log.i(LOGGING_TAG, String.format("Marking %s for deletion", note.getKey()));
-		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		boolean success = false;
 		/* Setup values */
-		ContentValues args = new ContentValues();
-		args.put(DELETED, true);
-		args.put(SYNCED, false);
+		ContentValues values = new ContentValues();
+		values.put(DELETED, true);
+		values.put(SYNCED, false);
 		/* Perform query */
-		try {
-			db.beginTransaction();
-			int rows = db.update(DATABASE_TABLE, args, BaseColumns._ID + "=" + note.getId(), null);
-			success = rows == 1;
-			if (success) { db.setTransactionSuccessful(); }
-		} finally {
-			db.endTransaction();
-			db.close();
-		}
+        boolean success = writeNote(values, note) != null;
 		return success;
 	}
 	/**
@@ -269,22 +236,11 @@ public class SimpleNoteDao {
 	 * @param note to mark synchronized
 	 * @return whether or not the note was successfully updated
 	 */
-	synchronized public boolean markSynced(Note note) {
-		final SQLiteDatabase db = dbHelper.getWritableDatabase();
-		final ContentValues values = new ContentValues();	
+	public boolean markSynced(Note note) {
+        Log.i(LOGGING_TAG, String.format("Marking %s synchronized", note.getKey()));
+		final ContentValues values = new ContentValues();
 		values.put(SYNCED, true);
-		boolean success = false;
-		try {
-			db.beginTransaction();
-			int rows = db.update(DATABASE_TABLE, values, BaseColumns._ID + " = " + note.getId(), null);
-			if (rows == 1) {
-				success = true;
-				db.setTransactionSuccessful();
-			}
-		} finally {
-			db.endTransaction();
-			db.close();
-		}
+        boolean success = writeNote(values, note) != null;
 		return success;
 	}
 	/**
@@ -328,6 +284,32 @@ public class SimpleNoteDao {
 		}
 		return success;
 	}
+    synchronized private Note writeNote(ContentValues values, Note note) {
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        Note result = null;
+        try {
+            db.beginTransaction();
+            if (note.getId() != Constants.DEFAULT_ID) {
+                Log.i(LOGGING_TAG, String.format("Updating note with id: %d", note.getId()));
+                int rows = db.update(DATABASE_TABLE, values, BaseColumns._ID + " = " + note.getId(), null);
+                if (rows == 1) {
+                    result = note;
+                    db.setTransactionSuccessful();
+                }
+            } else {
+                Log.i(LOGGING_TAG, "Inserting new note into DB");
+                long id = db.insert(DATABASE_TABLE, null, values);
+                if (id != Constants.DEFAULT_ID) {
+                    result = note.setId(id);
+                    db.setTransactionSuccessful();
+                }
+            }
+        } finally {
+            db.endTransaction();
+            db.close();
+        }
+        return result;
+    }
 	/**
 	 * Turn a cursor into an array of Note objects
 	 * @param cursor to read data from

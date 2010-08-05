@@ -45,7 +45,13 @@ public class SimpleNoteList extends NoteListActivity {
 		}
 		Log.d(LOGGING_TAG, "Firing up the note list");
 		// Now get notes and create a note adapter and set it to display
-        Note[] notes = dao.retrieveAll();
+        final Object data = getLastNonConfigurationInstance();
+        final Note[] notes;
+        if (data == null) {
+            notes = dao.retrieveAll();
+        } else {
+            notes = (Note[]) data;
+        }
 		setListAdapter(new NotesAdapter(this, notes));
         // Set content view based on Notes currently in the database
         setContentView(R.layout.notes_list);
@@ -55,7 +61,9 @@ public class SimpleNoteList extends NoteListActivity {
         final Api.Credentials credentials = Preferences.getLoginPreferences(this);
 		if (credentials.hasAuth()) {
 			// sync notes in a background thread
-			syncNotes();
+			if (data == null) {
+                syncNotes();
+            }
 		} else {
 			(new LoginTask(this, credentials)).execute();
 		}

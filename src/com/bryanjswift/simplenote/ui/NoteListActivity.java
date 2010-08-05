@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -74,7 +75,7 @@ public abstract class NoteListActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
-        if (paddingHeight == -1 && shadowHeight == -1) {
+        if (paddingHeight == -1) {
             getWindowManager().getDefaultDisplay().getMetrics(display);
             paddingHeight = Math.round(getResources().getInteger(R.integer.noteListPadding) * display.density);
             // 5.33333333333 is the assumed height of the scrolling shadow at 160 dpi
@@ -126,6 +127,14 @@ public abstract class NoteListActivity extends ListActivity {
         super.onPause();
         unregisterReceiver(refreshNoteReceiver);
         unregisterReceiver(syncNoteReceiver);
+    }
+
+    /**
+     * @see android.app.Activity#onRetainNonConfigurationInstance()
+     */
+    @Override
+    public Object onRetainNonConfigurationInstance() {
+        return ((NotesAdapter) getListAdapter()).getNotes();
     }
     /**
      * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
@@ -224,7 +233,10 @@ public abstract class NoteListActivity extends ListActivity {
             getListView().setPadding(0, 0, 0, 0);
         } else {
             // not scrollable so show the shadow
-            getListView().setPadding(0, 0, 0, paddingHeight);
+            int listHeight = getListAdapter().getCount() * rowHeight;
+            int ph = display.heightPixels - paddingHeight - shadowHeight - titleBarHeight - listHeight;
+            if (ph > paddingHeight) { ph = paddingHeight; }
+            getListView().setPadding(0, 0, 0, ph);
         }
     }
     /**
@@ -232,9 +244,16 @@ public abstract class NoteListActivity extends ListActivity {
      * @return whether the list height is greater than or equal to the display height
      */
     private boolean isScrollable() {
-        int displayHeight = display.heightPixels - paddingHeight - shadowHeight - titleBarHeight;
+        int displayHeight;
+        if (isPortrait()) {
+            displayHeight = display.heightPixels - paddingHeight - shadowHeight - titleBarHeight;
+        } else {
+            displayHeight = display.widthPixels - paddingHeight - shadowHeight - titleBarHeight;
+        }
         int listHeight = getListAdapter().getCount() * rowHeight;
-        Log.d(LOGGING_TAG, String.format("DisplayHeight: %d :: ListHeight: %d", displayHeight, listHeight));
         return listHeight >= displayHeight;
+    }
+    private boolean isPortrait() {
+        return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
     }
 }

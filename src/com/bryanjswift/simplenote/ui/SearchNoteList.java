@@ -37,11 +37,17 @@ public class SearchNoteList extends NoteListActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_list);
         Intent searchIntent = getIntent();
+        final Object data = getLastNonConfigurationInstance();
         if (Intent.ACTION_SEARCH.equals(searchIntent.getAction())) {
             String query = searchIntent.getStringExtra(SearchManager.QUERY);
             mQuery = query;
             ((TextView) findViewById(R.id.no_results)).setText(String.format(getString(R.string.no_results), query));
-            Note[] results = search(query);
+            final Note[] results;
+            if (data == null) {
+                results = search(query);
+            } else {
+                results = (Note[]) data;
+            }
             setListAdapter(new NotesAdapter(this, results));
             updateShadow();
             setTitle(String.format(getString(R.string.results_title), query));

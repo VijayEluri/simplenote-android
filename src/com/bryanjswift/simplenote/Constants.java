@@ -33,9 +33,11 @@ public class Constants {
     public static final String BROADCAST_REFRESH_NOTES = Constants.class.getPackage().getName() + ".REFRESH_NOTES";
     public static final String BROADCAST_SYNC_NOTES = Constants.class.getPackage().getName() + ".SYNC_NOTES";
     // API Base URL
-    public static final String API_BASE_URL   = "https://simple-note.appspot.com/api";
+    public static final String BASE_URL = "https://simple-note.appspot.com";
+    public static final String CREATE_ACCOUNT_URL = BASE_URL + "/createaccount.html";
+    public static final String API_BASE_URL   = BASE_URL + "/api";
     public static final String API_LOGIN_URL  = API_BASE_URL + "/login";                    // POST
-    public static final String API_REGISTER_URL = API_BASE_URL + "/create";                 // POST
+    public static final String API_REGISTER_URL = BASE_URL + "/create";                 // POST
     public static final String API_NOTES_URL  = API_BASE_URL + "/index";                    // GET
     public static final String API_NOTE_URL   = API_BASE_URL + "/note";                        // GET
     public static final String API_UPDATE_URL = API_BASE_URL + "/note";                        // POST

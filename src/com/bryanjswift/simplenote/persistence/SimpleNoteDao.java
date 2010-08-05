@@ -183,6 +183,7 @@ public class SimpleNoteDao {
             while (cursor.moveToNext()) { // there is something in the Cursor so create a Note
                 if (c.getString(KEY).equals(key)) {
                     result = new Note(c.getLong(BaseColumns._ID), c.getString(BODY), c.getString(KEY), c.getString(MODIFY), c.getBoolean(DELETED));
+                    cursor.moveToLast();
                 }
             }
             db.setTransactionSuccessful();

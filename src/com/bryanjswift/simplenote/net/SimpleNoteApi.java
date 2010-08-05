@@ -49,7 +49,7 @@ public class SimpleNoteApi extends Api {
      */
     public static Response register(final Credentials credentials, final HttpCallback callback) {
         Log.d(LOGGING_TAG, "Attempting to create new user");
-        String data = encode("api=1&email=" + credentials.email + "&password=" + credentials.password, true, true);
+        String data = encode("api=1&email=" + credentials.email + "&password=" + credentials.password, true, false);
         Response response = null;
         try {
             response = handleResponse(callback, Post(Constants.API_REGISTER_URL, data));

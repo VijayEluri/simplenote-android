@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bryanjswift.simplenote.Constants;
@@ -122,6 +123,31 @@ public class SimpleNoteEdit extends Activity {
             private boolean isInsideView(View view, MotionEvent evt) {
                 return evt.getRawY() > view.getTop() && evt.getRawY() < view.getBottom()
                         && evt.getRawX() > view.getLeft() && evt.getRawX() < view.getRight();
+            }
+        });
+        findViewById(R.id.note_body_scroll).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Log.d(LOGGING_TAG, "ScrollView clicked");
+            }
+        });
+        findViewById(R.id.note_body).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Log.d(LOGGING_TAG, "EditText clicked");
+                ScrollView scroller = (ScrollView) view.getParent();
+                int y = scroller.getScrollY();
+                Log.d(LOGGING_TAG, "ScrollViewY: " + y + " ;; EditTextY: " + view.getScrollY());
+            }
+        });
+        findViewById(R.id.note_body_scroll).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) { Log.d(LOGGING_TAG, "ScrollView has focus"); }
+                else { Log.d(LOGGING_TAG, "ScrollView lost focus"); }
+            }
+        });
+        findViewById(R.id.note_body).setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) { Log.d(LOGGING_TAG, "EditText has focus"); }
+                else { Log.d(LOGGING_TAG, "EditText lost focus"); }
             }
         });
 	}

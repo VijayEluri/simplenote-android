@@ -63,7 +63,10 @@ public abstract class Api {
 		} catch (FileNotFoundException fnfe) {
 			// I'm not sure why but when the login fails we get a FileNotFoundException
 			response.status = HttpStatus.SC_UNAUTHORIZED;
-		}
+		} catch (IOException ioe) {
+            // I'm not sure why but when the login fails we get a FileNotFoundException
+            response.status = HttpStatus.SC_UNAUTHORIZED;
+        }
 		return response;
 	}
 	/**

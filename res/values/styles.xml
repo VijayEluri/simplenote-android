@@ -4,8 +4,26 @@
   <style name="NoTitleDialogTheme" parent="@android:style/Theme.Dialog">
     <item name="android:windowNoTitle">true</item>
   </style>
+  <style name="SimpleNoteTitleText" parent="android:TextAppearance.WindowTitle">
+    <item name="android:textSize">14.813333dip</item>
+    <item name="android:textColor">@color/titlebar_text</item>
+  </style>
+  <style name="SimpleNoteTitle" parent="android:WindowTitle">
+    <item name="android:textAppearance">@style/SimpleNoteTitleText</item>
+    <item name="android:shadowDx">1.1</item>
+    <item name="android:shadowDy">1.1</item>
+    <item name="android:shadowRadius">1.1</item>
+    <item name="android:shadowColor">@color/header_shadow_color</item>
+    <item name="android:paddingLeft">10dip</item>
+  </style>
+  <style name="SimpleNoteTitlebar">
+    <item name="android:background">@drawable/bg_titlebar</item>
+  </style>
   <style name="Theme.SimpleNote" parent="@android:Theme">
     <item name="android:windowBackground">@drawable/background</item>
+    <item name="android:windowTitleSize">26dip</item>
+    <item name="android:windowTitleStyle">@style/SimpleNoteTitle</item>
+    <item name="android:windowTitleBackgroundStyle">@style/SimpleNoteTitlebar</item>
   </style>
   <style name="Theme.SimpleNote.NoTitle">
     <item name="android:windowNoTitle">true</item>

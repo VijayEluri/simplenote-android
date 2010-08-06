@@ -5,6 +5,7 @@
   <integer name="every4hour">4</integer>
   <integer name="every8hour">8</integer>
   <integer name="titleMaxChars">27</integer>
+  <integer name="titleBarMaxChars">30</integer>
   <integer name="noteListPadding">29</integer>
   <integer name="noteItemHeight">67</integer>
 </resources>

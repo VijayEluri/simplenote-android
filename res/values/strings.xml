@@ -73,5 +73,5 @@
   <!-- Search -->
   <string name="search_hint">Search notes</string>
   <string name="no_results">No notes were found for your search of \'%s\'</string>
-  <string name="results_title">Notes containing \'%s\'</string>
+  <string name="results_title">Notes for - %s</string>
 </resources>

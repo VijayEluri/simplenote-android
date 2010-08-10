@@ -21,7 +21,7 @@
     <activity android:name=".ui.LoginDialog" android:label="@string/signin"
         android:theme="@style/NoTitleDialogTheme" />
     <activity android:name=".Preferences" android:label="@string/menu_preferences"
-        android:theme="@android:style/Theme.Black" />
+        android:theme="@style/Theme.SimpleNote.Preferences" />
     <activity android:name=".ui.SearchNoteList" android:theme="@style/Theme.SimpleNote">
       <intent-filter>
         <action android:name="android.intent.action.SEARCH" />

@@ -79,6 +79,7 @@ public class Notifications {
                     context.getString(R.string.status_syncing_description),
                     PendingIntent.getActivity(context, Constants.REQUEST_SYNCING, intent, PendingIntent.FLAG_UPDATE_CURRENT));
             notifier.notify(Constants.NOTIFICATION_SYNCING, notification);
+            Log.d(LOGGING_TAG, "Starting sync notify");
             notifyingSync = true;
         }
     }
@@ -89,6 +90,7 @@ public class Notifications {
     public synchronized static void CancelSyncing(Context context) {
         notifyingSync = false;
         final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Log.d(LOGGING_TAG, "Cancelling sync notify");
         notifier.cancel(Constants.NOTIFICATION_SYNCING);
     }
 }

@@ -49,6 +49,7 @@ public class ScrollWrappableEditText extends EditText {
         // Always return true, the ScrollView around this will handle the proper rectangle being on screen
         if (getParent() instanceof ScrollView) {
             Log.d(LOGGING_TAG, "Wrapped in ScrollView tell call request is complete");
+            ((ScrollView) getParent()).scrollBy(rectangle.left - getLeft(), rectangle.top - getTop());
             return true;
         } else {
             Log.d(LOGGING_TAG, "Not wrapped by ScrollView, handle normally");

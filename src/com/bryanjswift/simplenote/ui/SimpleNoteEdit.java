@@ -1,30 +1,25 @@
 package com.bryanjswift.simplenote.ui;
 
-import java.util.Date;
-
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.WindowManager;
+import android.view.*;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
+
+import java.util.Date;
 
 /**
  * Handle the note editing
@@ -39,6 +34,7 @@ public class SimpleNoteEdit extends Activity {
 	private String mOriginalBody = "";
 	private boolean mActivityStateSaved = false;
 	private boolean mNoteSaved = false;
+    private boolean mKeyboardOpen = false;
 	/**
 	 * Default constructor to setup final fields
 	 */
@@ -75,12 +71,13 @@ public class SimpleNoteEdit extends Activity {
 			title = getString(R.string.new_note);
 		}
 		((TextView) findViewById(R.id.note_title)).setText(NotesAdapter.ellipsizeTitle(this, title));
-        ImageButton trash = (ImageButton) findViewById(R.id.note_delete);
+        final ImageButton trash = (ImageButton) findViewById(R.id.note_delete);
         trash.setOnClickListener(new View.OnClickListener() {
             /**
              * Perform deletion of the note
              * @param view being clicked
              */
+            @Override
             public void onClick(View view) {
                 Log.d(LOGGING_TAG, "OnClick firing for trash icon");
                 delete();
@@ -93,6 +90,7 @@ public class SimpleNoteEdit extends Activity {
              * @param motionEvent information about touch event
              * @return whether or not the event was handled (it wasn't)
              */
+            @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 View titleRow = findViewById(R.id.note_title_row);
                 switch (motionEvent.getAction()) {
@@ -125,6 +123,18 @@ public class SimpleNoteEdit extends Activity {
                         && evt.getRawX() > view.getLeft() && evt.getRawX() < view.getRight();
             }
         });
+        findViewById(R.id.note_body_scroll).setOnTouchListener(new View.OnTouchListener() {
+            /**
+             * Try to open the keyboard
+             * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+             */
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                Log.d(LOGGING_TAG, "touching the ScrollView");
+                openKeyboard(findViewById(R.id.note_body));
+                return false;
+            }
+        });
 	}
 
     /**
@@ -134,7 +144,7 @@ public class SimpleNoteEdit extends Activity {
     protected void onPostResume() {
         super.onPostResume();
         if (mNoteId == Constants.DEFAULT_ID && !hasHardwareKeyboard()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            openKeyboard(findViewById(R.id.note_body));
         }
     }
     /**
@@ -286,5 +296,18 @@ public class SimpleNoteEdit extends Activity {
      */
     private boolean hasHardwareKeyboard() {
         return getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
+    }
+    /**
+     * Request to open or show the soft keyboard
+     * @param view to show for?
+     */
+    private void openKeyboard(final View view) {
+        if (!mKeyboardOpen) {
+            Log.d(LOGGING_TAG, "Trying to open keyboard");
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+        }
+        mKeyboardOpen = true;
     }
 }

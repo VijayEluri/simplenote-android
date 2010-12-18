@@ -4,6 +4,7 @@ import java.util.Date;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.BaseColumns;
@@ -132,7 +133,7 @@ public class SimpleNoteEdit extends Activity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        if (mNoteId == Constants.DEFAULT_ID) {
+        if (mNoteId == Constants.DEFAULT_ID && !hasHardwareKeyboard()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         }
     }
@@ -279,4 +280,11 @@ public class SimpleNoteEdit extends Activity {
 		mNoteSaved = true;
 		finish();
 	}
+    /**
+     * Checks for the presence of any hardware keyboard
+     * @return whether or not a hardware keyboard exists
+     */
+    private boolean hasHardwareKeyboard() {
+        return getResources().getConfiguration().keyboard != Configuration.KEYBOARD_NOKEYS;
+    }
 }

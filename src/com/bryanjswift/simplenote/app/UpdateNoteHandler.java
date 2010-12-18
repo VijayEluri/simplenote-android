@@ -63,7 +63,6 @@ public class UpdateNoteHandler extends Handler {
 	 */
 	private void handleUpdateStarted(final Message msg) {
         isSyncing = true;
-		Notifications.Syncing(context);
 	}
 	/**
 	 * Handle the update finished message
@@ -71,6 +70,5 @@ public class UpdateNoteHandler extends Handler {
 	 */
 	private void handleUpdateFinished(final Message msg) {
         isSyncing = false;
-		Notifications.CancelSyncing(context);
 	}
 }

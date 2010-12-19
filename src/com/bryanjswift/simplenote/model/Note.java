@@ -114,15 +114,8 @@ public class Note implements Serializable{
 	 * @return title
 	 */
 	public final String getTitle() {
-		if (title == null) {
-			final int idxNewline = titleAndBody.indexOf("\n");
-			if (idxNewline != -1) {
-				title = titleAndBody.substring(0,idxNewline);
-			} else {
-				title = titleAndBody;
-			}
-		}
-		return title;
+        title = extractTitle(titleAndBody);
+        return title;
 	}
 	/**
 	 * Invokes private constructor to create a new note
@@ -238,4 +231,20 @@ public class Note implements Serializable{
 	public final Note setSynced(final boolean synced) {
 		return new Note(this.id, this.titleAndBody, this.key, this.dateModified, this.deleted, synced);
 	}
+
+    /**
+     * Extract the title from a given title and body String
+     * @param noteBody from which title information will be extracted
+     * @return extracted title
+     */
+    public static String extractTitle(final String noteBody) {
+        final String title;
+        final int idxNewline = noteBody.indexOf("\n");
+        if (idxNewline != -1) {
+            title = noteBody.substring(0,idxNewline);
+        } else {
+            title = noteBody;
+        }
+        return title;
+    }
 }

@@ -17,6 +17,7 @@ import com.bryanjswift.simplenote.Constants;
 import com.bryanjswift.simplenote.R;
 import com.bryanjswift.simplenote.model.Note;
 import com.bryanjswift.simplenote.persistence.SimpleNoteDao;
+import com.bryanjswift.simplenote.view.ScrollWrappableEditText;
 import com.bryanjswift.simplenote.widget.NotesAdapter;
 
 import java.util.Date;
@@ -35,6 +36,69 @@ public class SimpleNoteEdit extends Activity {
 	private boolean mActivityStateSaved = false;
 	private boolean mNoteSaved = false;
     private boolean mKeyboardOpen = false;
+    private final View.OnTouchListener trashTouch = new View.OnTouchListener() {
+        /**
+         * Handle special events when touching the trash button
+         * @param view being touched
+         * @param motionEvent information about touch event
+         * @return whether or not the event was handled (it wasn't)
+         */
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            View titleRow = findViewById(R.id.note_title_row);
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_UP:
+                    if (isInsideView(view, motionEvent)) {
+                        Log.d(LOGGING_TAG, "ACTION_UP MotionEvent inside view - letting onClick handle deleting note");
+                    } else {
+                        titleRow.setPressed(false);
+                    }
+                    break;
+                case MotionEvent.ACTION_OUTSIDE:
+                case MotionEvent.ACTION_CANCEL:
+                    titleRow.setPressed(false);
+                    break;
+                case MotionEvent.ACTION_DOWN:
+                    titleRow.setPressed(true);
+                    break;
+            }
+            return false;
+        }
+
+        /**
+         * Check the evt occurred within the bounds of view
+         * @param view to check motion event coordinates against
+         * @param evt to test against view bounds
+         * @return true if (view.getTop() > evt.getY() < view.getBottom()) && (view.getLeft() > evt.getX() < view.getRight())
+         */
+        private boolean isInsideView(View view, MotionEvent evt) {
+            return evt.getRawY() > view.getTop() && evt.getRawY() < view.getBottom()
+                    && evt.getRawX() > view.getLeft() && evt.getRawX() < view.getRight();
+        }
+    };
+    private final View.OnClickListener trashClick = new View.OnClickListener() {
+        /**
+         * Perform deletion of the note
+         * @param view being clicked
+         */
+        @Override
+        public void onClick(View view) {
+            Log.d(LOGGING_TAG, "OnClick firing for trash icon");
+            delete();
+        }
+    };
+    private final View.OnTouchListener scrollTouch = new View.OnTouchListener() {
+        /**
+         * Try to open the keyboard
+         * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
+         */
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            Log.d(LOGGING_TAG, "touching the ScrollView");
+            openKeyboard(findViewById(R.id.note_body));
+            return false;
+        }
+    };
 	/**
 	 * Default constructor to setup final fields
 	 */
@@ -64,77 +128,25 @@ public class SimpleNoteEdit extends Activity {
 			mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
 		}
 		final String title;
+        final ScrollWrappableEditText noteBody = ((ScrollWrappableEditText) findViewById(R.id.note_body));
+        final TextView noteTitle = ((TextView) findViewById(R.id.note_title));
 		if (dbNote != null) {
 			title = dbNote.getTitle();
-			((EditText) findViewById(R.id.note_body)).setText(dbNote.getBody());
+			noteBody.setText(dbNote.getBody());
 		} else {
 			title = getString(R.string.new_note);
 		}
-		((TextView) findViewById(R.id.note_title)).setText(NotesAdapter.ellipsizeTitle(this, title));
+		noteTitle.setText(NotesAdapter.ellipsizeTitle(this, title));
+        noteBody.setOnChangeListener(new ScrollWrappableEditText.OnChangeListener() {
+            @Override
+            public void onChange(View v, String oldText, String newText) {
+                noteTitle.setText(NotesAdapter.ellipsizeTitle(SimpleNoteEdit.this, Note.extractTitle(newText)));
+            }
+        });
         final ImageButton trash = (ImageButton) findViewById(R.id.note_delete);
-        trash.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Perform deletion of the note
-             * @param view being clicked
-             */
-            @Override
-            public void onClick(View view) {
-                Log.d(LOGGING_TAG, "OnClick firing for trash icon");
-                delete();
-            }
-        });
-        trash.setOnTouchListener(new View.OnTouchListener() {
-            /**
-             * Handle special events when touching the trash button
-             * @param view being touched
-             * @param motionEvent information about touch event
-             * @return whether or not the event was handled (it wasn't)
-             */
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                View titleRow = findViewById(R.id.note_title_row);
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_UP:
-                        if (isInsideView(view, motionEvent)) {
-                            Log.d(LOGGING_TAG, "ACTION_UP MotionEvent inside view - letting onClick handle deleting note");
-                        } else {
-                            titleRow.setPressed(false);
-                        }
-                        break;
-                    case MotionEvent.ACTION_OUTSIDE:
-                    case MotionEvent.ACTION_CANCEL:
-                        titleRow.setPressed(false);
-                        break;
-                    case MotionEvent.ACTION_DOWN:
-                        titleRow.setPressed(true);
-                        break;
-                }
-                return false;
-            }
-
-            /**
-             * Check the evt occurred within the bounds of view
-             * @param view to check motion event coordinates against
-             * @param evt to test against view bounds
-             * @return true if (view.getTop() > evt.getY() < view.getBottom()) && (view.getLeft() > evt.getX() < view.getRight())
-             */
-            private boolean isInsideView(View view, MotionEvent evt) {
-                return evt.getRawY() > view.getTop() && evt.getRawY() < view.getBottom()
-                        && evt.getRawX() > view.getLeft() && evt.getRawX() < view.getRight();
-            }
-        });
-        findViewById(R.id.note_body_scroll).setOnTouchListener(new View.OnTouchListener() {
-            /**
-             * Try to open the keyboard
-             * @see android.view.View.OnTouchListener#onTouch(android.view.View, android.view.MotionEvent)
-             */
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                Log.d(LOGGING_TAG, "touching the ScrollView");
-                openKeyboard(findViewById(R.id.note_body));
-                return false;
-            }
-        });
+        trash.setOnClickListener(trashClick);
+        trash.setOnTouchListener(trashTouch);
+        findViewById(R.id.note_body_scroll).setOnTouchListener(scrollTouch);
 	}
 
     /**
@@ -180,7 +192,7 @@ public class SimpleNoteEdit extends Activity {
 		Log.d(LOGGING_TAG, "Firing onPause and handling note saving if needed");
 		// if text is unchanged send a CANCELLED result, otherwise save and send an OK result
 		if (needsSave() && !mActivityStateSaved) {
-			save();
+			saveAndFinish();
 		} else {
 			Intent intent = getIntent();
 			setResult(RESULT_CANCELED, intent);
@@ -209,7 +221,7 @@ public class SimpleNoteEdit extends Activity {
 		boolean handled = false;
 		if (needsSave()) {
 			// save finishes the Activity with an OK result
-			save();
+			saveAndFinish();
 			handled = true;
 		}
 		return handled;
@@ -230,7 +242,7 @@ public class SimpleNoteEdit extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.menu_save:
-				save(); // save returns ok
+				saveAndFinish(); // save returns ok
 				return true;
 			case R.id.menu_delete:
 				delete(); // delete returns ok if there was a note to delete, cancelled otherwise
@@ -248,25 +260,33 @@ public class SimpleNoteEdit extends Activity {
 		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
 		return !(mNoteSaved || mOriginalBody.equals(body));
 	}
+    /**
+     * Saves the note with data from the view
+     * @return the note as it is now saved in the DB
+     */
+    private Note save() {
+        final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
+        final String now = Constants.serverDateFormat.format(new Date());
+        final Note dbNote = dao.retrieve(mNoteId);
+        final Note note;
+        if (!(dbNote == null || dbNote.getKey().equals(Constants.DEFAULT_KEY))) {
+            note = dao.save(dbNote.setBody(body).setDateModified(now).setSynced(false));
+            Log.d(LOGGING_TAG, String.format("Saved the note '%d' with updated values", note.getId()));
+        } else {
+            note = dao.save(new Note(body, now));
+            Log.d(LOGGING_TAG, String.format("Created the note '%d'", note.getId()));
+        }
+        mNoteId = note.getId();
+        mNoteSaved = true;
+        return note;
+    }
 	/**
 	 * Saves the note with data from the view and finishes this Activity with an OK result
 	 */
-	private void save() {
-		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
-		final String now = Constants.serverDateFormat.format(new Date());
+	private void saveAndFinish() {
 		final Intent intent = getIntent();
 		// get the note as it is from the db, set new fields values and save it
-		final Note dbNote = dao.retrieve(mNoteId);
-		final Note note;
-		if (!(dbNote == null || dbNote.getKey().equals(Constants.DEFAULT_KEY))) {
-			note = dao.save(dbNote.setBody(body).setDateModified(now).setSynced(false));
-			Log.d(LOGGING_TAG, String.format("Saved the note '%d' with updated values", note.getId()));
-		} else {
-			note = dao.save(new Note(body, now));
-			Log.d(LOGGING_TAG, String.format("Created the note '%d'", note.getId()));
-		}
-		mNoteId = note.getId();
-		mNoteSaved = true;
+		final Note note = save();
 		intent.putExtra(Note.class.getName(), note);
 		setResult(RESULT_OK, intent);
 		finish();

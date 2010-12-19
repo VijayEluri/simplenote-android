@@ -57,7 +57,6 @@ public class ScrollWrappableEditText extends EditText {
     public boolean requestRectangleOnScreen(Rect rectangle, boolean immediate) {
         // Detect text changes here because onKey only fires for certain key presses
         final String newText = getText().toString();
-        Log.d(LOGGING_TAG, String.format("Comparing %s to %s", newText, oldText));
         if (onChangeListener != null && !newText.equals(oldText)) {
             onChangeListener.onChange(this, oldText, newText);
             oldText = newText;

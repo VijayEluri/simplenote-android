@@ -60,11 +60,11 @@
   <string name="pref_account_description">Enter your SimpleNote login details</string>
   <string name="pref_account_email">Email</string>
   <string name="pref_account_password">Password</string>
-  <string name="pref_account_clear_title">Clear Account</string>
-  <string name="pref_account_clear_description">Clear all account information (including notes) and sign out of account.</string>
-  <string name="pref_account_clear_dialog_title">Clear your credentials?</string>
-  <string name="pref_account_clear_dialog_yes">Clear \'em</string>
-  <string name="pref_account_clear_dialog_no">Keep \'em</string>
+  <string name="pref_account_clear_title">Sign Out</string>
+  <string name="pref_account_clear_description">Sign out and remove notes from device.</string>
+  <string name="pref_account_clear_dialog_title">Sign out of SimpleNote on this device?</string>
+  <string name="pref_account_clear_dialog_yes">Yes, please</string>
+  <string name="pref_account_clear_dialog_no">No, thanks</string>
   <!-- Preferences Options -->
   <string name="every1hour">Every Hour</string>
   <string name="every2hour">Every 2 Hours</string>

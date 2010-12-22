@@ -74,7 +74,7 @@ public class SimpleNoteList extends NoteListActivity {
             }
         });
 		// restore the scroll position
-		getListView().scrollTo(0, scrollY);
+        getListView().scrollTo(0, scrollY);
 	}
 	/**
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
@@ -99,15 +99,15 @@ public class SimpleNoteList extends NoteListActivity {
 		}
 	}
 	/**
-	 * Deal with the results of the REQUEST_LOGIN Activity
+	 * Deal with the results of the REQUEST_EDIT Activity
 	 * @param resultCode how the SimpleNoteEdit Activity finished
 	 * @param data the intent that started the SimpleNoteEdit Activity
 	 */
 	private void handleNoteEditResult(final int resultCode, final Intent data) {
+        final Note note = (Note) data.getExtras().get(Note.class.getName());
 		switch (resultCode) {
 			case RESULT_OK:
-                (new UpdateNoteTask(this))
-                        .execute((Note) data.getExtras().getSerializable(Note.class.getName()));
+                (new UpdateNoteTask(this)).execute(note);
 				break;
 			case RESULT_CANCELED:
 				// not modified

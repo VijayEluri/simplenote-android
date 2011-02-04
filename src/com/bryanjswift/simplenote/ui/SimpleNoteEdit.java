@@ -27,14 +27,14 @@ import java.util.Date;
  * @author bryanjswift
  */
 public class SimpleNoteEdit extends Activity {
-	private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteEdit";
-	// Final variables
-	private final SimpleNoteDao dao;
-	// Mutable instance variables
-	private long mNoteId = 0L;
-	private String mOriginalBody = "";
-	private boolean mActivityStateSaved = false;
-	private boolean mNoteSaved = false;
+    private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteEdit";
+    // Final variables
+    private final SimpleNoteDao dao;
+    // Mutable instance variables
+    private long mNoteId = 0L;
+    private String mOriginalBody = "";
+    private boolean mActivityStateSaved = false;
+    private boolean mNoteSaved = false;
     private boolean mKeyboardOpen = false;
     private final View.OnTouchListener trashTouch = new View.OnTouchListener() {
         /**
@@ -99,44 +99,44 @@ public class SimpleNoteEdit extends Activity {
             return false;
         }
     };
-	/**
-	 * Default constructor to setup final fields
-	 */
-	public SimpleNoteEdit() {
-		this.dao = new SimpleNoteDao(this);
-	}
-	/**
-	 * @see android.app.Activity#onCreate(android.os.Bundle)
-	 */
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
-		getWindow().setFormat(PixelFormat.RGBA_8888);
-		setContentView(R.layout.edit_note);
-		if (savedInstanceState == null) {
-			Bundle extras = getIntent().getExtras();
-			mNoteId = extras.getLong(BaseColumns._ID);
-			mOriginalBody = extras.getString(SimpleNoteDao.BODY);
-		} else {
-			mNoteId = savedInstanceState.getLong(BaseColumns._ID);
-		}
-		final Note dbNote = dao.retrieve(mNoteId);
-		if (savedInstanceState == null && mOriginalBody == null) {
-			mOriginalBody = dbNote.getBody();
-		} else if (savedInstanceState != null && mOriginalBody == null) {
-			mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
-		}
-		final String title;
+    /**
+     * Default constructor to setup final fields
+     */
+    public SimpleNoteEdit() {
+        this.dao = new SimpleNoteDao(this);
+    }
+    /**
+     * @see android.app.Activity#onCreate(android.os.Bundle)
+     */
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
+        getWindow().setFormat(PixelFormat.RGBA_8888);
+        setContentView(R.layout.edit_note);
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            mNoteId = extras.getLong(BaseColumns._ID);
+            mOriginalBody = extras.getString(SimpleNoteDao.BODY);
+        } else {
+            mNoteId = savedInstanceState.getLong(BaseColumns._ID);
+        }
+        final Note dbNote = dao.retrieve(mNoteId);
+        if (savedInstanceState == null && mOriginalBody == null) {
+            mOriginalBody = dbNote.getBody();
+        } else if (savedInstanceState != null && mOriginalBody == null) {
+            mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
+        }
+        final String title;
         final ScrollWrappableEditText noteBody = ((ScrollWrappableEditText) findViewById(R.id.note_body));
         final TextView noteTitle = ((TextView) findViewById(R.id.note_title));
-		if (dbNote != null) {
-			title = dbNote.getTitle();
-			noteBody.setText(dbNote.getBody());
-		} else {
-			title = getString(R.string.new_note);
-		}
-		noteTitle.setText(NotesAdapter.ellipsizeTitle(this, title));
+        if (dbNote != null) {
+            title = dbNote.getTitle();
+            noteBody.setText(dbNote.getBody());
+        } else {
+            title = getString(R.string.new_note);
+        }
+        noteTitle.setText(NotesAdapter.ellipsizeTitle(this, title));
         noteBody.setOnChangeListener(new ScrollWrappableEditText.OnChangeListener() {
             @Override
             public void onChange(View v, String oldText, String newText) {
@@ -147,7 +147,7 @@ public class SimpleNoteEdit extends Activity {
         trash.setOnClickListener(trashClick);
         trash.setOnTouchListener(trashTouch);
         findViewById(R.id.note_body_scroll).setOnTouchListener(scrollTouch);
-	}
+    }
 
     /**
      * @see android.app.Activity#onPostResume()
@@ -160,106 +160,106 @@ public class SimpleNoteEdit extends Activity {
         }
     }
     /**
-	 * @see android.app.Activity#onResume()
-	 */
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.d(LOGGING_TAG, "Resuming SimpleNoteEdit");
-		mActivityStateSaved = false;
-	}
-	/**
-	 * Called before on pause, save data here so SimpleEditNote can be relaunched
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 */
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		Log.d(LOGGING_TAG, "Saving instance state");
-		mActivityStateSaved = true;
-		// Make sure the note id is set in the saved state
-		outState.putLong(BaseColumns._ID, mNoteId);
-		outState.putString(SimpleNoteDao.BODY, mOriginalBody);
-		outState.putInt(Constants.REQUEST_KEY, Constants.REQUEST_EDIT);
-	}
-	/**
-	 * When user leaves this view save the note and set a result
-	 * @see android.app.Activity#onPause()
-	 */
-	@Override
-	protected void onPause() {
-		super.onPause();
-		Log.d(LOGGING_TAG, "Firing onPause and handling note saving if needed");
-		// if text is unchanged send a CANCELLED result, otherwise save and send an OK result
-		if (needsSave() && !mActivityStateSaved) {
-			saveAndFinish();
-		} else {
-			Intent intent = getIntent();
-			setResult(RESULT_CANCELED, intent);
-		}
-	}
-	/**
-	 * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
-	 */
-	@Override
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		boolean handled = false;
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			handled = handleBackPressed();
-		}
-		if (!handled) {
-			handled = super.onKeyDown(keyCode, event);
-		}
-		return handled;
-	}
-	/**
-	 * The logic to handle the press of the back button
-	 * @return whether or not the event was handled
-	 */
-	private boolean handleBackPressed() {
-		Log.d(LOGGING_TAG, "Back button pressed");
-		boolean handled = false;
-		if (needsSave()) {
-			// save finishes the Activity with an OK result
-			saveAndFinish();
-			handled = true;
-		}
-		return handled;
-	}
-	/**
-	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-	 */
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_edit, menu);
-		return true;
-	}
-	/**
-	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-	 */
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-			case R.id.menu_save:
-				saveAndFinish(); // save returns ok
-				return true;
-			case R.id.menu_delete:
-				delete(); // delete returns ok if there was a note to delete, cancelled otherwise
-				return true;
-			default:
-				return super.onOptionsItemSelected(item);
-		}
-	}
-	/**
-	 * Checks if the body of the note has been updated compared to what was in the DB
-	 * when this Activity was created
-	 * @return whether or note the note body has changed
-	 */
-	private boolean needsSave() {
-		final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
-		return !(mNoteSaved || mOriginalBody.equals(body));
-	}
+     * @see android.app.Activity#onResume()
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOGGING_TAG, "Resuming SimpleNoteEdit");
+        mActivityStateSaved = false;
+    }
+    /**
+     * Called before on pause, save data here so SimpleEditNote can be relaunched
+     * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+     */
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(LOGGING_TAG, "Saving instance state");
+        mActivityStateSaved = true;
+        // Make sure the note id is set in the saved state
+        outState.putLong(BaseColumns._ID, mNoteId);
+        outState.putString(SimpleNoteDao.BODY, mOriginalBody);
+        outState.putInt(Constants.REQUEST_KEY, Constants.REQUEST_EDIT);
+    }
+    /**
+     * When user leaves this view save the note and set a result
+     * @see android.app.Activity#onPause()
+     */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOGGING_TAG, "Firing onPause and handling note saving if needed");
+        // if text is unchanged send a CANCELLED result, otherwise save and send an OK result
+        if (needsSave() && !mActivityStateSaved) {
+            saveAndFinish();
+        } else {
+            final Intent intent = getIntent();
+            setResult(RESULT_CANCELED, intent);
+        }
+    }
+    /**
+     * @see android.app.Activity#onKeyDown(int, android.view.KeyEvent)
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        boolean handled = false;
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            handled = handleBackPressed();
+        }
+        if (!handled) {
+            handled = super.onKeyDown(keyCode, event);
+        }
+        return handled;
+    }
+    /**
+     * The logic to handle the press of the back button
+     * @return whether or not the event was handled
+     */
+    private boolean handleBackPressed() {
+        Log.d(LOGGING_TAG, "Back button pressed");
+        boolean handled = false;
+        if (needsSave()) {
+            // save finishes the Activity with an OK result
+            saveAndFinish();
+            handled = true;
+        }
+        return handled;
+    }
+    /**
+     * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_edit, menu);
+        return true;
+    }
+    /**
+     * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_save:
+                saveAndFinish(); // save returns ok
+                return true;
+            case R.id.menu_delete:
+                delete(); // delete returns ok if there was a note to delete, cancelled otherwise
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    /**
+     * Checks if the body of the note has been updated compared to what was in the DB
+     * when this Activity was created
+     * @return whether or note the note body has changed
+     */
+    private boolean needsSave() {
+        final String body = ((EditText) findViewById(R.id.note_body)).getText().toString();
+        return !(mNoteSaved || mOriginalBody.equals(body));
+    }
     /**
      * Saves the note with data from the view
      * @return the note as it is now saved in the DB
@@ -280,36 +280,36 @@ public class SimpleNoteEdit extends Activity {
         mNoteSaved = true;
         return note;
     }
-	/**
-	 * Saves the note with data from the view and finishes this Activity with an OK result
-	 */
-	private void saveAndFinish() {
-		final Intent intent = getIntent();
-		// get the note as it is from the db, set new fields values and save it
-		final Note note = save();
-		intent.putExtra(Note.class.getName(), note);
-		setResult(RESULT_OK, intent);
-		finish();
-	}
-	/**
-	 * Deletes the note if it exists in the db otherwise cancel
-	 */
-	private void delete() {
-		final Note dbNote = dao.retrieve(mNoteId);
-		final Intent intent = getIntent();
-		if (dbNote != null) {
-			Log.d(LOGGING_TAG, "Note exists, marking it as deleted and finishing successfully");
-			dao.delete(dbNote);
-			// Have to re-retrieve because deleting doesn't update the note passed to delete
-			intent.putExtra(Note.class.getName(), dao.retrieve(mNoteId));
-			setResult(RESULT_OK, intent);
-		} else {
-			Log.d(LOGGING_TAG, "Note doesn't exist, cancelling");
-			setResult(RESULT_CANCELED, intent);
-		}
-		mNoteSaved = true;
-		finish();
-	}
+    /**
+     * Saves the note with data from the view and finishes this Activity with an OK result
+     */
+    private void saveAndFinish() {
+        final Intent intent = getIntent();
+        // get the note as it is from the db, set new fields values and save it
+        final Note note = save();
+        intent.putExtra(Note.class.getName(), note);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+    /**
+     * Deletes the note if it exists in the db otherwise cancel
+     */
+    private void delete() {
+        final Note dbNote = dao.retrieve(mNoteId);
+        final Intent intent = getIntent();
+        if (dbNote != null) {
+            Log.d(LOGGING_TAG, "Note exists, marking it as deleted and finishing successfully");
+            dao.delete(dbNote);
+            // Have to re-retrieve because deleting doesn't update the note passed to delete
+            intent.putExtra(Note.class.getName(), dao.retrieve(mNoteId));
+            setResult(RESULT_OK, intent);
+        } else {
+            Log.d(LOGGING_TAG, "Note doesn't exist, cancelling");
+            setResult(RESULT_CANCELED, intent);
+        }
+        mNoteSaved = true;
+        finish();
+    }
     /**
      * Checks for the presence of any hardware keyboard
      * @return whether or not a hardware keyboard exists

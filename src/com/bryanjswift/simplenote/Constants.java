@@ -25,6 +25,8 @@ public class Constants {
     public static final int REQUEST_LOGIN = 32568;
     public static final int REQUEST_EDIT = 9138171;
     public static final int REQUEST_SYNCING = 6387981;
+    // Activity result for saving new note
+    public static final int RESULT_NEW = -479212390;
     // Notifications
     public static final String NOTIFICATION_TYPE = "__NOTIFICATION_TYPE__";
     public static final int NOTIFICATION_CREDENTIALS = 98074121;
@@ -36,13 +38,13 @@ public class Constants {
     public static final String BASE_URL = "https://simple-note.appspot.com";
     public static final String CREATE_ACCOUNT_URL = BASE_URL + "/createaccount.html";
     public static final String API_BASE_URL   = BASE_URL + "/api";
-    public static final String API_LOGIN_URL  = API_BASE_URL + "/login";                    // POST
+    public static final String API_LOGIN_URL  = API_BASE_URL + "/login";                // POST
     public static final String API_REGISTER_URL = BASE_URL + "/create";                 // POST
-    public static final String API_NOTES_URL  = API_BASE_URL + "/index";                    // GET
-    public static final String API_NOTE_URL   = API_BASE_URL + "/note";                        // GET
-    public static final String API_UPDATE_URL = API_BASE_URL + "/note";                        // POST
-    public static final String API_DELETE_URL = API_BASE_URL + "/delete";                    // GET
-    public static final String API_SEARCH_URL = API_BASE_URL + "/search";                    // GET
+    public static final String API_NOTES_URL  = API_BASE_URL + "/index";                // GET
+    public static final String API_NOTE_URL   = API_BASE_URL + "/note";                 // GET
+    public static final String API_UPDATE_URL = API_BASE_URL + "/note";                 // POST
+    public static final String API_DELETE_URL = API_BASE_URL + "/delete";               // GET
+    public static final String API_SEARCH_URL = API_BASE_URL + "/search";               // GET
     // Create Account URL
     public static final Uri URL_CREATE_ACCOUNT = (new Uri.Builder())
             .scheme("http").authority("simple-note.appspot.com").path("/createaccount.html").build();

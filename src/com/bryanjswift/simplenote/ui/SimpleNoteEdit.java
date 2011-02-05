@@ -286,9 +286,15 @@ public class SimpleNoteEdit extends Activity {
     private void saveAndFinish() {
         final Intent intent = getIntent();
         // get the note as it is from the db, set new fields values and save it
+        final int result;
+        if (mNoteId == Constants.DEFAULT_ID) {
+            result = Constants.RESULT_NEW;
+        } else {
+            result = RESULT_OK;
+        }
         final Note note = save();
         intent.putExtra(Note.class.getName(), note);
-        setResult(RESULT_OK, intent);
+        setResult(result, intent);
         finish();
     }
     /**

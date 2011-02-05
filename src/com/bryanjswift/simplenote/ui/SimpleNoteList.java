@@ -36,12 +36,9 @@ public class SimpleNoteList extends NoteListActivity {
     protected void onCreate(Bundle savedState) {
         super.onCreate(savedState);
         FireIntent.finishIfUnauthorized(this);
-        int scrollY = 0;
         if (savedState != null && savedState.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
             Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
             FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
-        } else if (savedState != null) {
-            scrollY = savedState.getInt(SCROLL_POSITION, 0);
         }
         Log.d(LOGGING_TAG, "Firing up the note list");
         // Now get notes and create a note adapter and set it to display
@@ -73,16 +70,6 @@ public class SimpleNoteList extends NoteListActivity {
                 FireIntent.EditNote(SimpleNoteList.this, Constants.DEFAULT_ID, "");
             }
         });
-        // restore the scroll position
-        getListView().scrollTo(0, scrollY);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle state) {
-        super.onRestoreInstanceState(state);
-        if (state != null) {
-            getListView().scrollTo(0, state.getInt(SCROLL_POSITION, 0));
-        }
     }
 
     /**
@@ -107,6 +94,7 @@ public class SimpleNoteList extends NoteListActivity {
             syncNotes();
         }
     }
+
     /**
      * Deal with the results of the REQUEST_EDIT Activity
      * @param resultCode how the SimpleNoteEdit Activity finished
@@ -114,10 +102,7 @@ public class SimpleNoteList extends NoteListActivity {
      */
     private void handleNoteEditResult(final int resultCode, final Intent data) {
         switch (resultCode) {
-            case Constants.RESULT_NEW:
-                final View listView = getListView();
-                listView.scrollTo(listView.getScrollX(), 0);
-                // fall through to OK result
+            case Constants.RESULT_NEW: // fall through to OK result
             case RESULT_OK:
                 // Should not have null data here
                 final Note note = (Note) data.getExtras().get(Note.class.getName());

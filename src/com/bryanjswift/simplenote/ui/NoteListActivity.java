@@ -96,9 +96,6 @@ public abstract class NoteListActivity extends ListActivity {
             Log.d(LOGGING_TAG, "Resuming edit note from a saved state");
             FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
         }
-        if (state != null) {
-            getListView().scrollTo(0, state.getInt(SCROLL_POSITION, 0));
-		}
     }
     /**
      * @see android.app.Activity#onResume()

@@ -76,6 +76,15 @@ public class SimpleNoteList extends NoteListActivity {
         // restore the scroll position
         getListView().scrollTo(0, scrollY);
     }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle state) {
+        super.onRestoreInstanceState(state);
+        if (state != null) {
+            getListView().scrollTo(0, state.getInt(SCROLL_POSITION, 0));
+        }
+    }
+
     /**
      * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
      */
@@ -105,6 +114,10 @@ public class SimpleNoteList extends NoteListActivity {
      */
     private void handleNoteEditResult(final int resultCode, final Intent data) {
         switch (resultCode) {
+            case Constants.RESULT_NEW:
+                final View listView = getListView();
+                listView.scrollTo(listView.getScrollX(), 0);
+                // fall through to OK result
             case RESULT_OK:
                 // Should not have null data here
                 final Note note = (Note) data.getExtras().get(Note.class.getName());

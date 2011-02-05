@@ -138,8 +138,7 @@ public class SimpleNoteDao {
         values.put(DELETED, note.isDeleted());
         values.put(SYNCED, note.isSynced());
         /* Perform query */
-        Note result = writeNote(values, note);
-        return result;
+        return writeNote(values, note);
     }
     /**
      * Retrieve a specific Note from the database
@@ -250,8 +249,7 @@ public class SimpleNoteDao {
         values.put(DELETED, true);
         values.put(SYNCED, false);
         /* Perform query */
-        boolean success = writeNote(values, note) != null;
-        return success;
+        return writeNote(values, note) != null;
     }
     /**
      * Mark a Note as up to date with the server in the database
@@ -262,8 +260,7 @@ public class SimpleNoteDao {
         Log.i(LOGGING_TAG, String.format("Marking %s synchronized", note.getKey()));
         final ContentValues values = new ContentValues();
         values.put(SYNCED, true);
-        boolean success = writeNote(values, note) != null;
-        return success;
+        return writeNote(values, note) != null;
     }
     /**
      * Remove a Note from the database

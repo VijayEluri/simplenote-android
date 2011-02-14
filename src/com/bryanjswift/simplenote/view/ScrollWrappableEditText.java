@@ -54,16 +54,33 @@ public class ScrollWrappableEditText extends EditText {
      * @see android.view.View#requestRectangleOnScreen(android.graphics.Rect, boolean)
      */
     @Override
-    public boolean requestRectangleOnScreen(Rect rectangle, boolean immediate) {
+    public boolean requestRectangleOnScreen(final Rect rectangle, final boolean immediate) {
         // Detect text changes here because onKey only fires for certain key presses
         final String newText = getText().toString();
         if (onChangeListener != null && !newText.equals(oldText)) {
             onChangeListener.onChange(this, oldText, newText);
             oldText = newText;
         }
-        // Always return true, the ScrollView around this will handle the proper rectangle being on screen
         if (getParent() instanceof ScrollView) {
-            ((ScrollView) getParent()).scrollBy(rectangle.left - getLeft(), rectangle.top - getTop());
+            // Move the EditText to 0,0
+            scrollTo(0, 0);
+            // Handle moving the surrounding ScrollView so the requested rectangle is in view
+            final int paddingTop = getPaddingTop();
+            final int paddingLeft = getPaddingLeft();
+            final int top;
+            Log.d(LOGGING_TAG, String.format("paddingTop: %d :: paddingLeft: %d", paddingTop, paddingLeft));
+            if (rectangle.top < paddingTop) {
+                top = 0;
+            } else {
+                top = rectangle.top - paddingTop;
+            }
+            final int left;
+            if (rectangle.left < paddingTop) {
+                left = 0;
+            } else {
+                left = rectangle.left - paddingLeft;
+            }
+            ((ScrollView) getParent()).scrollTo(left, top);
             return true;
         } else {
             return super.requestRectangleOnScreen(rectangle, immediate);

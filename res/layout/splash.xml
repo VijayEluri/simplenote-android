@@ -9,7 +9,7 @@
       android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/splashLogo"
-        android:src="@drawable/simplenote"
+        android:src="@drawable/swiftnote"
         style="@style/SplashLogo" />
     <ImageView
         android:id="@+id/splashLabel"

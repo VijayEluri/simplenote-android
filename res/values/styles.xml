@@ -73,8 +73,8 @@
     <item name="android:layout_marginLeft">34dip</item>
   </style>
   <style name="SplashLogo">
-    <item name="android:layout_width">100.6666666dip</item>
-    <item name="android:layout_height">100.6666666dip</item>
+    <item name="android:layout_width">101.3333333333dip</item>
+    <item name="android:layout_height">100dip</item>
     <item name="android:layout_gravity">center</item>
     <item name="android:layout_marginTop">29dip</item>
   </style>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">SimpleNote</string>
+  <string name="app_name">SwiftNote</string>
   <string name="no_notes">You have no notes.</string>
   <string name="title">Title</string>
   <string name="body">Body</string>
@@ -13,7 +13,7 @@
   <string name="password">Password</string>
   <string name="signin">Login</string>
   <string name="signup">Create An Account</string>
-  <string name="new_to_simplenote">New to SimpleNote?</string>
+  <string name="new_to_simplenote">Don't have a SimpleNote account?</string>
   <string name="all_notes">All notes</string>
   <!-- Menu -->
   <string name="menu_add">Add Note</string>

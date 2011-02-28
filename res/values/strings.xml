@@ -13,7 +13,7 @@
   <string name="password">Password</string>
   <string name="signin">Login</string>
   <string name="signup">Create An Account</string>
-  <string name="new_to_simplenote">Don't have a SimpleNote account?</string>
+  <string name="new_to_simplenote">Don\'t have a SimpleNote account?</string>
   <string name="all_notes">All notes</string>
   <!-- Menu -->
   <string name="menu_add">Add Note</string>

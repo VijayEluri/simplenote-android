@@ -1,4 +1,4 @@
-package com.simplenote.android.model;
+package com.bryanjswift.swiftnote.model;
 
 import java.util.Date;
 

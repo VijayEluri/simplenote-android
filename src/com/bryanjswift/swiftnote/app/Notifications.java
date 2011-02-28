@@ -30,7 +30,7 @@ public class Notifications {
     public static void Credentials(Context context, CharSequence ticker, CharSequence title, CharSequence description) {
         final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final Notification notification = new Notification(
-                R.drawable.simplenote_status_3, ticker, System.currentTimeMillis());
+                R.drawable.swiftnote_status_3, ticker, System.currentTimeMillis());
         final Intent intent = new Intent(context, SimpleNoteSplash.class);
         intent.putExtra(Constants.NOTIFICATION_TYPE, Constants.NOTIFICATION_CREDENTIALS);
         notification.setLatestEventInfo(
@@ -68,7 +68,7 @@ public class Notifications {
             final NotificationManager notifier =
                     (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             final Notification notification = new Notification(
-                    R.drawable.simplenote_status, null, System.currentTimeMillis());
+                    R.drawable.swiftnote_status, null, System.currentTimeMillis());
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
             notification.flags |= Notification.FLAG_NO_CLEAR;
             final Intent intent = new Intent(context, SimpleNoteList.class);

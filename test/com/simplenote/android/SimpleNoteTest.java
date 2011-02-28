@@ -1,4 +1,4 @@
-package com.simplenote.android;
+package com.bryanjswift.swiftnote;
 
 import junit.framework.Test;
 import junit.framework.TestSuite;

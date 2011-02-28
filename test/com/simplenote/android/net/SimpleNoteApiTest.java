@@ -1,4 +1,4 @@
-package com.simplenote.android.net;
+package com.bryanjswift.swiftnote.net;
 
 import com.bryanjswift.swiftnote.net.Api;
 import junit.framework.TestCase;

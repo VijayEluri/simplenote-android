@@ -38,5 +38,5 @@
   <uses-permission android:name="android.permission.WAKE_LOCK" />
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <instrumentation android:name="android.test.InstrumentationTestRunner"
-      android:targetPackage="com.simplenote.android" android:label="Tests for My App"/>
+      android:targetPackage="com.bryanjswift.swiftnote" android:label="Tests for My App"/>
 </manifest>

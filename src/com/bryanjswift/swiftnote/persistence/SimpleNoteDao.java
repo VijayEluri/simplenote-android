@@ -25,7 +25,7 @@ public class SimpleNoteDao {
     public static final String SYNCED = "synced";
     private static final String[] columns = new String[] { BaseColumns._ID, KEY, BODY, MODIFY, DELETED, SYNCED };
     /* Database information/names */
-    private static final String DATABASE_NAME = "simplenotes_data.db";
+    private static final String DATABASE_NAME = "swiftnote_data.db";
     private static final String DATABASE_TABLE = "notes";
     private static final int DATABASE_VERSION = 4;
     /* Internal constants */

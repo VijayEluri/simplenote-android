@@ -79,13 +79,17 @@
     <item name="android:layout_marginTop">29dip</item>
   </style>
   <style name="Shadowed.SplashText">
-    <item name="android:layout_marginTop">20dip</item>
+    <item name="android:layout_marginTop">10dip</item>
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">center</item>
     <item name="android:textSize">15sp</item>
     <item name="android:textColor">@color/splashtext_color</item>
     <item name="android:shadowColor">@color/splashtext_shadow_color</item>
+  </style>
+  <style name="Shadowed.SplashText.Powered">
+    <item name="android:layout_marginTop">0dip</item>
+    <item name="android:textColor">@color/splashtext_login_color</item>
   </style>
   <!-- Splash Button Styles -->
   <style name="Shadowed.Button.Splash">

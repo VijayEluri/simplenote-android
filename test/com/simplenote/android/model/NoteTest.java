@@ -4,7 +4,7 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
-import com.bryanjswift.simplenote.model.Note;
+import com.bryanjswift.swiftnote.model.Note;
 
 /**
  * Tests for Note creation

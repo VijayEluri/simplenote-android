@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.bryanjswift.simplenote" 
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.bryanjswift.swiftnote"
     android:versionCode="2" android:versionName="1.0.0">
-  <application android:label="@string/app_name" android:icon="@drawable/snlogo" 
+  <application android:label="@string/app_name" android:icon="@drawable/snlogo"
         android:theme="@style/Theme.SimpleNote.NoTitle">
     <uses-library android:name="android.test.runner"/>
     <activity android:name=".ui.SimpleNoteSplash" android:label="@string/app_name"

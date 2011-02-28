@@ -1,13 +1,13 @@
 package com.simplenote.android.net;
 
-import com.bryanjswift.simplenote.net.Api;
+import com.bryanjswift.swiftnote.net.Api;
 import junit.framework.TestCase;
 
-import com.bryanjswift.simplenote.Constants;
-import com.bryanjswift.simplenote.model.Note;
-import com.bryanjswift.simplenote.net.Api.Response;
-import com.bryanjswift.simplenote.net.HttpCallback;
-import com.bryanjswift.simplenote.net.SimpleNoteApi;
+import com.bryanjswift.swiftnote.Constants;
+import com.bryanjswift.swiftnote.model.Note;
+import com.bryanjswift.swiftnote.net.Api.Response;
+import com.bryanjswift.swiftnote.net.HttpCallback;
+import com.bryanjswift.swiftnote.net.SimpleNoteApi;
 
 /**
  * Exercise the SimpleNoteApi class
@@ -15,8 +15,8 @@ import com.bryanjswift.simplenote.net.SimpleNoteApi;
  */
 public class SimpleNoteApiTest extends TestCase {
 	public static final String LOGGING_TAG = Constants.TAG + "SimpleNoteApiTest";
-    public final Api.Credentials credentials = new Api.Credentials("simplenote@bryanjswift.com", "simplenote1234", "");
-    public final Api.Credentials badCredentials = new Api.Credentials("simplenote@bryanjswift.com", "bad password", "");
+    public final Api.Credentials credentials = new Api.Credentials("swiftnote@bryanjswift.com", "simplenote1234", "");
+    public final Api.Credentials badCredentials = new Api.Credentials("swiftnote@bryanjswift.com", "bad password", "");
 
 	String noteBody;
 

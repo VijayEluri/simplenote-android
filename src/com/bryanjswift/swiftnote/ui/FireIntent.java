@@ -51,7 +51,7 @@ public class FireIntent {
      * @param context Context for which the intent is firing
      */
     public static void Splash(final Context context) {
-        final Intent splash = (new Intent(context, SimpleNoteSplash.class));
+        final Intent splash = (new Intent(context, SwiftNoteSplash.class));
         context.startActivity(splash);
     }
     /**

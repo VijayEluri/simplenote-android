@@ -10,7 +10,7 @@ import android.util.Log;
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.R;
 import com.bryanjswift.swiftnote.ui.SimpleNoteList;
-import com.bryanjswift.swiftnote.ui.SimpleNoteSplash;
+import com.bryanjswift.swiftnote.ui.SwiftNoteSplash;
 
 /**
  * Helper methods for posting Notifications
@@ -31,7 +31,7 @@ public class Notifications {
         final NotificationManager notifier = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         final Notification notification = new Notification(
                 R.drawable.swiftnote_status_3, ticker, System.currentTimeMillis());
-        final Intent intent = new Intent(context, SimpleNoteSplash.class);
+        final Intent intent = new Intent(context, SwiftNoteSplash.class);
         intent.putExtra(Constants.NOTIFICATION_TYPE, Constants.NOTIFICATION_CREDENTIALS);
         notification.setLatestEventInfo(
                 context.getApplicationContext(),

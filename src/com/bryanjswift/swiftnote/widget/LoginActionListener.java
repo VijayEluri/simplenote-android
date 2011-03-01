@@ -20,7 +20,7 @@ import com.bryanjswift.swiftnote.net.SwiftNoteApi;
 import com.bryanjswift.swiftnote.thread.LoginTask;
 
 /**
- * OnEditorActionListener and OnClickListener to handle logging in from SimpleNoteSplash screen
+ * OnEditorActionListener and OnClickListener to handle logging in from SwiftNoteSplash screen
  * @author bryanjswift
  */
 public class LoginActionListener implements OnEditorActionListener, View.OnClickListener {

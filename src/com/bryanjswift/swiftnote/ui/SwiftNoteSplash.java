@@ -24,8 +24,8 @@ import com.bryanjswift.swiftnote.widget.RegisterActionListener;
  * Main Activity for SimpleNote application
  * @author bryanjswift
  */
-public class SimpleNoteSplash extends Activity {
-    private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteSplash";
+public class SwiftNoteSplash extends Activity {
+    private static final String LOGGING_TAG = Constants.TAG + "SwiftNoteSplash";
     /**
      * @see android.app.Activity#onCreate(android.os.Bundle)
      */
@@ -64,8 +64,8 @@ public class SimpleNoteSplash extends Activity {
              */
             @Override
             public void on200(Response response) {
-                FireIntent.SimpleNoteList(SimpleNoteSplash.this);
-                SimpleNoteSplash.this.finish();
+                FireIntent.SimpleNoteList(SwiftNoteSplash.this);
+                SwiftNoteSplash.this.finish();
             }
         });
         final RegisterActionListener registerAction = new RegisterActionListener(this, email, password);

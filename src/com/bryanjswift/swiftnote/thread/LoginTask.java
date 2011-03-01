@@ -11,19 +11,19 @@ import com.bryanjswift.swiftnote.manager.Connectivity;
 import com.bryanjswift.swiftnote.net.Api;
 import com.bryanjswift.swiftnote.net.Api.Response;
 import com.bryanjswift.swiftnote.net.HttpCallback;
-import com.bryanjswift.swiftnote.net.SimpleNoteApi;
+import com.bryanjswift.swiftnote.net.SwiftNoteApi;
 import com.bryanjswift.swiftnote.ui.FireIntent;
 
 /**
- * Uses the SimpleNoteApi to login with existing credentials which must be provided
+ * Uses the SwiftNoteApi to login with existing credentials which must be provided
  * @author bryanjswift
  */
 public class LoginTask extends AsyncTask<Void, Void, Response> {
-	private static final String LOGGING_TAG = Constants.TAG + "LoginTask";
+    private static final String LOGGING_TAG = Constants.TAG + "LoginTask";
     // Immutable fields
-	private final Context context;
+    private final Context context;
     private final Api.Credentials credentials;
-	private final HttpCallback callback;
+    private final HttpCallback callback;
     /**
      * Default HttpCallback used if none provided
      */
@@ -45,14 +45,14 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
             Notifications.Credentials(context);
         }
     };
-	/**
-	 * Create new specialized task with credentials information
-	 * @param context from which the task was invoked
-	 * @param credentials information to use when attempting to re-authenticate
-	 */
-	public LoginTask(Context context, Api.Credentials credentials) {
-		this(context, credentials, null);
-	}
+    /**
+     * Create new specialized task with credentials information
+     * @param context from which the task was invoked
+     * @param credentials information to use when attempting to re-authenticate
+     */
+    public LoginTask(Context context, Api.Credentials credentials) {
+        this(context, credentials, null);
+    }
 
     /**
      * Create new task to perform user authentication in background
@@ -60,11 +60,11 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
      * @param credentials information to use when attempting to re-authenticate
      * @param callback to run instead of the default
      */
-	public LoginTask(Context context, Api.Credentials credentials, HttpCallback callback) {
-		this.context = context;
-		this.credentials = credentials;
-		this.callback = callback;
-	}
+    public LoginTask(Context context, Api.Credentials credentials, HttpCallback callback) {
+        this.context = context;
+        this.credentials = credentials;
+        this.callback = callback;
+    }
     /**
      * Send a login request to the SimpleNote API
      * @param voids empty parameter list
@@ -75,7 +75,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
         final Response response;
         if (Connectivity.hasInternet(context)) {
             Log.i(LOGGING_TAG, "Connected, attempting login");
-            response = SimpleNoteApi.login(credentials, new HttpCallback() {
+            response = SwiftNoteApi.login(credentials, new HttpCallback() {
                 /**
                  * Authentication was successful, store the token in the preferences and start the list activity
                  * @see com.bryanjswift.swiftnote.net.HttpCallback#on200(com.bryanjswift.swiftnote.net.Api.Response)
@@ -85,6 +85,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
                     Log.i(LOGGING_TAG, "Setting new authentication token");
                     Preferences.setAuthToken(context, response.body);
                 }
+
                 /**
                  * Authentication failed, show login dialog
                  * @see com.bryanjswift.swiftnote.net.HttpCallback#onError(com.bryanjswift.swiftnote.net.Api.Response)
@@ -93,6 +94,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
                 public void onError(final Response response) {
                     Log.d(LOGGING_TAG, String.format("Authentication failed with status code %d", response.status));
                 }
+
                 /**
                  * @see com.bryanjswift.swiftnote.net.HttpCallback#onException(java.lang.String, java.lang.String, java.lang.Throwable)
                  */
@@ -110,7 +112,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
             // Maybe should be a status 200 with an retry registered for when the network becomes available
         }
         return response;
-	}
+    }
     /**
      * Runs on UI thread, handle execution of the passed in callback
      * Uses private defaultCallback if none provided in constructor
@@ -120,9 +122,9 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
     protected void onPostExecute(final Response response) {
         super.onPostExecute(response);
         if (callback == null) {
-            SimpleNoteApi.handleResponse(defaultCallback, response);
+            SwiftNoteApi.handleResponse(defaultCallback, response);
         } else {
-            SimpleNoteApi.handleResponse(callback, response);
+            SwiftNoteApi.handleResponse(callback, response);
         }
     }
 

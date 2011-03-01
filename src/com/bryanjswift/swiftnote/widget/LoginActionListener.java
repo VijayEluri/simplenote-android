@@ -16,7 +16,7 @@ import com.bryanjswift.swiftnote.R;
 import com.bryanjswift.swiftnote.net.Api;
 import com.bryanjswift.swiftnote.net.Api.Response;
 import com.bryanjswift.swiftnote.net.HttpCallback;
-import com.bryanjswift.swiftnote.net.SimpleNoteApi;
+import com.bryanjswift.swiftnote.net.SwiftNoteApi;
 import com.bryanjswift.swiftnote.thread.LoginTask;
 
 /**
@@ -129,7 +129,7 @@ public class LoginActionListener implements OnEditorActionListener, View.OnClick
             @Override
             public void onComplete(final Response response) {
                 if (callback != null) {
-                    SimpleNoteApi.handleResponse(callback, response);
+                    SwiftNoteApi.handleResponse(callback, response);
                 }
             }
             /**

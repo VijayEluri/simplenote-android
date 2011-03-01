@@ -11,7 +11,7 @@ import com.bryanjswift.swiftnote.model.Note;
 import com.bryanjswift.swiftnote.net.Api;
 import com.bryanjswift.swiftnote.net.ServerCreateCallback;
 import com.bryanjswift.swiftnote.net.ServerSaveCallback;
-import com.bryanjswift.swiftnote.net.SimpleNoteApi;
+import com.bryanjswift.swiftnote.net.SwiftNoteApi;
 
 /**
  * Asyncronously send the note to the server
@@ -29,7 +29,7 @@ public class UpdateNoteTask extends AsyncTask<Note, Void, Void> {
         this.context = context;
     }
     /**
-     * Send the note to SimpleNote servers using the correct SimpleNoteApi call
+     * Send the note to SimpleNote servers using the correct SwiftNoteApi call
      * @param notes to be updated (only the first note is handled)
      * @return null
      */
@@ -42,13 +42,13 @@ public class UpdateNoteTask extends AsyncTask<Note, Void, Void> {
             final Api.Credentials credentials = Preferences.getLoginPreferences(context);
             if (!note.getKey().equals(Constants.DEFAULT_KEY) && note.isDeleted()) {
                 Log.d(LOGGING_TAG, "Deleting note on the server");
-                SimpleNoteApi.delete(note, credentials, new ServerSaveCallback(context, note));
+                SwiftNoteApi.delete(note, credentials, new ServerSaveCallback(context, note));
             } else if (note.getKey().equals(Constants.DEFAULT_KEY)) {
                 Log.d(LOGGING_TAG, "Creating a new note on the server");
-                SimpleNoteApi.create(note, credentials, new ServerCreateCallback(context, note));
+                SwiftNoteApi.create(note, credentials, new ServerCreateCallback(context, note));
             } else {
-                Log.d(LOGGING_TAG, String.format("Sending note '%s' to SimpleNoteApi", note.getKey()));
-                SimpleNoteApi.update(note, credentials, new ServerSaveCallback(context, note));
+                Log.d(LOGGING_TAG, String.format("Sending note '%s' to SwiftNoteApi", note.getKey()));
+                SwiftNoteApi.update(note, credentials, new ServerSaveCallback(context, note));
             }
         } else {
             Log.d(LOGGING_TAG, "Unable to send note, no connectivity");

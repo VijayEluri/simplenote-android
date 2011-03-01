@@ -7,7 +7,7 @@ import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.manager.Connectivity;
 import com.bryanjswift.swiftnote.net.Api;
 import com.bryanjswift.swiftnote.net.HttpCallback;
-import com.bryanjswift.swiftnote.net.SimpleNoteApi;
+import com.bryanjswift.swiftnote.net.SwiftNoteApi;
 import com.bryanjswift.swiftnote.ui.FireIntent;
 
 /**
@@ -48,7 +48,7 @@ public class RegisterTask extends AsyncTask<Api.Credentials, Void, Api.Response>
         final Api.Response response;
         if (Connectivity.hasInternet(context)) {
             Api.Credentials credentials = credentialses[0];
-            response = SimpleNoteApi.register(credentials, HttpCallback.EMPTY);
+            response = SwiftNoteApi.register(credentials, HttpCallback.EMPTY);
         } else {
             response = new Api.Response();
             response.status = Constants.NO_CONNECTION;
@@ -62,9 +62,9 @@ public class RegisterTask extends AsyncTask<Api.Credentials, Void, Api.Response>
     @Override
     protected void onPostExecute(Api.Response response) {
         if (callback == null) {
-            SimpleNoteApi.handleResponse(defaultCallback, response);
+            SwiftNoteApi.handleResponse(defaultCallback, response);
         } else {
-            SimpleNoteApi.handleResponse(callback, response);
+            SwiftNoteApi.handleResponse(callback, response);
         }
     }
 }

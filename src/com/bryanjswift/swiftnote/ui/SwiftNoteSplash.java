@@ -21,7 +21,7 @@ import com.bryanjswift.swiftnote.widget.LoginActionListener;
 import com.bryanjswift.swiftnote.widget.RegisterActionListener;
 
 /**
- * Main Activity for SimpleNote application
+ * Main Activity for SwiftNote application
  * @author bryanjswift
  */
 public class SwiftNoteSplash extends Activity {
@@ -41,7 +41,7 @@ public class SwiftNoteSplash extends Activity {
         if (!credentials.email.equals("") && (!credentials.password.equals("") || !credentials.auth.equals(""))) {
             // valid token stored
             Log.d(LOGGING_TAG, "Auth information stored, going to list");
-            FireIntent.SimpleNoteList(this);
+            FireIntent.List(this);
             this.finish();
         } else {
             // set up events for the splash screen
@@ -64,7 +64,7 @@ public class SwiftNoteSplash extends Activity {
              */
             @Override
             public void on200(Response response) {
-                FireIntent.SimpleNoteList(SwiftNoteSplash.this);
+                FireIntent.List(SwiftNoteSplash.this);
                 SwiftNoteSplash.this.finish();
             }
         });

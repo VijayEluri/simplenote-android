@@ -34,7 +34,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
          */
         @Override
         public void on200(final Response response) {
-            FireIntent.SimpleNoteList(context);
+            FireIntent.List(context);
         }
         /**
          * Show notification about failed login

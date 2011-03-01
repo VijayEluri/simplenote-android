@@ -88,7 +88,7 @@ public class RegisterActionListener implements View.OnClickListener {
                      */
                     @Override
                     public void on200(final Api.Response response) {
-                        FireIntent.SimpleNoteList(context);
+                        FireIntent.List(context);
                         context.finish();
                         if (dialog.isShowing()) {
                             dialog.dismiss();

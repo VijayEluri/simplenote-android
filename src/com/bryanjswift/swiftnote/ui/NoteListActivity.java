@@ -44,7 +44,7 @@ public abstract class NoteListActivity extends ListActivity {
     protected static int rowHeight = -1;
     /** Height of title bar */
     protected static int titleBarHeight = -1;
-    /** Interface for accessing the SimpleNote database on the device */
+    /** Interface for accessing the SwiftNote database on the device */
     protected final SwiftNoteDao dao;
     /** Message handler which should update the UI when a message with a Note is received */
     protected final Handler updateNoteHandler;

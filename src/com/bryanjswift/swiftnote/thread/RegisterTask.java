@@ -24,7 +24,7 @@ public class RegisterTask extends AsyncTask<Api.Credentials, Void, Api.Response>
         @Override
         public void on200(Api.Response response) {
             super.on200(response);
-            FireIntent.SimpleNoteList(context);
+            FireIntent.List(context);
         }
         /**
          * @see com.bryanjswift.swiftnote.net.HttpCallback#onError(com.bryanjswift.swiftnote.net.Api.Response)

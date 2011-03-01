@@ -6,11 +6,11 @@ import java.text.SimpleDateFormat;
 import android.net.Uri;
 
 /**
- * Hold constants for the SimpleNote application
+ * Hold constants for the SwiftNote application
  */
 public class Constants {
     /** Logging tag prefix */
-    public static final String TAG = "SimpleNote:";
+    public static final String TAG = "SwiftNote:";
     // Note Default Values
     public static final long DEFAULT_ID = -1L;
     public static final String DEFAULT_KEY = "__SN__DEFAULT__KEY__";

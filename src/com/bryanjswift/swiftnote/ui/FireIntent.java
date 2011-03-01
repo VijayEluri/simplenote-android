@@ -19,7 +19,7 @@ public class FireIntent {
      * Start the SwiftNoteList Activity
      * @param context in which the intent is firing
      */
-    public static void SimpleNoteList(final Context context) {
+    public static void List(final Context context) {
         Intent i = new Intent(context, SwiftNoteList.class);
         context.startActivity(i);
     }

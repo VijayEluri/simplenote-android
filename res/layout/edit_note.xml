@@ -17,7 +17,7 @@
       android:id="@+id/note_body_scroll"
       android:layout_below="@id/note_title_row"
       style="@style/NoteBodyScroll">
-    <com.bryanjswift.simplenote.view.ScrollWrappableEditText
+    <com.bryanjswift.swiftnote.view.ScrollWrappableEditText
         android:id="@+id/note_body"
         style="@style/NoteBody" />
   </ScrollView>

@@ -15,6 +15,10 @@
         android:id="@+id/splashLabel"
         android:src="@drawable/splash_header"
         style="@style/SplashHeader" />
+    <TextView
+        android:id="@+id/splash_login_to_simplenote"
+        android:text="@string/powered_by_simplenote"
+        style="@style/Shadowed.SplashText.Powered" />
     <EditText
         android:id="@+id/splash_email"
         android:hint="@string/email"

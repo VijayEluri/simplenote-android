@@ -4,31 +4,31 @@
   <style name="NoTitleDialogTheme" parent="@android:style/Theme.Dialog">
     <item name="android:windowNoTitle">true</item>
   </style>
-  <style name="SimpleNoteTitleText" parent="android:TextAppearance.WindowTitle">
+  <style name="SwiftNoteTitleText" parent="android:TextAppearance.WindowTitle">
     <item name="android:textSize">14.813333dip</item>
     <item name="android:textColor">@color/titlebar_text</item>
   </style>
-  <style name="SimpleNoteTitle" parent="android:WindowTitle">
-    <item name="android:textAppearance">@style/SimpleNoteTitleText</item>
+  <style name="SwiftNoteTitle" parent="android:WindowTitle">
+    <item name="android:textAppearance">@style/SwiftNoteTitleText</item>
     <item name="android:shadowDx">1.1</item>
     <item name="android:shadowDy">1.1</item>
     <item name="android:shadowRadius">1.1</item>
     <item name="android:shadowColor">@color/header_shadow_color</item>
     <item name="android:paddingLeft">10dip</item>
   </style>
-  <style name="SimpleNoteTitlebar">
+  <style name="SwiftNoteTitlebar">
     <item name="android:background">@drawable/bg_titlebar</item>
   </style>
-  <style name="Theme.SimpleNote" parent="@android:Theme.Black">
+  <style name="Theme.SwiftNote" parent="@android:Theme.Black">
     <item name="android:windowBackground">@drawable/background</item>
     <item name="android:windowTitleSize">26dip</item>
-    <item name="android:windowTitleStyle">@style/SimpleNoteTitle</item>
-    <item name="android:windowTitleBackgroundStyle">@style/SimpleNoteTitlebar</item>
+    <item name="android:windowTitleStyle">@style/SwiftNoteTitle</item>
+    <item name="android:windowTitleBackgroundStyle">@style/SwiftNoteTitlebar</item>
   </style>
-  <style name="Theme.SimpleNote.NoTitle">
+  <style name="Theme.SwiftNote.NoTitle">
     <item name="android:windowNoTitle">true</item>
   </style>
-  <style name="Theme.SimpleNote.Preferences">
+  <style name="Theme.SwiftNote.Preferences">
     <item name="android:windowBackground">@color/black</item>
   </style>
   <!-- Basic Styles -->
@@ -79,13 +79,17 @@
     <item name="android:layout_marginTop">29dip</item>
   </style>
   <style name="Shadowed.SplashText">
-    <item name="android:layout_marginTop">20dip</item>
+    <item name="android:layout_marginTop">10dip</item>
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">center</item>
     <item name="android:textSize">15sp</item>
     <item name="android:textColor">@color/splashtext_color</item>
     <item name="android:shadowColor">@color/splashtext_shadow_color</item>
+  </style>
+  <style name="Shadowed.SplashText.Powered">
+    <item name="android:layout_marginTop">0dip</item>
+    <item name="android:textColor">@color/splashtext_login_color</item>
   </style>
   <!-- Splash Button Styles -->
   <style name="Shadowed.Button.Splash">
@@ -268,7 +272,7 @@
     <item name="android:capitalize">none</item>
     <item name="android:imeOptions">actionGo</item>
     <item name="android:inputType">textPassword</item>
-    <!-- FIXME: This isn't forcing a sans-serif so it is set in code in SimpleNoteSplash.java -->
+    <!-- FIXME: This isn't forcing a sans-serif so it is set in code in SwiftNoteSplash.java -->
     <item name="android:typeface">sans</item>
   </style>
   <style name="Input.Splash.Email">

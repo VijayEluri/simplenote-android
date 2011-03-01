@@ -26,8 +26,8 @@ import java.util.Date;
  * Handle the note editing
  * @author bryanjswift
  */
-public class SimpleNoteEdit extends Activity {
-    private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteEdit";
+public class SwiftNoteEdit extends Activity {
+    private static final String LOGGING_TAG = Constants.TAG + "SwiftNoteEdit";
     // Final variables
     private final SwiftNoteDao dao;
     // Mutable instance variables
@@ -102,7 +102,7 @@ public class SimpleNoteEdit extends Activity {
     /**
      * Default constructor to setup final fields
      */
-    public SimpleNoteEdit() {
+    public SwiftNoteEdit() {
         this.dao = new SwiftNoteDao(this);
     }
     /**
@@ -111,7 +111,7 @@ public class SimpleNoteEdit extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(LOGGING_TAG, "Running creating new SimpleNoteEdit Activity");
+        Log.d(LOGGING_TAG, "Running creating new SwiftNoteEdit Activity");
         getWindow().setFormat(PixelFormat.RGBA_8888);
         setContentView(R.layout.edit_note);
         if (savedInstanceState == null) {
@@ -140,7 +140,7 @@ public class SimpleNoteEdit extends Activity {
         noteBody.setOnChangeListener(new ScrollWrappableEditText.OnChangeListener() {
             @Override
             public void onChange(View v, String oldText, String newText) {
-                noteTitle.setText(NotesAdapter.ellipsizeTitle(SimpleNoteEdit.this, Note.extractTitle(newText)));
+                noteTitle.setText(NotesAdapter.ellipsizeTitle(SwiftNoteEdit.this, Note.extractTitle(newText)));
             }
         });
         final ImageButton trash = (ImageButton) findViewById(R.id.note_delete);
@@ -165,7 +165,7 @@ public class SimpleNoteEdit extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(LOGGING_TAG, "Resuming SimpleNoteEdit");
+        Log.d(LOGGING_TAG, "Resuming SwiftNoteEdit");
         mActivityStateSaved = false;
     }
     /**

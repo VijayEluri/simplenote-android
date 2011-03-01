@@ -24,13 +24,13 @@ public class FireIntent {
         context.startActivity(i);
     }
     /**
-     * Starts the SimpleNoteEdit Activity
+     * Starts the SwiftNoteEdit Activity
      * @param context in which the intent is firing
      * @param id of the note to edit
      * @param originalBody of the note as retrieved from saved state
      */
     public static void EditNote(final Activity context, final long id, final String originalBody) {
-        Intent intent = new Intent(context, SimpleNoteEdit.class);
+        Intent intent = new Intent(context, SwiftNoteEdit.class);
         intent.putExtra(BaseColumns._ID, id);
         if (originalBody != null) {
             intent.putExtra(SwiftNoteDao.BODY, originalBody);

@@ -86,7 +86,7 @@ public abstract class NoteListActivity extends ListActivity {
         getWindow().setFormat(PixelFormat.RGBA_8888);
     }
     /**
-     * If SimpleNoteEdit saved state then retrieve it and go back to editing
+     * If SwiftNoteEdit saved state then retrieve it and go back to editing
      * @see android.app.ListActivity#onRestoreInstanceState(android.os.Bundle)
      */
     @Override

@@ -97,8 +97,8 @@ public class SimpleNoteList extends NoteListActivity {
 
     /**
      * Deal with the results of the REQUEST_EDIT Activity
-     * @param resultCode how the SimpleNoteEdit Activity finished
-     * @param data the intent that started the SimpleNoteEdit Activity
+     * @param resultCode how the SwiftNoteEdit Activity finished
+     * @param data the intent that started the SwiftNoteEdit Activity
      */
     private void handleNoteEditResult(final int resultCode, final Intent data) {
         switch (resultCode) {

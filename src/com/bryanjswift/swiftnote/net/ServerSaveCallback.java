@@ -8,7 +8,7 @@ import com.bryanjswift.swiftnote.Preferences;
 import com.bryanjswift.swiftnote.app.Notifications;
 import com.bryanjswift.swiftnote.model.Note;
 import com.bryanjswift.swiftnote.net.Api.Response;
-import com.bryanjswift.swiftnote.persistence.SimpleNoteDao;
+import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 import com.bryanjswift.swiftnote.thread.LoginTask;
 
 /**
@@ -18,7 +18,7 @@ import com.bryanjswift.swiftnote.thread.LoginTask;
 public class ServerSaveCallback extends HttpCallback {
     private static final String LOGGING_TAG = Constants.TAG + "ServerSaveCallback";
     // Inheritable fields
-    protected final SimpleNoteDao dao;
+    protected final SwiftNoteDao dao;
     protected final Context context;
     protected final Note note;
     /**
@@ -30,7 +30,7 @@ public class ServerSaveCallback extends HttpCallback {
         super();
         this.note = note;
         this.context = context;
-        this.dao = new SimpleNoteDao(context);
+        this.dao = new SwiftNoteDao(context);
     }
     /**
      * @see com.bryanjswift.swiftnote.net.HttpCallback#on200(com.bryanjswift.swiftnote.net.Api.Response)

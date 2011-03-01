@@ -24,7 +24,7 @@ import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.R;
 import com.bryanjswift.swiftnote.app.UpdateNoteHandler;
 import com.bryanjswift.swiftnote.model.Note;
-import com.bryanjswift.swiftnote.persistence.SimpleNoteDao;
+import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 import com.bryanjswift.swiftnote.thread.SyncNotesTask;
 import com.bryanjswift.swiftnote.widget.NotesAdapter;
 
@@ -45,7 +45,7 @@ public abstract class NoteListActivity extends ListActivity {
     /** Height of title bar */
     protected static int titleBarHeight = -1;
     /** Interface for accessing the SimpleNote database on the device */
-    protected final SimpleNoteDao dao;
+    protected final SwiftNoteDao dao;
     /** Message handler which should update the UI when a message with a Note is received */
     protected final Handler updateNoteHandler;
     /** BroadcastReceiver which will receive requests to update from background sync services */
@@ -66,7 +66,7 @@ public abstract class NoteListActivity extends ListActivity {
     };
     public NoteListActivity() {
         super();
-        this.dao = new SimpleNoteDao(this);
+        this.dao = new SwiftNoteDao(this);
         this.updateNoteHandler = new UpdateNoteHandler(this, true);
     }
     /**
@@ -94,7 +94,7 @@ public abstract class NoteListActivity extends ListActivity {
         super.onRestoreInstanceState(state);
         if (state != null && state.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
             Log.d(LOGGING_TAG, "Resuming edit note from a saved state");
-            FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SimpleNoteDao.BODY));
+            FireIntent.EditNote(this, state.getLong(BaseColumns._ID), state.getString(SwiftNoteDao.BODY));
         }
     }
     /**

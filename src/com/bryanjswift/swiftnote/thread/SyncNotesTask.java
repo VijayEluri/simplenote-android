@@ -16,7 +16,7 @@ import com.bryanjswift.swiftnote.net.HttpCallback;
 import com.bryanjswift.swiftnote.net.ServerCreateCallback;
 import com.bryanjswift.swiftnote.net.ServerSaveCallback;
 import com.bryanjswift.swiftnote.net.SwiftNoteApi;
-import com.bryanjswift.swiftnote.persistence.SimpleNoteDao;
+import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 
 /**
  * Adds Android specific handling of API methods
@@ -26,7 +26,7 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
     private static final String LOGGING_TAG = Constants.TAG + "SyncNotesTask";
     // Private immutable fields
     private final Context context;
-    private final SimpleNoteDao dao;
+    private final SwiftNoteDao dao;
     private final Api.Credentials credentials;
     private final Handler handler;
     /**
@@ -36,7 +36,7 @@ public class SyncNotesTask extends AsyncTask<Void, Void, Void> {
      */
     public SyncNotesTask(final Context context, final Handler handler) {
         this.context = context;
-        this.dao = new SimpleNoteDao(context);
+        this.dao = new SwiftNoteDao(context);
         this.credentials = Preferences.getLoginPreferences(context);
         this.handler = handler;
     }

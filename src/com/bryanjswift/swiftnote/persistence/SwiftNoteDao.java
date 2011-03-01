@@ -15,7 +15,7 @@ import com.bryanjswift.swiftnote.model.Note;
  * Handle database access
  * @author bryanjswift
  */
-public class SimpleNoteDao {
+public class SwiftNoteDao {
     /* Sql Column names */
     public static final String KEY = "key";
     public static final String KEY_HASH = "key_hash";
@@ -36,7 +36,7 @@ public class SimpleNoteDao {
      * Construct Dao with Activity context
      * @param context - where the Dao was created
      */
-    public SimpleNoteDao(Context context) {
+    public SwiftNoteDao(Context context) {
         this.dbHelper = new DatabaseHelper(context);
     }
     /**

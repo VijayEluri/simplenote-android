@@ -12,7 +12,7 @@ import com.bryanjswift.swiftnote.Preferences;
 import com.bryanjswift.swiftnote.R;
 import com.bryanjswift.swiftnote.model.Note;
 import com.bryanjswift.swiftnote.net.Api;
-import com.bryanjswift.swiftnote.persistence.SimpleNoteDao;
+import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 import com.bryanjswift.swiftnote.thread.LoginTask;
 import com.bryanjswift.swiftnote.thread.UpdateNoteTask;
 import com.bryanjswift.swiftnote.widget.NotesAdapter;
@@ -38,7 +38,7 @@ public class SimpleNoteList extends NoteListActivity {
         FireIntent.finishIfUnauthorized(this);
         if (savedState != null && savedState.getInt(Constants.REQUEST_KEY) == Constants.REQUEST_EDIT) {
             Log.d(LOGGING_TAG, "Resuming note editing from a saved state");
-            FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SimpleNoteDao.BODY));
+            FireIntent.EditNote(this, savedState.getLong(BaseColumns._ID), savedState.getString(SwiftNoteDao.BODY));
         }
         Log.d(LOGGING_TAG, "Firing up the note list");
         // Now get notes and create a note adapter and set it to display

@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.R;
 import com.bryanjswift.swiftnote.model.Note;
-import com.bryanjswift.swiftnote.persistence.SimpleNoteDao;
+import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 import com.bryanjswift.swiftnote.view.ScrollWrappableEditText;
 import com.bryanjswift.swiftnote.widget.NotesAdapter;
 
@@ -29,7 +29,7 @@ import java.util.Date;
 public class SimpleNoteEdit extends Activity {
     private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteEdit";
     // Final variables
-    private final SimpleNoteDao dao;
+    private final SwiftNoteDao dao;
     // Mutable instance variables
     private long mNoteId = 0L;
     private String mOriginalBody = "";
@@ -103,7 +103,7 @@ public class SimpleNoteEdit extends Activity {
      * Default constructor to setup final fields
      */
     public SimpleNoteEdit() {
-        this.dao = new SimpleNoteDao(this);
+        this.dao = new SwiftNoteDao(this);
     }
     /**
      * @see android.app.Activity#onCreate(android.os.Bundle)
@@ -117,7 +117,7 @@ public class SimpleNoteEdit extends Activity {
         if (savedInstanceState == null) {
             Bundle extras = getIntent().getExtras();
             mNoteId = extras.getLong(BaseColumns._ID);
-            mOriginalBody = extras.getString(SimpleNoteDao.BODY);
+            mOriginalBody = extras.getString(SwiftNoteDao.BODY);
         } else {
             mNoteId = savedInstanceState.getLong(BaseColumns._ID);
         }
@@ -125,7 +125,7 @@ public class SimpleNoteEdit extends Activity {
         if (savedInstanceState == null && mOriginalBody == null) {
             mOriginalBody = dbNote.getBody();
         } else if (savedInstanceState != null && mOriginalBody == null) {
-            mOriginalBody = savedInstanceState.getString(SimpleNoteDao.BODY);
+            mOriginalBody = savedInstanceState.getString(SwiftNoteDao.BODY);
         }
         final String title;
         final ScrollWrappableEditText noteBody = ((ScrollWrappableEditText) findViewById(R.id.note_body));
@@ -179,7 +179,7 @@ public class SimpleNoteEdit extends Activity {
         mActivityStateSaved = true;
         // Make sure the note id is set in the saved state
         outState.putLong(BaseColumns._ID, mNoteId);
-        outState.putString(SimpleNoteDao.BODY, mOriginalBody);
+        outState.putString(SwiftNoteDao.BODY, mOriginalBody);
         outState.putInt(Constants.REQUEST_KEY, Constants.REQUEST_EDIT);
     }
     /**

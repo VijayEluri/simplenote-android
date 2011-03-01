@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.R;
 import com.bryanjswift.swiftnote.model.Note;
-import com.bryanjswift.swiftnote.persistence.SimpleNoteDao;
+import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 import com.bryanjswift.swiftnote.widget.NotesAdapter;
 
 /**
@@ -20,14 +20,14 @@ import com.bryanjswift.swiftnote.widget.NotesAdapter;
 public class SearchNoteList extends NoteListActivity {
     private static final String LOGGING_TAG = Constants.TAG + SearchNoteList.class.getSimpleName();
     // Immutable fields
-    private final SimpleNoteDao dao;
+    private final SwiftNoteDao dao;
     // Mutable fields
     private String mQuery;
     /**
      * Default constructor to populate necessary final fields
      */
     public SearchNoteList() {
-        this.dao = new SimpleNoteDao(this);
+        this.dao = new SwiftNoteDao(this);
     }
     /**
      * @see android.app.Activity#onCreate(android.os.Bundle)

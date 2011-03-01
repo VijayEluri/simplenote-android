@@ -4,10 +4,10 @@ import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.Settings.Secure;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.Preferences;
 import com.bryanjswift.swiftnote.R;
@@ -19,6 +19,11 @@ import com.bryanjswift.swiftnote.service.DailyService;
 import com.bryanjswift.swiftnote.service.SyncService;
 import com.bryanjswift.swiftnote.widget.LoginActionListener;
 import com.bryanjswift.swiftnote.widget.RegisterActionListener;
+
+import com.android.vending.licensing.AESObfuscator;
+import com.android.vending.licensing.LicenseChecker;
+import com.android.vending.licensing.LicenseCheckerCallback;
+import com.android.vending.licensing.ServerManagedPolicy;
 
 /**
  * Main Activity for SwiftNote application
@@ -75,5 +80,23 @@ public class SwiftNoteSplash extends Activity {
         signupButton.setOnClickListener(registerAction);
         // FIXME: This doesn't work from styles.xml
         password.setTypeface(Typeface.SANS_SERIF);
+    }
+    /**
+     *
+     */
+    private void checkLicense() {
+        final String deviceId = Secure.getString(getContentResolver(), Secure.ANDROID_ID);
+        final LicenseChecker checker = new LicenseChecker(this,
+                new ServerManagedPolicy(this, new AESObfuscator(
+                        Constants.SALT, getPackageName(), deviceId)
+                ), Constants.BASE64_PUBLIC_KEY
+        );
+        final LicenseCheckerCallback callback = new SwiftNoteLicenseCallback();
+        checker.checkAccess(callback);
+    }
+    private class SwiftNoteLicenseCallback implements LicenseCheckerCallback {
+        public void allow() { }
+        public void applicationError(final LicenseCheckerCallback.ApplicationErrorCode code) { }
+        public void dontAllow() { }
     }
 }

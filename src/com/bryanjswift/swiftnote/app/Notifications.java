@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.R;
-import com.bryanjswift.swiftnote.ui.SimpleNoteList;
+import com.bryanjswift.swiftnote.ui.SwiftNoteList;
 import com.bryanjswift.swiftnote.ui.SwiftNoteSplash;
 
 /**
@@ -71,7 +71,7 @@ public class Notifications {
                     R.drawable.swiftnote_status, null, System.currentTimeMillis());
             notification.flags |= Notification.FLAG_ONGOING_EVENT;
             notification.flags |= Notification.FLAG_NO_CLEAR;
-            final Intent intent = new Intent(context, SimpleNoteList.class);
+            final Intent intent = new Intent(context, SwiftNoteList.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             notification.setLatestEventInfo(
                     context.getApplicationContext(),

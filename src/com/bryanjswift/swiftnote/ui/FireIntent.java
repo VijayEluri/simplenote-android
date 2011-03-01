@@ -16,11 +16,11 @@ import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
  */
 public class FireIntent {
     /**
-     * Start the SimpleNoteList Activity
+     * Start the SwiftNoteList Activity
      * @param context in which the intent is firing
      */
     public static void SimpleNoteList(final Context context) {
-        Intent i = new Intent(context, SimpleNoteList.class);
+        Intent i = new Intent(context, SwiftNoteList.class);
         context.startActivity(i);
     }
     /**

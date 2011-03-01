@@ -21,12 +21,12 @@ import com.bryanjswift.swiftnote.widget.NotesAdapter;
  * 'Main' Activity to List notes
  * @author bryanjswift
  */
-public class SimpleNoteList extends NoteListActivity {
-    private static final String LOGGING_TAG = Constants.TAG + "SimpleNoteList";
+public class SwiftNoteList extends NoteListActivity {
+    private static final String LOGGING_TAG = Constants.TAG + "SwiftNoteList";
     /**
      * Create a dao to store using this as the context
      */
-    public SimpleNoteList() {
+    public SwiftNoteList() {
         super();
     }
     /**
@@ -67,7 +67,7 @@ public class SimpleNoteList extends NoteListActivity {
         // bind click listener to new note button
         findViewById(R.id.note_add).setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                FireIntent.EditNote(SimpleNoteList.this, Constants.DEFAULT_ID, "");
+                FireIntent.EditNote(SwiftNoteList.this, Constants.DEFAULT_ID, "");
             }
         });
     }

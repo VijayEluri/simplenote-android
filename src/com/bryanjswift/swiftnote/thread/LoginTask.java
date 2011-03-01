@@ -29,7 +29,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
      */
     private final HttpCallback defaultCallback = new HttpCallback() {
         /**
-         * Go to the SimpleNoteList screen
+         * Go to the SwiftNoteList screen
          * @param response contents of the response
          */
         @Override

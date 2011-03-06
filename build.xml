@@ -34,6 +34,10 @@
          should be checked in in Version Control Systems. -->
     <property file="default.properties" />
 
+    <!-- We set the system property build.sysclasspath to "ignore" in order to discard the
+         annoying warning message which otherwise appears during every build -->
+    <property name="build.sysclasspath" value="ignore" />
+
     <!-- Custom Android task to deal with the project target, and import the proper rules.
          This requires ant 1.6.0 or above. -->
     <path id="android.antlibs">

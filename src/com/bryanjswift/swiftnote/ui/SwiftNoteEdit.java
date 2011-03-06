@@ -1,6 +1,5 @@
 package com.bryanjswift.swiftnote.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -8,13 +7,20 @@ import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.provider.BaseColumns;
 import android.util.Log;
-import android.view.*;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.R;
+import com.bryanjswift.swiftnote.app.LicenseCheckActivity;
 import com.bryanjswift.swiftnote.model.Note;
 import com.bryanjswift.swiftnote.persistence.SwiftNoteDao;
 import com.bryanjswift.swiftnote.view.ScrollWrappableEditText;
@@ -26,7 +32,7 @@ import java.util.Date;
  * Handle the note editing
  * @author bryanjswift
  */
-public class SwiftNoteEdit extends Activity {
+public class SwiftNoteEdit extends LicenseCheckActivity {
     private static final String LOGGING_TAG = Constants.TAG + "SwiftNoteEdit";
     // Final variables
     private final SwiftNoteDao dao;

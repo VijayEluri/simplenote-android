@@ -16,6 +16,8 @@
   <string name="powered_by_simplenote">Powered by SimpleNote</string>
   <string name="new_to_simplenote">Don\'t have a SimpleNote account?</string>
   <string name="all_notes">All notes</string>
+  <!-- Licensing -->
+  <string name="license_invalid">No license for SwiftNote found, please purchase in the Android Market</string>
   <!-- Menu -->
   <string name="menu_add">Add Note</string>
   <string name="menu_preferences">Preferences</string>

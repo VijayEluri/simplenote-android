@@ -1,16 +1,15 @@
 package com.bryanjswift.swiftnote.ui;
 
-import android.app.Activity;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.Preferences;
 import com.bryanjswift.swiftnote.R;
+import com.bryanjswift.swiftnote.app.LicenseCheckActivity;
 import com.bryanjswift.swiftnote.app.Notifications;
 import com.bryanjswift.swiftnote.net.Api;
 import com.bryanjswift.swiftnote.net.Api.Response;
@@ -24,7 +23,7 @@ import com.bryanjswift.swiftnote.widget.RegisterActionListener;
  * Main Activity for SwiftNote application
  * @author bryanjswift
  */
-public class SwiftNoteSplash extends Activity {
+public class SwiftNoteSplash extends LicenseCheckActivity {
     private static final String LOGGING_TAG = Constants.TAG + "SwiftNoteSplash";
     /**
      * @see android.app.Activity#onCreate(android.os.Bundle)

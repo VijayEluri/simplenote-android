@@ -20,6 +20,8 @@ public class Constants {
     public static final int MESSAGE_UPDATE_NOTE = 12398;
     public static final int MESSAGE_UPDATE_STARTED = 8621034;
     public static final int MESSAGE_UPDATE_FINISHED = 9732145;
+    public static final int MESSAGE_LICENSE_VALID = 4893267;
+    public static final int MESSAGE_LICENSE_INVALID = 4893268;
     // Activity for result request Codes
     public static final String REQUEST_KEY = "ActivityRequest";
     public static final int REQUEST_LOGIN = 32568;
@@ -49,4 +51,10 @@ public class Constants {
     public static final Uri URL_CREATE_ACCOUNT = (new Uri.Builder())
             .scheme("http").authority("simple-note.appspot.com").path("/createaccount.html").build();
     public static final int NO_CONNECTION = 499;
+    // Licensing
+    public static final String BASE64_PUBLIC_KEY = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApWp9FPULIkog/BMygZkogn1OKmmake7SlgdyLwZIql63n/yFAsYpo/11dWQSG5KTCVDFJm0ElpBIJbYuv133ghrNOU3dQzwA6Y/lVyfxXRAPoobfbF8tcUeLAYim2W9GtiqHqLXIVMYJF/55Atxf9sCUyyIgZWD3xuqdcUYchJ3nToQV6QazWJt8S+CnEMxlbkwqSd4gjTy+W1KPsWEXc0ZYJbe2icABFqWNkwifCKxfSIXwAHZYGAFzKM1+Zvl4qZYxx3SVINHp+gy7TtHJatBvqsdTL2uTCIYHjVH1yZX/0rY1/Tj/Fi7AP0yiCqzUY5PtfQcX23sWBCjfBuI2QQIDAQAB";
+    public static final byte[] SALT = new byte[] {
+        -21, 42, 98, -74, -98, -43, 53, -123, 99, 84,
+        -47, -87, 16, -80, -90, -53, -102, 40, -55, 95
+    };
 }

@@ -1,6 +1,6 @@
 package com.bryanjswift.swiftnote.app;
 
-import android.content.Context;
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -11,14 +11,14 @@ import com.bryanjswift.swiftnote.R;
 /** @author bryanjswift */
 public class SwiftNoteLicenseHandler extends Handler {
     private static final String LOGGING_TAG = Constants.TAG + "SwiftNoteLicenseHandler";
-    private final Context context;
+    private final Activity activity;
 
     /**
-     * Create a SwiftNoteLicenseHandler with the specified context
-     * @param context to use when performing actions on the UI thread
+     * Create a SwiftNoteLicenseHandler with the specified activity
+     * @param activity to use when performing actions on the UI thread
      */
-    public SwiftNoteLicenseHandler(final Context context) {
-        this.context = context;
+    public SwiftNoteLicenseHandler(final Activity activity) {
+        this.activity = activity;
     }
 
     /**
@@ -47,6 +47,7 @@ public class SwiftNoteLicenseHandler extends Handler {
      */
     private void handleInvalid() {
         Log.d(LOGGING_TAG, "Invalid license found");
-        Toast.makeText(context, R.string.license_invalid, Toast.LENGTH_LONG).show();
+        Toast.makeText(activity, R.string.license_invalid, Toast.LENGTH_LONG).show();
+        activity.finish();
     }
 }

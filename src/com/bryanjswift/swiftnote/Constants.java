@@ -20,6 +20,8 @@ public class Constants {
     public static final int MESSAGE_UPDATE_NOTE = 12398;
     public static final int MESSAGE_UPDATE_STARTED = 8621034;
     public static final int MESSAGE_UPDATE_FINISHED = 9732145;
+    public static final int MESSAGE_LICENSE_VALID = 4893267;
+    public static final int MESSAGE_LICENSE_INVALID = 4893268;
     // Activity for result request Codes
     public static final String REQUEST_KEY = "ActivityRequest";
     public static final int REQUEST_LOGIN = 32568;

@@ -7,9 +7,9 @@
     <item>@string/every8hour</item>
   </string-array>
   <string-array name="background_values">
-    <item>1</item>
-    <item>2</item>
-    <item>4</item>
-    <item>8</item>
+    <item>60</item>
+    <item>120</item>
+    <item>240</item>
+    <item>480</item>
   </string-array>
 </resources>

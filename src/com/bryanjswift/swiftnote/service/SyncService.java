@@ -23,7 +23,7 @@ import com.bryanjswift.swiftnote.util.WakefulIntentService;
 
 public class SyncService extends WakefulIntentService {
     private static final String LOGGING_TAG = Constants.TAG + "SyncService";
-    private static int hoursInMillis = 3600000;
+    private static final int minuteInMillis = 60000;
     /**
      * Create an instance of the service with a SwiftNoteDao
      */
@@ -69,7 +69,7 @@ public class SyncService extends WakefulIntentService {
         final PendingIntent pendingIntent = PendingIntent.getBroadcast(context.getApplicationContext(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         final AlarmManager am = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        final long schedule = hoursInMillis * Integer.parseInt(preferences.getString(Preferences.BACKGROUND, "0"), 10);
+        final long schedule = minuteInMillis * Integer.parseInt(preferences.getString(Preferences.BACKGROUND, "0"), 10);
         if (preferences.getBoolean(Preferences.BACKGROUND_ENABLED, false) && schedule > 0) {
             Log.d(LOGGING_TAG, "Scheduling a broadcast for synchronization");
             am.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + schedule, pendingIntent);

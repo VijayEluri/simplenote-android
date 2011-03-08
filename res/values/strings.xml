@@ -69,6 +69,8 @@
   <string name="pref_account_clear_dialog_yes">Yes, please</string>
   <string name="pref_account_clear_dialog_no">No, thanks</string>
   <!-- Preferences Options -->
+  <string name="every10minutes">Every 10 Minutes</string>
+  <string name="every30minutes">Every 30 Minutes</string>
   <string name="every1hour">Every Hour</string>
   <string name="every2hour">Every 2 Hours</string>
   <string name="every4hour">Every 4 Hours</string>

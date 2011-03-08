@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <integer name="every10minutes">10</integer>
+  <integer name="every30minutes">30</integer>
   <integer name="every1hour">60</integer>
   <integer name="every2hour">120</integer>
   <integer name="every4hour">240</integer>

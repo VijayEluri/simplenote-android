@@ -3,12 +3,12 @@
   <PreferenceCategory android:title="@string/pref_background_category">
     <CheckBoxPreference android:title="@string/pref_background_title"
       android:summary="@string/pref_background_description"
-      android:defaultValue="false"
+      android:defaultValue="true"
       android:key="background_enabled" />
     <ListPreference android:title="@string/pref_frequency_title"
       android:summary="@string/pref_frequency_description"
       android:key="background"
-      android:defaultValue="@integer/every1hour"
+      android:defaultValue="@integer/every10minutes"
       android:entries="@array/background"
       android:entryValues="@array/background_values"
       android:dependency="background_enabled" />

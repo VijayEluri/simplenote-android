@@ -72,7 +72,5 @@ public class SwiftNoteSplash extends LicenseCheckActivity {
         password.setOnEditorActionListener(loginAction);
         loginButton.setOnClickListener(loginAction);
         signupButton.setOnClickListener(registerAction);
-        // FIXME: This doesn't work from styles.xml
-        password.setTypeface(Typeface.SANS_SERIF);
     }
 }

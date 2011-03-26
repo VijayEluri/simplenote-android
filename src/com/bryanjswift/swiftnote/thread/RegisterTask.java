@@ -50,8 +50,7 @@ public class RegisterTask extends AsyncTask<Api.Credentials, Void, Api.Response>
             Api.Credentials credentials = credentialses[0];
             response = SwiftNoteApi.register(credentials, HttpCallback.EMPTY);
         } else {
-            response = new Api.Response();
-            response.status = Constants.NO_CONNECTION;
+            response = new Api.Response(Constants.NO_CONNECTION);
         }
         return response;
     }

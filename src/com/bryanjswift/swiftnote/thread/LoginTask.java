@@ -107,8 +107,7 @@ public class LoginTask extends AsyncTask<Void, Void, Response> {
             });
         } else {
             Log.i(LOGGING_TAG, "No internet connection, returning timeout status code");
-            response = new Response();
-            response.status = Constants.NO_CONNECTION;
+            response = new Response(Constants.NO_CONNECTION);
             // Maybe should be a status 200 with an retry registered for when the network becomes available
         }
         return response;

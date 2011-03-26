@@ -105,11 +105,10 @@ public class SwiftNoteApi extends Api {
             Response response = handleResponse(callback, Get(Constants.API_NOTE_URL + data));
             if (response.status == HttpStatus.SC_OK) {
                 // May need to get header information from the Response object in order to be sure modify date is in sync with server
-                Map<String, List<String>> headers = response.headers;
                 note = n.setTitleAndBody(response.body)
-                        .setDeleted(new Boolean(headers.get("note-deleted").get(0)))
-                        .setKey(headers.get("note-key").get(0))
-                        .setDateModified(headers.get("note-modifydate").get(0));
+                        .setDeleted(new Boolean(response.headers.get("note-deleted").get(0)))
+                        .setKey(response.headers.get("note-key").get(0))
+                        .setDateModified(response.headers.get("note-modifydate").get(0));
             }
         } catch (IOException ioe) {
             callback.onException(Constants.API_NOTE_URL, data, ioe);
@@ -189,6 +188,7 @@ public class SwiftNoteApi extends Api {
      * Calls the appropriate methods on the HttpCallback object for the given response
      * @param callback method collection to handle response
      * @param response object from an HTTP request
+     * @return response passed in
      */
     public static Response handleResponse(final HttpCallback callback, final Response response) {
         switch (response.status) {

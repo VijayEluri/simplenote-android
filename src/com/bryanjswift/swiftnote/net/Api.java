@@ -1,28 +1,48 @@
 package com.bryanjswift.swiftnote.net;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
+import android.util.Log;
+import com.bryanjswift.swiftnote.Constants;
+import com.bryanjswift.swiftnote.util.Base64;
+import com.bryanjswift.swiftnote.util.IOUtils;
+import org.apache.http.Header;
+import org.apache.http.HeaderIterator;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.bryanjswift.swiftnote.util.Base64;
-import org.apache.http.HttpStatus;
-
 public abstract class Api {
+    private static final String LOGGING_TAG = Constants.TAG + "Api";
 	/**
 	 * Class to represent the response from an API call
 	 */
 	public static class Response {
-		public int status;
-		public String body;
-		public Map<String, List<String>> headers;
+		public final int status;
+		public final String body;
+		public final Map<String, List<String>> headers;
+        public Response(final int status, final String body, final Map<String, List<String>> headers) {
+            this.status = status;
+            this.body = body;
+            this.headers = headers;
+        }
+        public Response(final int status) {
+            this(status, null, null);
+        }
 	}
 	/**
 	 * Sends an HTTP POST request
@@ -30,76 +50,82 @@ public abstract class Api {
 	 * @param url to connect to
 	 * @param data to send in POST body
 	 * @return Response object containing status code and response body
-	 * @throws IOException when there is a problem establishing a connection
+     * @throws IOException never?
 	 */
-	public static Response Post(String url, String data) throws IOException {
-		Response response = new Response();
-		try {
-			// Setup connection
-			HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-			conn.setRequestMethod("POST");
-			conn.setDoOutput(true);
-			conn.connect();
-			// Send POST data to the server
-			OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-			out.write(data);
-			out.flush();
-			// Get the response from the server
-			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192);
-			StringBuilder sb = new StringBuilder();
-			for (String line = in.readLine(); line != null; line = in.readLine()) {
-				sb.append(line);
-                sb.append('\n');
-			}
-            if (sb.length() > 0) {
-                sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
-            }
-			// Store response information in Response object
-			response.status = conn.getResponseCode();
-			response.body = sb.toString();
-			response.headers = conn.getHeaderFields();
-			// Clean up
-			conn.disconnect();
-		} catch (FileNotFoundException fnfe) {
-			// I'm not sure why but when the login fails we get a FileNotFoundException
-			response.status = HttpStatus.SC_UNAUTHORIZED;
-		} catch (IOException ioe) {
-            // I'm not sure why but when the login fails we get a FileNotFoundException
-            response.status = HttpStatus.SC_UNAUTHORIZED;
+    public static Api.Response Post(final String url, final String data) throws IOException {
+        final HttpClient client = new DefaultHttpClient();
+        Api.Response apiResponse = new Api.Response(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        try {
+            final URI uri = new URI(url);
+            final HttpPost post = new HttpPost(uri);
+            post.setEntity(new StringEntity(data));
+            final HttpResponse response = client.execute(post);
+            final HttpEntity entity = response.getEntity();
+            final int status = response.getStatusLine().getStatusCode();
+            Log.i(LOGGING_TAG, "API (POST) call to " + uri.toString() + " returned with " + status + " status");
+            apiResponse = new Api.Response(status, IOUtils.slurp(entity.getContent()), extractHeaders(response));
+        } catch (URISyntaxException urise) {
+            Log.e(LOGGING_TAG, "Couldn't create URI", urise);
+        } catch (UnsupportedEncodingException uee) {
+            Log.e(LOGGING_TAG, "Encountered unsupported encoding", uee);
+        } catch (ClientProtocolException cpe) {
+            Log.e(LOGGING_TAG, "Wrong protocol", cpe);
+        } catch (IOException ioe) {
+            Log.e(LOGGING_TAG, "Something bad happened", ioe);
         }
-		return response;
-	}
+        return apiResponse;
+    }
 	/**
 	 * Sends an HTTP GET request
 	 *
 	 * @param url to connect to
 	 * @return Response object containing status code and response body
-	 * @throws IOException when there is a problem establishing a connection
+     * @throws IOException never?
 	 */
-	public static Response Get(String url) throws IOException {
-		Response response = new Response();
-		// Setup connection
-		HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
-		conn.setRequestMethod("GET");
-		conn.connect();
-		// Get response from the server
-		BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()),8192);
-		StringBuilder sb = new StringBuilder();
-		for (String line = in.readLine(); line != null; line = in.readLine()) {
-			sb.append(line);
-            sb.append('\n');
-		}
-        if (sb.length() > 0) {
-		    sb.deleteCharAt(sb.length() - 1); // Remove extraneous CR/LF
+    public static Api.Response Get(final String url) throws IOException {
+        final HttpClient client = new DefaultHttpClient();
+        Api.Response apiResponse = new Api.Response(HttpStatus.SC_INTERNAL_SERVER_ERROR);
+        try {
+            final URI uri = new URI(url);
+            final HttpGet get = new HttpGet(uri);
+            final HttpResponse response = client.execute(get);
+            final HttpEntity entity = response.getEntity();
+            final int status = response.getStatusLine().getStatusCode();
+            Log.i(LOGGING_TAG, "API (GET) call to " + uri.toString() + " returned with " + status + " status");
+            final String body = status == HttpStatus.SC_OK ? IOUtils.slurp(entity.getContent()) : null;
+            apiResponse = new Api.Response(status, body, extractHeaders(response));
+        } catch (URISyntaxException urise) {
+            Log.e(LOGGING_TAG, "Couldn't create URI", urise);
+        } catch (UnsupportedEncodingException uee) {
+            Log.e(LOGGING_TAG, "Encountered unsupported encoding", uee);
+        } catch (ClientProtocolException cpe) {
+            Log.e(LOGGING_TAG, "Wrong protocol", cpe);
+        } catch (IOException ioe) {
+            Log.e(LOGGING_TAG, "Something bad happened", ioe);
         }
-		// Store response in a Response object
-		response.status = conn.getResponseCode();
-		response.body = sb.toString();
-		response.headers = conn.getHeaderFields();
-		// Clean up
-		conn.disconnect();
-		return response;
-	}
+        return apiResponse;
+    }
+
+    /**
+     * Create a map of header names to header values from an HttpResponse
+     * @param response to create header map from
+     * @return map of header name to value list
+     */
+    public static Map<String, List<String>> extractHeaders(final HttpResponse response) {
+        final HeaderIterator headersIterator = response.headerIterator();
+        final Map<String, List<String>> headers = new HashMap<String, List<String>>();
+        while (headersIterator.hasNext()) {
+            final Header header = headersIterator.nextHeader();
+            final String name = header.getName();
+            List<String> values = headers.get(name);
+            if (values == null) {
+                values = new ArrayList<String>();
+            }
+            values.add(header.getValue());
+            headers.put(name, values);
+        }
+        return headers;
+    }
 	/**
 	 * Quick way to URL encode a String
 	 * @param str to encode

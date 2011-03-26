@@ -1,17 +1,14 @@
 package com.bryanjswift.swiftnote.net;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import android.util.Log;
-
 import com.bryanjswift.swiftnote.Constants;
 import com.bryanjswift.swiftnote.model.Note;
 import org.apache.http.HttpStatus;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A sensible interface to the SimpleNote server API

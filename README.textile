@@ -1,5 +1,4 @@
-h1. Todo
+h1. This project is ancient - don't use it
 
-Todo items are listed in "Lighthouse":https://bryanjswift.lighthouseapp.com/projects/56309-simplenote-android/
-
-More information and discussion at "Google Groups":http://groups.google.com/group/simplenote-api/browse_thread/thread/7fc1fc123752fb12
+This is open sourcing of code for a Simplenote client built and released years ago.
+It will no longer function against the current Simplenote API.
